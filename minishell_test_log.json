@@ -1,0 +1,1727 @@
+{
+  "timestamp": "2025-09-13 16:49:02",
+  "total_tests": 191,
+  "passed": 164,
+  "failed": 27,
+  "results": [
+    {
+      "name": "echo_simple",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello"
+    },
+    {
+      "name": "echo_multiple_args",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello world"
+    },
+    {
+      "name": "echo_empty",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: '', Exit: None",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "echo"
+    },
+    {
+      "name": "echo_with_flags",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: 0",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "echo -n hello"
+    },
+    {
+      "name": "pwd",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: '/root/Desktop/minishell', Exit: 0",
+      "actual": "Output: '/root/Desktop/minishell', Exit: 0",
+      "error_msg": "",
+      "command": "pwd"
+    },
+    {
+      "name": "ls_exists",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'builtins\ncore\nenv\nexecutor\nexpand\ngc\nlexer\nMakefile\nminishell\nminishell_test_log.json\nout.txt\nparser\n__pycache__\nsignals\ntest\nTESTING_GUIDE.md\ntest_minishell.py\ntest_results.txt\nTEST_USAGE.md\nutils\nvalgrind.supp', Exit: 0",
+      "actual": "Output: 'builtins\ncore\nenv\nexecutor\nexpand\ngc\nlexer\nMakefile\nminishell\nminishell_test_log.json\nout.txt\nparser\n__pycache__\nsignals\ntest\nTESTING_GUIDE.md\ntest_minishell.py\ntest_results.txt\nTEST_USAGE.md\nutils\nvalgrind.supp', Exit: 0",
+      "error_msg": "",
+      "command": "ls"
+    },
+    {
+      "name": "ls_with_flags",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'total 404\ndrwxr-xr-x 15 root root   4096 Sep 13 16:46 .\ndrwxr-xr-x  5 root root   4096 Sep 11 07:03 ..\ndrwxr-xr-x  2 root root   4096 Sep 13 16:46 builtins\ndrwxr-xr-x  2 root root   4096 Sep 13 16:46 core\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 env\ndrwxr-xr-x  2 root root   4096 Sep 13 16:46 executor\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 expand\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 gc\ndrwxr-xr-x  8 root root   4096 Sep 11 05:31 .git\n-rw-r--r--  1 root root     52 Sep 11 11:29 .gitignore\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 lexer\n-rw-r--r--  1 root root    887 Sep 13 16:03 Makefile\n-rwxr-xr-x  1 root root  98080 Sep 13 16:46 minishell\n-rw-r--r--  1 root root 115059 Sep 13 16:48 minishell_test_log.json\n-rw-r--r--  1 root root     11 Sep 13 16:09 out.txt\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 parser\ndrwxr-xr-x  2 root root   4096 Sep 11 13:16 __pycache__\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 signals\ndrwxr-xr-x  2 root root   4096 Sep 13 12:59 test\n-rw-r--r--  1 root root  15524 Sep 11 11:50 TESTING_GUIDE.md\n-rwxr-xr-x  1 root root  62631 Sep 11 13:14 test_minishell.py\n-rw-r--r--  1 root root  25718 Sep 13 16:44 test_results.txt\n-rw-r--r--  1 root root   6163 Sep 11 12:31 TEST_USAGE.md\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 utils\n-rw-r--r--  1 root root   1681 Sep 11 17:59 valgrind.supp', Exit: 0",
+      "actual": "Output: 'total 404\ndrwxr-xr-x 15 root root   4096 Sep 13 16:46 .\ndrwxr-xr-x  5 root root   4096 Sep 11 07:03 ..\ndrwxr-xr-x  2 root root   4096 Sep 13 16:46 builtins\ndrwxr-xr-x  2 root root   4096 Sep 13 16:46 core\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 env\ndrwxr-xr-x  2 root root   4096 Sep 13 16:46 executor\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 expand\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 gc\ndrwxr-xr-x  8 root root   4096 Sep 11 05:31 .git\n-rw-r--r--  1 root root     52 Sep 11 11:29 .gitignore\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 lexer\n-rw-r--r--  1 root root    887 Sep 13 16:03 Makefile\n-rwxr-xr-x  1 root root  98080 Sep 13 16:46 minishell\n-rw-r--r--  1 root root 115059 Sep 13 16:48 minishell_test_log.json\n-rw-r--r--  1 root root     11 Sep 13 16:09 out.txt\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 parser\ndrwxr-xr-x  2 root root   4096 Sep 11 13:16 __pycache__\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 signals\ndrwxr-xr-x  2 root root   4096 Sep 13 12:59 test\n-rw-r--r--  1 root root  15524 Sep 11 11:50 TESTING_GUIDE.md\n-rwxr-xr-x  1 root root  62631 Sep 11 13:14 test_minishell.py\n-rw-r--r--  1 root root  25718 Sep 13 16:44 test_results.txt\n-rw-r--r--  1 root root   6163 Sep 11 12:31 TEST_USAGE.md\ndrwxr-xr-x  2 root root   4096 Sep 13 16:03 utils\n-rw-r--r--  1 root root   1681 Sep 11 17:59 valgrind.supp', Exit: 0",
+      "error_msg": "",
+      "command": "ls -la"
+    },
+    {
+      "name": "date",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'Sat Sep 13 04:48:58 PM UTC 2025', Exit: 0",
+      "actual": "Output: 'Sat Sep 13 04:48:58 PM UTC 2025', Exit: 0",
+      "error_msg": "",
+      "command": "date"
+    },
+    {
+      "name": "whoami",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'root', Exit: 0",
+      "actual": "Output: 'root', Exit: 0",
+      "error_msg": "",
+      "command": "whoami"
+    },
+    {
+      "name": "uname",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'Linux', Exit: 0",
+      "actual": "Output: 'Linux', Exit: 0",
+      "error_msg": "",
+      "command": "uname"
+    },
+    {
+      "name": "cat_version",
+      "category": "basic",
+      "passed": false,
+      "expected": "Output: 'cat (GNU coreutils) 9.4\nCopyright (C) 2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by Torbj\u00f6rn Granlund and Richard M. Stallman.', Exit: 0",
+      "actual": "Output: 'cat (GNU coreutils) 9.4\nCopyright (C) 2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\nWritten by Torbj\u00f6rn Granlund and Richard M. Stallman.', Exit: 0",
+      "error_msg": "Output mismatch. Expected: 'cat (GNU coreutils) 9.4\nCopyright (C) 2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n\nWritten by Torbj\u00f6rn Granlund and Richard M. Stallman.', Got: 'cat (GNU coreutils) 9.4\nCopyright (C) 2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\nWritten by Torbj\u00f6rn Granlund and Richard M. Stallman.'",
+      "command": "cat --version"
+    },
+    {
+      "name": "which_ls",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: '/usr/bin/ls', Exit: 0",
+      "actual": "Output: '/usr/bin/ls', Exit: 0",
+      "error_msg": "",
+      "command": "which ls"
+    },
+    {
+      "name": "nonexistent_command",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 127",
+      "actual": "Output: '', Exit: 127",
+      "error_msg": "",
+      "command": "nonexistentcommand123"
+    },
+    {
+      "name": "permission_denied_cmd",
+      "category": "basic",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 126",
+      "actual": "Output: '', Exit: 126",
+      "error_msg": "",
+      "command": "/etc/shadow"
+    },
+    {
+      "name": "cd_root",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '/', Exit: None",
+      "actual": "Output: '/', Exit: 0",
+      "error_msg": "",
+      "command": "cd /; pwd"
+    },
+    {
+      "name": "cd_home",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '/root', Exit: None",
+      "actual": "Output: '/root', Exit: 0",
+      "error_msg": "",
+      "command": "cd ~; pwd"
+    },
+    {
+      "name": "cd_home_explicit",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '/root', Exit: None",
+      "actual": "Output: '/root', Exit: 0",
+      "error_msg": "",
+      "command": "cd $HOME; pwd"
+    },
+    {
+      "name": "cd_back",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '/root/Desktop/minishell\n/root/Desktop/minishell', Exit: 0",
+      "actual": "Output: '/root/Desktop/minishell\n/root/Desktop/minishell', Exit: 0",
+      "error_msg": "",
+      "command": "cd /tmp; cd -; pwd"
+    },
+    {
+      "name": "cd_parent",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '/root/Desktop', Exit: 0",
+      "actual": "Output: '/root/Desktop', Exit: 0",
+      "error_msg": "",
+      "command": "cd ..; pwd"
+    },
+    {
+      "name": "cd_current",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '/root/Desktop/minishell', Exit: 0",
+      "actual": "Output: '/root/Desktop/minishell', Exit: 0",
+      "error_msg": "",
+      "command": "cd .; pwd"
+    },
+    {
+      "name": "cd_nonexistent",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: 1",
+      "error_msg": "",
+      "command": "cd /nonexistent/path"
+    },
+    {
+      "name": "cd_no_args",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '/root', Exit: None",
+      "actual": "Output: '/root', Exit: 0",
+      "error_msg": "",
+      "command": "cd; pwd"
+    },
+    {
+      "name": "env_display",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'BROWSER=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/bin/helpers/browser.sh\nCOLORTERM=truecolor\nDBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/0/bus\nDEBUGINFOD_URLS=https://debuginfod.ubuntu.com \nGIT_ASKPASS=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/extensions/git/dist/askpass.sh\nGIT_PAGER=cat\nHOME=/root\nLANG=en_US.UTF-8\nLESSCLOSE=/usr/bin/lesspipe %s %s\nLESSOPEN=| /usr/bin/lesspipe %s\nLOGNAME=root\nLS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:\nOLDPWD=/root/Desktop/minishell\nPATH=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/root/.local/bin:/root/.local/bin:/root/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/root/.local/bin\nPWD=/root/Desktop/minishell\nSHELL=/bin/bash\nSHLVL=1\nSSH_CLIENT=24.133.41.25 50343 22\nSSH_CONNECTION=24.133.41.25 50343 94.154.46.73 22\nSSL_CERT_DIR=/usr/lib/ssl/certs\nSSL_CERT_FILE=/usr/lib/ssl/cert.pem\nTERM_PROGRAM_VERSION=1.104.0\nTERM_PROGRAM=vscode\nTERM=xterm-256color\nUSER=root\n_=/usr/bin/python3\nVSCODE_GIT_ASKPASS_EXTRA_ARGS=\nVSCODE_GIT_ASKPASS_MAIN=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/extensions/git/dist/askpass-main.js\nVSCODE_GIT_ASKPASS_NODE=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/node\nVSCODE_GIT_IPC_HANDLE=/run/user/0/vscode-git-42b2000723.sock\nVSCODE_IPC_HOOK_CLI=/run/user/0/vscode-ipc-5dd7c2dd-9b91-40f9-ba77-6f4652ae7483.sock\nVSCODE_PYTHON_AUTOACTIVATE_GUARD=1\nXDG_DATA_DIRS=/usr/local/share:/usr/share:/var/lib/snapd/desktop\nXDG_RUNTIME_DIR=/run/user/0\nXDG_SESSION_CLASS=user\nXDG_SESSION_ID=528\nXDG_SESSION_TYPE=tty', Exit: 0",
+      "actual": "Output: 'BROWSER=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/bin/helpers/browser.sh\nCOLORTERM=truecolor\nDBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/0/bus\nDEBUGINFOD_URLS=https://debuginfod.ubuntu.com \nGIT_ASKPASS=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/extensions/git/dist/askpass.sh\nGIT_PAGER=cat\nHOME=/root\nLANG=en_US.UTF-8\nLESSCLOSE=/usr/bin/lesspipe %s %s\nLESSOPEN=| /usr/bin/lesspipe %s\nLOGNAME=root\nLS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:\nOLDPWD=/root/Desktop/minishell\nPATH=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/root/.local/bin:/root/.local/bin:/root/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/root/.local/bin\nPWD=/root/Desktop/minishell\nSHELL=/bin/bash\nSHLVL=1\nSSH_CLIENT=24.133.41.25 50343 22\nSSH_CONNECTION=24.133.41.25 50343 94.154.46.73 22\nSSL_CERT_DIR=/usr/lib/ssl/certs\nSSL_CERT_FILE=/usr/lib/ssl/cert.pem\nTERM_PROGRAM_VERSION=1.104.0\nTERM_PROGRAM=vscode\nTERM=xterm-256color\nUSER=root\n_=/usr/bin/python3\nVSCODE_GIT_ASKPASS_EXTRA_ARGS=\nVSCODE_GIT_ASKPASS_MAIN=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/extensions/git/dist/askpass-main.js\nVSCODE_GIT_ASKPASS_NODE=/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/node\nVSCODE_GIT_IPC_HANDLE=/run/user/0/vscode-git-42b2000723.sock\nVSCODE_IPC_HOOK_CLI=/run/user/0/vscode-ipc-5dd7c2dd-9b91-40f9-ba77-6f4652ae7483.sock\nVSCODE_PYTHON_AUTOACTIVATE_GUARD=1\nXDG_DATA_DIRS=/usr/local/share:/usr/share:/var/lib/snapd/desktop\nXDG_RUNTIME_DIR=/run/user/0\nXDG_SESSION_CLASS=user\nXDG_SESSION_ID=528\nXDG_SESSION_TYPE=tty', Exit: 0",
+      "error_msg": "",
+      "command": "env | sort"
+    },
+    {
+      "name": "env_with_command",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "env echo hello"
+    },
+    {
+      "name": "export_simple",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "export TEST_VAR=hello; echo $TEST_VAR"
+    },
+    {
+      "name": "export_with_spaces",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "export TEST_VAR='hello world'; echo $TEST_VAR"
+    },
+    {
+      "name": "export_empty",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '', Exit: None",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "export EMPTY_VAR=; echo $EMPTY_VAR"
+    },
+    {
+      "name": "export_no_value",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '', Exit: 1",
+      "actual": "Output: '', Exit: 1",
+      "error_msg": "",
+      "command": "export JUST_NAME; env | grep JUST_NAME"
+    },
+    {
+      "name": "export_overwrite",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'second', Exit: None",
+      "actual": "Output: 'second', Exit: 0",
+      "error_msg": "",
+      "command": "export TEST_VAR=first; export TEST_VAR=second; echo $TEST_VAR"
+    },
+    {
+      "name": "unset_existing",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '', Exit: None",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "export TEST_VAR=hello; unset TEST_VAR; echo $TEST_VAR"
+    },
+    {
+      "name": "unset_nonexistent",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "unset NONEXISTENT_VAR"
+    },
+    {
+      "name": "unset_multiple",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: '', Exit: None",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "export VAR1=a VAR2=b; unset VAR1 VAR2; echo $VAR1$VAR2"
+    },
+    {
+      "name": "exit_success",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "exit 0"
+    },
+    {
+      "name": "exit_failure",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 42",
+      "actual": "Output: '', Exit: 42",
+      "error_msg": "",
+      "command": "exit 42"
+    },
+    {
+      "name": "exit_no_arg",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "exit"
+    },
+    {
+      "name": "exit_invalid",
+      "category": "builtins",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 2",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "",
+      "command": "exit abc"
+    },
+    {
+      "name": "input_redirect",
+      "category": "redirections",
+      "passed": true,
+      "expected": "Output: 'test content\nline2\nline3', Exit: None",
+      "actual": "Output: 'test content\nline2\nline3', Exit: -6",
+      "error_msg": "",
+      "command": "cat < /tmp/tmp3xc8zoh4/test_input.txt"
+    },
+    {
+      "name": "input_redirect_wc",
+      "category": "redirections",
+      "passed": true,
+      "expected": "Output: '3', Exit: None",
+      "actual": "Output: '3', Exit: -6",
+      "error_msg": "",
+      "command": "wc -l < /tmp/tmp3xc8zoh4/test_input.txt"
+    },
+    {
+      "name": "input_redirect_nonexistent",
+      "category": "redirections",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: -6",
+      "error_msg": " Exit code mismatch. Expected: 1, Got: -6",
+      "command": "cat < /nonexistent/file"
+    },
+    {
+      "name": "output_redirect",
+      "category": "redirections",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'hello world' > /tmp/tmp3xc8zoh4/test_output.txt; cat /tmp/tmp3xc8zoh4/test_output.txt"
+    },
+    {
+      "name": "output_redirect_overwrite",
+      "category": "redirections",
+      "passed": true,
+      "expected": "Output: 'line2', Exit: None",
+      "actual": "Output: 'line2', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'line1' > /tmp/tmp3xc8zoh4/test_output.txt; echo 'line2' > /tmp/tmp3xc8zoh4/test_output.txt; cat /tmp/tmp3xc8zoh4/test_output.txt"
+    },
+    {
+      "name": "append_redirect",
+      "category": "redirections",
+      "passed": true,
+      "expected": "Output: 'line1\nline2', Exit: None",
+      "actual": "Output: 'line1\nline2', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'line1' > /tmp/tmp3xc8zoh4/append_test.txt; echo 'line2' >> /tmp/tmp3xc8zoh4/append_test.txt; cat /tmp/tmp3xc8zoh4/append_test.txt"
+    },
+    {
+      "name": "append_multiple",
+      "category": "redirections",
+      "passed": true,
+      "expected": "Output: 'a\nb\nc', Exit: None",
+      "actual": "Output: 'a\nb\nc', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'a' > /tmp/tmp3xc8zoh4/append_test.txt; echo 'b' >> /tmp/tmp3xc8zoh4/append_test.txt; echo 'c' >> /tmp/tmp3xc8zoh4/append_test.txt; cat /tmp/tmp3xc8zoh4/append_test.txt"
+    },
+    {
+      "name": "redirect_with_args",
+      "category": "redirections",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello world > /tmp/tmp3xc8zoh4/test_output.txt; cat /tmp/tmp3xc8zoh4/test_output.txt"
+    },
+    {
+      "name": "input_output_redirect",
+      "category": "redirections",
+      "passed": true,
+      "expected": "Output: 'input data', Exit: None",
+      "actual": "Output: 'input data', Exit: 0",
+      "error_msg": "",
+      "command": "cat < /tmp/tmp3xc8zoh4/input2.txt > /tmp/tmp3xc8zoh4/output2.txt; cat /tmp/tmp3xc8zoh4/output2.txt"
+    },
+    {
+      "name": "redirect_readonly",
+      "category": "redirections",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: -6",
+      "error_msg": " Exit code mismatch. Expected: 1, Got: -6",
+      "command": "echo test > /tmp/tmp3xc8zoh4/readonly.txt"
+    },
+    {
+      "name": "simple_pipe",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello | cat"
+    },
+    {
+      "name": "pipe_chain",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello | cat | cat"
+    },
+    {
+      "name": "pipe_chain_long",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'test', Exit: None",
+      "actual": "Output: 'test', Exit: 0",
+      "error_msg": "",
+      "command": "echo test | cat | cat | cat"
+    },
+    {
+      "name": "echo_pipe_wc",
+      "category": "pipes",
+      "passed": false,
+      "expected": "Output: '3', Exit: None",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "Output mismatch. Expected: '3', Got: ''",
+      "command": "echo 'line1\nline2\nline3' | wc -l"
+    },
+    {
+      "name": "ls_pipe_wc",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: '21', Exit: 0",
+      "actual": "Output: '21', Exit: 0",
+      "error_msg": "",
+      "command": "ls | wc -l"
+    },
+    {
+      "name": "echo_pipe_grep",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'hello\nhello', Exit: 0",
+      "actual": "Output: 'hello\nhello', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'hello\\nworld\\nhello' | grep hello"
+    },
+    {
+      "name": "cat_pipe_sort",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'a\nb\nc', Exit: None",
+      "actual": "Output: 'a\nb\nc', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'c\\nb\\na' | sort"
+    },
+    {
+      "name": "env_pipe_grep",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'HOME=/root', Exit: 0",
+      "actual": "Output: 'HOME=/root', Exit: 0",
+      "error_msg": "",
+      "command": "env | grep HOME"
+    },
+    {
+      "name": "echo_pipe_head",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'line1\nline2', Exit: None",
+      "actual": "Output: 'line1\nline2', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'line1\\nline2\\nline3' | head -n 2"
+    },
+    {
+      "name": "echo_pipe_tail",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'line3', Exit: None",
+      "actual": "Output: 'line3', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'line1\\nline2\\nline3' | tail -n 1"
+    },
+    {
+      "name": "complex_pipe",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'apple\nbanana\ncherry', Exit: None",
+      "actual": "Output: 'apple\nbanana\ncherry', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'apple\\nbanana\\napple\\ncherry' | sort | uniq"
+    },
+    {
+      "name": "pipe_with_vars",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "export VAR=hello; echo $VAR | cat"
+    },
+    {
+      "name": "pipe_command_not_found",
+      "category": "pipes",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 127",
+      "actual": "Output: '', Exit: 127",
+      "error_msg": "",
+      "command": "echo hello | nonexistentcommand"
+    },
+    {
+      "name": "broken_pipe_start",
+      "category": "pipes",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 127",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": " Exit code mismatch. Expected: 127, Got: 0",
+      "command": "nonexistentcommand | cat"
+    },
+    {
+      "name": "var_expansion",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: '/root', Exit: None",
+      "actual": "Output: '/root', Exit: 0",
+      "error_msg": "",
+      "command": "echo $HOME"
+    },
+    {
+      "name": "var_expansion_user",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'root', Exit: None",
+      "actual": "Output: 'root', Exit: 0",
+      "error_msg": "",
+      "command": "echo $USER"
+    },
+    {
+      "name": "var_expansion_path",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: '/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/root/.local/bin:/root/.local/bin:/root/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/root/.local/bin', Exit: None",
+      "actual": "Output: '/root/.vscode-server/cli/servers/Stable-f220831ea2d946c0dcb0f3eaa480eb435a2c1260/server/bin/remote-cli:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/root/.local/bin:/root/.local/bin:/root/.vscode-server/data/User/globalStorage/github.copilot-chat/debugCommand:/root/.local/bin', Exit: -6",
+      "error_msg": "",
+      "command": "echo $PATH"
+    },
+    {
+      "name": "var_in_middle",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'helloroot', Exit: None",
+      "actual": "Output: 'helloroot', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello$USER"
+    },
+    {
+      "name": "var_at_start",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'root world', Exit: None",
+      "actual": "Output: 'root world', Exit: 0",
+      "error_msg": "",
+      "command": "echo $USER world"
+    },
+    {
+      "name": "var_multiple",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'root /root', Exit: None",
+      "actual": "Output: 'root /root', Exit: 0",
+      "error_msg": "",
+      "command": "echo $USER $HOME"
+    },
+    {
+      "name": "undefined_var",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: '', Exit: None",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "echo $UNDEFINED_VAR_12345"
+    },
+    {
+      "name": "undefined_with_text",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello$UNDEFINED_VAR"
+    },
+    {
+      "name": "exit_status_success",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: '0', Exit: None",
+      "actual": "Output: '0', Exit: 0",
+      "error_msg": "",
+      "command": "true; echo $?"
+    },
+    {
+      "name": "exit_status_failure",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: '1', Exit: None",
+      "actual": "Output: '1', Exit: 0",
+      "error_msg": "",
+      "command": "false; echo $?"
+    },
+    {
+      "name": "exit_status_command_not_found",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: '127', Exit: None",
+      "actual": "Output: '127', Exit: 0",
+      "error_msg": "",
+      "command": "nonexistentcmd; echo $?"
+    },
+    {
+      "name": "dollar_alone",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: '$', Exit: None",
+      "actual": "Output: '$', Exit: 0",
+      "error_msg": "",
+      "command": "echo $"
+    },
+    {
+      "name": "double_dollar",
+      "category": "env_vars",
+      "passed": false,
+      "expected": "Output: '196979', Exit: 0",
+      "actual": "Output: '196978', Exit: 0",
+      "error_msg": "Output mismatch. Expected: '196979', Got: '196978'",
+      "command": "echo $$"
+    },
+    {
+      "name": "var_with_braces",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: '/root', Exit: None",
+      "actual": "Output: '/root', Exit: 0",
+      "error_msg": "",
+      "command": "echo ${HOME}"
+    },
+    {
+      "name": "var_in_quotes",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'root', Exit: None",
+      "actual": "Output: 'root', Exit: 0",
+      "error_msg": "",
+      "command": "echo \"$USER\""
+    },
+    {
+      "name": "custom_var_simple",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'test', Exit: None",
+      "actual": "Output: 'test', Exit: 0",
+      "error_msg": "",
+      "command": "export CUSTOM=test; echo $CUSTOM"
+    },
+    {
+      "name": "custom_var_override",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'custom', Exit: None",
+      "actual": "Output: 'custom', Exit: 0",
+      "error_msg": "",
+      "command": "export PATH=custom; echo $PATH"
+    },
+    {
+      "name": "custom_var_unset",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: '', Exit: None",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "export TEMP=value; unset TEMP; echo $TEMP"
+    },
+    {
+      "name": "var_in_command",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "export CMD=echo; $CMD hello"
+    },
+    {
+      "name": "var_as_argument",
+      "category": "env_vars",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "export ARG=hello; echo $ARG"
+    },
+    {
+      "name": "single_quotes",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'hello world'"
+    },
+    {
+      "name": "single_quotes_no_expansion",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: '$HOME', Exit: None",
+      "actual": "Output: '$HOME', Exit: 0",
+      "error_msg": "",
+      "command": "echo '$HOME'"
+    },
+    {
+      "name": "single_quotes_with_spaces",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: '  multiple   spaces  ', Exit: None",
+      "actual": "Output: 'multiple   spaces', Exit: 0",
+      "error_msg": "",
+      "command": "echo '  multiple   spaces  '"
+    },
+    {
+      "name": "single_quotes_special_chars",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: '!@#$%^&*()', Exit: None",
+      "actual": "Output: '!@#$%^&*()', Exit: 0",
+      "error_msg": "",
+      "command": "echo '!@#$%^&*()'"
+    },
+    {
+      "name": "double_quotes",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "echo \"hello world\""
+    },
+    {
+      "name": "double_quotes_expansion",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'hello root', Exit: None",
+      "actual": "Output: 'hello root', Exit: 0",
+      "error_msg": "",
+      "command": "echo \"hello $USER\""
+    },
+    {
+      "name": "double_quotes_with_singles",
+      "category": "quotes",
+      "passed": false,
+      "expected": "Output: 'It's working', Exit: None",
+      "actual": "Output: 'Its working', Exit: 0",
+      "error_msg": "Output mismatch. Expected: 'It's working', Got: 'Its working'",
+      "command": "echo \"It's working\""
+    },
+    {
+      "name": "double_quotes_multiple_vars",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'root at /root', Exit: None",
+      "actual": "Output: 'root at /root', Exit: 0",
+      "error_msg": "",
+      "command": "echo \"$USER at $HOME\""
+    },
+    {
+      "name": "mixed_quotes",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'single double normal', Exit: None",
+      "actual": "Output: 'single double normal', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'single' \"double\" normal"
+    },
+    {
+      "name": "quotes_in_quotes",
+      "category": "quotes",
+      "passed": false,
+      "expected": "Output: 'He said 'hello'', Exit: None",
+      "actual": "Output: 'He said hello', Exit: 0",
+      "error_msg": "Output mismatch. Expected: 'He said 'hello'', Got: 'He said hello'",
+      "command": "echo \"He said 'hello'\""
+    },
+    {
+      "name": "nested_quotes",
+      "category": "quotes",
+      "passed": false,
+      "expected": "Output: 'User is \"$USER\"', Exit: None",
+      "actual": "Output: 'User is $USER', Exit: 0",
+      "error_msg": "Output mismatch. Expected: 'User is \"$USER\"', Got: 'User is $USER'",
+      "command": "echo 'User is \"$USER\"' "
+    },
+    {
+      "name": "empty_single_quotes",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: '', Exit: None",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "echo ''"
+    },
+    {
+      "name": "empty_double_quotes",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: '', Exit: None",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "echo \"\""
+    },
+    {
+      "name": "quotes_with_empty",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'hello  world', Exit: None",
+      "actual": "Output: 'hello  world', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello '' world"
+    },
+    {
+      "name": "escape_quote",
+      "category": "quotes",
+      "passed": false,
+      "expected": "Output: 'can\\'t', Exit: None",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "Output mismatch. Expected: 'can\\'t', Got: ''",
+      "command": "echo 'can\\'t'"
+    },
+    {
+      "name": "escape_backslash",
+      "category": "quotes",
+      "passed": false,
+      "expected": "Output: 'back\\\\slash', Exit: None",
+      "actual": "Output: 'back\\slash', Exit: 0",
+      "error_msg": "Output mismatch. Expected: 'back\\\\slash', Got: 'back\\slash'",
+      "command": "echo \"back\\\\slash\""
+    },
+    {
+      "name": "unclosed_single_quote",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 2",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "",
+      "command": "echo 'unclosed"
+    },
+    {
+      "name": "unclosed_double_quote",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 2",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "",
+      "command": "echo \"unclosed"
+    },
+    {
+      "name": "quotes_with_pipe",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'hello world' | cat"
+    },
+    {
+      "name": "complex_quotes",
+      "category": "quotes",
+      "passed": false,
+      "expected": "Output: 'Start 'middle' end', Exit: None",
+      "actual": "Output: 'Start middle end', Exit: 0",
+      "error_msg": "Output mismatch. Expected: 'Start 'middle' end', Got: 'Start middle end'",
+      "command": "echo \"Start 'middle' end\" "
+    },
+    {
+      "name": "quotes_with_semicolon",
+      "category": "quotes",
+      "passed": true,
+      "expected": "Output: 'first\nsecond', Exit: None",
+      "actual": "Output: 'first\nsecond', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'first'; echo 'second'"
+    },
+    {
+      "name": "simple_sequence",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: 'first\nsecond', Exit: None",
+      "actual": "Output: 'first\nsecond', Exit: 0",
+      "error_msg": "",
+      "command": "echo first; echo second"
+    },
+    {
+      "name": "three_commands",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: '1\n2\n3', Exit: None",
+      "actual": "Output: '1\n2\n3', Exit: 0",
+      "error_msg": "",
+      "command": "echo 1; echo 2; echo 3"
+    },
+    {
+      "name": "empty_command_in_sequence",
+      "category": "semicolon",
+      "passed": false,
+      "expected": "Output: 'start\nend', Exit: None",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "Output mismatch. Expected: 'start\nend', Got: ''",
+      "command": "echo start; ; echo end"
+    },
+    {
+      "name": "sequence_with_cd",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: '/\n/root', Exit: None",
+      "actual": "Output: '/\n/root', Exit: 0",
+      "error_msg": "",
+      "command": "cd /; pwd; cd ~; pwd"
+    },
+    {
+      "name": "builtin_sequence",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: 'test\n', Exit: None",
+      "actual": "Output: 'test', Exit: 0",
+      "error_msg": "",
+      "command": "export VAR=test; echo $VAR; unset VAR; echo $VAR"
+    },
+    {
+      "name": "sequence_with_pipe",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: 'hello\nworld', Exit: None",
+      "actual": "Output: 'hello\nworld', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello | cat; echo world"
+    },
+    {
+      "name": "pipe_in_sequence",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: 'first\nsecond\nthird', Exit: None",
+      "actual": "Output: 'first\nsecond\nthird', Exit: 0",
+      "error_msg": "",
+      "command": "echo first; echo second | cat; echo third"
+    },
+    {
+      "name": "complex_sequence",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: 'start\nmiddle\nend', Exit: None",
+      "actual": "Output: 'start\nmiddle\nend', Exit: 0",
+      "error_msg": "",
+      "command": "echo start; export VAR=middle; echo $VAR; echo end"
+    },
+    {
+      "name": "sequence_with_redirect",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: 'hello\ndone', Exit: None",
+      "actual": "Output: 'hello\ndone', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello > /tmp/tmp3xc8zoh4/seq_test.txt; cat /tmp/tmp3xc8zoh4/seq_test.txt; echo done"
+    },
+    {
+      "name": "sequence_with_error",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: 'start\nend', Exit: None",
+      "actual": "Output: 'start\nend', Exit: 0",
+      "error_msg": "",
+      "command": "echo start; nonexistentcommand; echo end"
+    },
+    {
+      "name": "sequence_exit_codes",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: 'success\nafter_false', Exit: None",
+      "actual": "Output: 'success\nafter_false', Exit: 0",
+      "error_msg": "",
+      "command": "true; echo success; false; echo after_false"
+    },
+    {
+      "name": "sequence_with_quotes",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: 'first part\nsecond part', Exit: None",
+      "actual": "Output: 'first part\nsecond part', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'first part'; echo \"second part\""
+    },
+    {
+      "name": "long_sequence",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: '0\n1\n2\n3\n4', Exit: None",
+      "actual": "Output: '0\n1\n2\n3\n4', Exit: 0",
+      "error_msg": "",
+      "command": "echo 0; echo 1; echo 2; echo 3; echo 4"
+    },
+    {
+      "name": "sequence_env_vars",
+      "category": "semicolon",
+      "passed": true,
+      "expected": "Output: '12', Exit: None",
+      "actual": "Output: '12', Exit: 0",
+      "error_msg": "",
+      "command": "export A=1; export B=2; echo $A$B"
+    },
+    {
+      "name": "sequence_only_semicolons",
+      "category": "semicolon",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": " Exit code mismatch. Expected: 0, Got: 2",
+      "command": ";;;"
+    },
+    {
+      "name": "sequence_trailing_semicolon",
+      "category": "semicolon",
+      "passed": false,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "Output mismatch. Expected: 'hello', Got: ''",
+      "command": "echo hello;"
+    },
+    {
+      "name": "sequence_leading_semicolon",
+      "category": "semicolon",
+      "passed": false,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "Output mismatch. Expected: 'hello', Got: ''",
+      "command": ";echo hello"
+    },
+    {
+      "name": "unclosed_single_quote",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 2",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "",
+      "command": "echo 'unclosed"
+    },
+    {
+      "name": "unclosed_double_quote",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 2",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "",
+      "command": "echo \"unclosed"
+    },
+    {
+      "name": "invalid_pipe_start",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 2",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "",
+      "command": "| echo hello"
+    },
+    {
+      "name": "invalid_pipe_end",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 2",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "",
+      "command": "echo hello |"
+    },
+    {
+      "name": "double_pipe",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 2",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "",
+      "command": "echo hello || echo world"
+    },
+    {
+      "name": "invalid_redirect_input",
+      "category": "errors",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: -6",
+      "error_msg": " Exit code mismatch. Expected: 1, Got: -6",
+      "command": "cat < /nonexistent/file"
+    },
+    {
+      "name": "invalid_redirect_output",
+      "category": "errors",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: -6",
+      "error_msg": " Exit code mismatch. Expected: 1, Got: -6",
+      "command": "echo test > /root/cannot_write"
+    },
+    {
+      "name": "command_not_found",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 127",
+      "actual": "Output: '', Exit: 127",
+      "error_msg": "",
+      "command": "nonexistentcommand123"
+    },
+    {
+      "name": "invalid_builtin_args",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: 1",
+      "error_msg": "",
+      "command": "cd too many args"
+    },
+    {
+      "name": "export_invalid",
+      "category": "errors",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": " Exit code mismatch. Expected: 1, Got: 0",
+      "command": "export =value"
+    },
+    {
+      "name": "export_invalid_name",
+      "category": "errors",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": " Exit code mismatch. Expected: 1, Got: 0",
+      "command": "export 123VAR=value"
+    },
+    {
+      "name": "permission_denied_read",
+      "category": "errors",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: 'test', Exit: 0",
+      "error_msg": " Exit code mismatch. Expected: 1, Got: 0",
+      "command": "cat /tmp/tmp3xc8zoh4/restricted"
+    },
+    {
+      "name": "cd_to_file",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: 1",
+      "error_msg": "",
+      "command": "cd /etc/passwd"
+    },
+    {
+      "name": "cd_permission_denied",
+      "category": "errors",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 1",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": " Exit code mismatch. Expected: 1, Got: 0",
+      "command": "cd /root/.ssh"
+    },
+    {
+      "name": "pipe_to_invalid_command",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 127",
+      "actual": "Output: '', Exit: 127",
+      "error_msg": "",
+      "command": "echo hello | nonexistentcommand"
+    },
+    {
+      "name": "invalid_command_pipe",
+      "category": "errors",
+      "passed": false,
+      "expected": "Output: 'None', Exit: 127",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": " Exit code mismatch. Expected: 127, Got: 0",
+      "command": "nonexistentcommand | cat"
+    },
+    {
+      "name": "unset_readonly_var",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "unset PATH"
+    },
+    {
+      "name": "empty_command",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": ""
+    },
+    {
+      "name": "spaces_only",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "   "
+    },
+    {
+      "name": "tabs_only",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "\t\t"
+    },
+    {
+      "name": "newlines_only",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "\n\n"
+    },
+    {
+      "name": "exit_out_of_range",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "exit 256"
+    },
+    {
+      "name": "exit_negative",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 255",
+      "actual": "Output: '', Exit: 255",
+      "error_msg": "",
+      "command": "exit -1"
+    },
+    {
+      "name": "exit_string",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 2",
+      "actual": "Output: '', Exit: 2",
+      "error_msg": "",
+      "command": "exit hello"
+    },
+    {
+      "name": "very_long_line",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', Exit: None",
+      "actual": "Output: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', Exit: -6",
+      "error_msg": "",
+      "command": "echo aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "name": "ctrl_c_simulation",
+      "category": "errors",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 0",
+      "actual": "Output: '', Exit: 0",
+      "error_msg": "",
+      "command": "sleep 1"
+    },
+    {
+      "name": "long_echo",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', Exit: None",
+      "actual": "Output: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', Exit: -6",
+      "error_msg": "",
+      "command": "echo aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "name": "very_long_echo",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', Exit: None",
+      "actual": "Output: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', Exit: -6",
+      "error_msg": "",
+      "command": "echo xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    {
+      "name": "multiple_spaces",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "echo    hello     world"
+    },
+    {
+      "name": "mixed_whitespace",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "echo\t\thello\t\tworld"
+    },
+    {
+      "name": "leading_trailing_spaces",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "   echo hello world   "
+    },
+    {
+      "name": "special_chars",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'special: !@#$%^&*()', Exit: None",
+      "actual": "Output: 'special: !@#$%^&*()', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'special: !@#$%^&*()'"
+    },
+    {
+      "name": "unicode_chars",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'h\u00e9llo w\u00f6rld', Exit: None",
+      "actual": "Output: 'h\u00e9llo w\u00f6rld', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'h\u00e9llo w\u00f6rld'"
+    },
+    {
+      "name": "numbers_and_symbols",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '1234567890!@#$%^&*()', Exit: None",
+      "actual": "Output: '1234567890!@#$%^&*()', Exit: 0",
+      "error_msg": "",
+      "command": "echo '1234567890!@#$%^&*()'"
+    },
+    {
+      "name": "many_arguments",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'arg0 arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9 arg10 arg11 arg12 arg13 arg14 arg15 arg16 arg17 arg18 arg19 arg20 arg21 arg22 arg23 arg24 arg25 arg26 arg27 arg28 arg29 arg30 arg31 arg32 arg33 arg34 arg35 arg36 arg37 arg38 arg39 arg40 arg41 arg42 arg43 arg44 arg45 arg46 arg47 arg48 arg49 arg50 arg51 arg52 arg53 arg54 arg55 arg56 arg57 arg58 arg59 arg60 arg61 arg62 arg63 arg64 arg65 arg66 arg67 arg68 arg69 arg70 arg71 arg72 arg73 arg74 arg75 arg76 arg77 arg78 arg79 arg80 arg81 arg82 arg83 arg84 arg85 arg86 arg87 arg88 arg89 arg90 arg91 arg92 arg93 arg94 arg95 arg96 arg97 arg98 arg99', Exit: None",
+      "actual": "Output: 'arg0 arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9 arg10 arg11 arg12 arg13 arg14 arg15 arg16 arg17 arg18 arg19 arg20 arg21 arg22 arg23 arg24 arg25 arg26 arg27 arg28 arg29 arg30 arg31 arg32 arg33 arg34 arg35 arg36 arg37 arg38 arg39 arg40 arg41 arg42 arg43 arg44 arg45 arg46 arg47 arg48 arg49 arg50 arg51 arg52 arg53 arg54 arg55 arg56 arg57 arg58 arg59 arg60 arg61 arg62 arg63 arg64 arg65 arg66 arg67 arg68 arg69 arg70 arg71 arg72 arg73 arg74 arg75 arg76 arg77 arg78 arg79 arg80 arg81 arg82 arg83 arg84 arg85 arg86 arg87 arg88 arg89 arg90 arg91 arg92 arg93 arg94 arg95 arg96 arg97 arg98 arg99', Exit: 0",
+      "error_msg": "",
+      "command": "echo arg0 arg1 arg2 arg3 arg4 arg5 arg6 arg7 arg8 arg9 arg10 arg11 arg12 arg13 arg14 arg15 arg16 arg17 arg18 arg19 arg20 arg21 arg22 arg23 arg24 arg25 arg26 arg27 arg28 arg29 arg30 arg31 arg32 arg33 arg34 arg35 arg36 arg37 arg38 arg39 arg40 arg41 arg42 arg43 arg44 arg45 arg46 arg47 arg48 arg49 arg50 arg51 arg52 arg53 arg54 arg55 arg56 arg57 arg58 arg59 arg60 arg61 arg62 arg63 arg64 arg65 arg66 arg67 arg68 arg69 arg70 arg71 arg72 arg73 arg74 arg75 arg76 arg77 arg78 arg79 arg80 arg81 arg82 arg83 arg84 arg85 arg86 arg87 arg88 arg89 arg90 arg91 arg92 arg93 arg94 arg95 arg96 arg97 arg98 arg99"
+    },
+    {
+      "name": "nested_quote_complex",
+      "category": "edge_cases",
+      "passed": false,
+      "expected": "Output: 'He said \"Hello\" to me', Exit: None",
+      "actual": "Output: 'He said Hello to me', Exit: 0",
+      "error_msg": "Output mismatch. Expected: 'He said \"Hello\" to me', Got: 'He said Hello to me'",
+      "command": "echo 'He said \"Hello\" to me'"
+    },
+    {
+      "name": "long_pipe_chain",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'test', Exit: None",
+      "actual": "Output: 'test', Exit: 0",
+      "error_msg": "",
+      "command": "echo test | cat | cat | cat | cat | cat | cat | cat | cat | cat | cat"
+    },
+    {
+      "name": "many_semicolon_commands",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19', Exit: None",
+      "actual": "Output: '0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n11\n12\n13\n14\n15\n16\n17\n18\n19', Exit: 0",
+      "error_msg": "",
+      "command": "echo 0; echo 1; echo 2; echo 3; echo 4; echo 5; echo 6; echo 7; echo 8; echo 9; echo 10; echo 11; echo 12; echo 13; echo 14; echo 15; echo 16; echo 17; echo 18; echo 19"
+    },
+    {
+      "name": "var_with_numbers",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'test', Exit: None",
+      "actual": "Output: 'test', Exit: 0",
+      "error_msg": "",
+      "command": "export VAR123=test; echo $VAR123"
+    },
+    {
+      "name": "var_with_underscores",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'test', Exit: None",
+      "actual": "Output: 'test', Exit: 0",
+      "error_msg": "",
+      "command": "export MY_VAR_123=test; echo $MY_VAR_123"
+    },
+    {
+      "name": "relative_path",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: './test/../test', Exit: None",
+      "actual": "Output: './test/../test', Exit: 0",
+      "error_msg": "",
+      "command": "echo ./test/../test"
+    },
+    {
+      "name": "absolute_path",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '/usr/bin/test', Exit: None",
+      "actual": "Output: '/usr/bin/test', Exit: 0",
+      "error_msg": "",
+      "command": "echo /usr/bin/test"
+    },
+    {
+      "name": "command_substitution_syntax",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '`date`', Exit: None",
+      "actual": "Output: '`date`', Exit: 0",
+      "error_msg": "",
+      "command": "echo `date`"
+    },
+    {
+      "name": "dollar_paren_syntax",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '$(date)', Exit: None",
+      "actual": "Output: '$(date)', Exit: 0",
+      "error_msg": "",
+      "command": "echo $(date)"
+    },
+    {
+      "name": "arithmetic_syntax",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '$((2+2))', Exit: None",
+      "actual": "Output: '$((2+2))', Exit: 0",
+      "error_msg": "",
+      "command": "echo $((2+2))"
+    },
+    {
+      "name": "brace_expansion_syntax",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '{a,b,c}', Exit: None",
+      "actual": "Output: '{a,b,c}', Exit: 0",
+      "error_msg": "",
+      "command": "echo {a,b,c}"
+    },
+    {
+      "name": "tilde_in_quotes",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '~', Exit: None",
+      "actual": "Output: '~', Exit: 0",
+      "error_msg": "",
+      "command": "echo '~'"
+    },
+    {
+      "name": "tilde_with_user",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '/root', Exit: 0",
+      "actual": "Output: '/root', Exit: 0",
+      "error_msg": "",
+      "command": "echo ~root"
+    },
+    {
+      "name": "zero_length_var",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: '[]', Exit: None",
+      "actual": "Output: '[]', Exit: 0",
+      "error_msg": "",
+      "command": "export EMPTY=; echo [$EMPTY]"
+    },
+    {
+      "name": "zero_length_command",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'None', Exit: 127",
+      "actual": "Output: '', Exit: 127",
+      "error_msg": "",
+      "command": "export CMD=; $CMD echo hello"
+    },
+    {
+      "name": "tab_character",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'hello\tworld', Exit: None",
+      "actual": "Output: 'hello\tworld', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'hello\tworld'"
+    },
+    {
+      "name": "newline_in_quotes",
+      "category": "edge_cases",
+      "passed": false,
+      "expected": "Output: 'line1\nline2', Exit: None",
+      "actual": "Output: 'line1', Exit: 127",
+      "error_msg": "Output mismatch. Expected: 'line1\nline2', Got: 'line1'",
+      "command": "echo line1\nline2"
+    },
+    {
+      "name": "hidden_file_access",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'hidden content', Exit: None",
+      "actual": "Output: 'hidden content', Exit: 0",
+      "error_msg": "",
+      "command": "cat /tmp/tmp3xc8zoh4/.hidden_file"
+    },
+    {
+      "name": "multiple_output_redirects",
+      "category": "edge_cases",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello > /tmp/tmp3xc8zoh4/multi_out > /tmp/tmp3xc8zoh4/multi_out; cat /tmp/tmp3xc8zoh4/multi_out"
+    },
+    {
+      "name": "sigint_handling",
+      "category": "signals",
+      "passed": false,
+      "expected": "Shell continues after SIGINT",
+      "actual": "[Errno 2] No such file or directory: './minishell'",
+      "error_msg": "Signal test failed: [Errno 2] No such file or directory: './minishell'",
+      "command": "SIGINT test"
+    },
+    {
+      "name": "pipe_with_input_redirect",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'line2', Exit: None",
+      "actual": "Output: 'line2', Exit: 0",
+      "error_msg": "",
+      "command": "cat < /tmp/tmp3xc8zoh4/combo_in.txt | grep line2"
+    },
+    {
+      "name": "pipe_with_output_redirect",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "echo hello | cat > /tmp/tmp3xc8zoh4/combo_out.txt; cat /tmp/tmp3xc8zoh4/combo_out.txt"
+    },
+    {
+      "name": "pipe_with_env_vars",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'hello', Exit: None",
+      "actual": "Output: 'hello', Exit: 0",
+      "error_msg": "",
+      "command": "export WORD=hello; echo $WORD | cat"
+    },
+    {
+      "name": "env_var_in_pipe",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: '', Exit: 1",
+      "actual": "Output: '', Exit: 1",
+      "error_msg": "",
+      "command": "echo test | grep $USER"
+    },
+    {
+      "name": "semicolon_pipe_combo",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'first\nsecond', Exit: None",
+      "actual": "Output: 'first\nsecond', Exit: 0",
+      "error_msg": "",
+      "command": "echo first | cat; echo second | cat"
+    },
+    {
+      "name": "complex_semicolon_pipe",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'start\nmiddle\nend', Exit: None",
+      "actual": "Output: 'start\nmiddle\nend', Exit: 0",
+      "error_msg": "",
+      "command": "echo start; echo middle | cat | cat; echo end"
+    },
+    {
+      "name": "semicolon_redirect_combo",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'first\nsecond', Exit: None",
+      "actual": "Output: 'first\nsecond', Exit: 0",
+      "error_msg": "",
+      "command": "echo first > /tmp/tmp3xc8zoh4/seq_redir.txt; echo second >> /tmp/tmp3xc8zoh4/seq_redir.txt; cat /tmp/tmp3xc8zoh4/seq_redir.txt"
+    },
+    {
+      "name": "quotes_env_combo",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'Value: test', Exit: None",
+      "actual": "Output: 'Value: test', Exit: 0",
+      "error_msg": "",
+      "command": "export VAR=test; echo \"Value: $VAR\""
+    },
+    {
+      "name": "single_quotes_no_env",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'Value: $VAR', Exit: None",
+      "actual": "Output: 'Value: $VAR', Exit: 0",
+      "error_msg": "",
+      "command": "export VAR=test; echo 'Value: $VAR'"
+    },
+    {
+      "name": "quotes_pipe_combo",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'hello world' | cat"
+    },
+    {
+      "name": "complex_quotes_pipe",
+      "category": "combinations",
+      "passed": false,
+      "expected": "Output: 'He said 'hello'', Exit: None",
+      "actual": "Output: 'He said hello', Exit: 0",
+      "error_msg": "Output mismatch. Expected: 'He said 'hello'', Got: 'He said hello'",
+      "command": "echo \"He said 'hello'\" | cat"
+    },
+    {
+      "name": "all_features_combo",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'hello world\ndone', Exit: None",
+      "actual": "Output: 'hello world\ndone', Exit: 0",
+      "error_msg": "",
+      "command": "export MSG=\"hello world\"; echo \"$MSG\" > /tmp/tmp3xc8zoh4/complex.txt; cat /tmp/tmp3xc8zoh4/complex.txt | cat; echo done"
+    },
+    {
+      "name": "ultra_complex",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'start test\nmiddle\nend test', Exit: None",
+      "actual": "Output: 'start test\nmiddle\nend test', Exit: 0",
+      "error_msg": "",
+      "command": "export VAR=test; echo \"start $VAR\" | cat; echo 'middle'; echo \"end $VAR\" | cat"
+    },
+    {
+      "name": "error_in_pipe_sequence",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'start\nend', Exit: None",
+      "actual": "Output: 'start\nend', Exit: 0",
+      "error_msg": "",
+      "command": "echo start; echo middle | nonexistentcmd; echo end"
+    },
+    {
+      "name": "nested_redirect_pipe",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'nested content', Exit: None",
+      "actual": "Output: 'nested content', Exit: 0",
+      "error_msg": "",
+      "command": "cat < /tmp/tmp3xc8zoh4/nested.txt | cat | cat"
+    },
+    {
+      "name": "multi_env_complex",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'hello world', Exit: None",
+      "actual": "Output: 'hello world', Exit: 0",
+      "error_msg": "",
+      "command": "export A=hello; export B=world; echo \"$A $B\" | cat"
+    },
+    {
+      "name": "quotes_semicolon_pipe",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'first part\nsecond part', Exit: None",
+      "actual": "Output: 'first part\nsecond part', Exit: 0",
+      "error_msg": "",
+      "command": "echo 'first part'; echo 'second part' | cat"
+    },
+    {
+      "name": "long_combination",
+      "category": "combinations",
+      "passed": true,
+      "expected": "Output: 'start\ntest\nmiddle\nend', Exit: None",
+      "actual": "Output: 'start\ntest\nmiddle\nend', Exit: 0",
+      "error_msg": "",
+      "command": "export VAR=test; echo start; echo $VAR | cat; echo middle; echo end"
+    }
+  ]
+}

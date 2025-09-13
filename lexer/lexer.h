@@ -20,6 +20,7 @@ typedef enum e_token_type
 {
 	TOKEN_WORD,
 	TOKEN_PIPE,
+	TOKEN_SEMICOLON,
 	TOKEN_REDIR_IN,
 	TOKEN_REDIR_OUT,
 	TOKEN_REDIR_APPEND,
@@ -41,28 +42,23 @@ typedef struct s_lexer
 	char			current_char;
 }	t_lexer;
 
-// lexer.c
 t_token		*lexer(char *input);
 
-// utils.c
 void		advance_char(t_lexer *lexer);
 void		cleanup_tokens(t_token *tokens);
 char		peek_char(t_lexer *lexer, int offset);
 t_token		*create_token(t_token_type type, char *value);
 void		add_token_to_list(t_token **head, t_token *new_token);
 
-// is_it.c
 bool		is_quote(char c);
 bool		is_operator(char c);
 bool		is_word_char(char c);
 bool		is_whitespace(char c);
 bool		is_double_operator(t_lexer *lexer);
 
-// read_token.c
 t_token		*read_word(t_lexer *lexer);
 t_token		*read_operator(t_lexer *lexer);
 
-// libft.c
 size_t		ft_strlen(const char *str);
 char		*ft_strdup(const char *str);
 

@@ -1,0 +1,101 @@
+# Valgrind suppression file for minishell
+# Suppresses known readline and ncurses library leaks
+
+{
+   readline_malloc
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.2
+   ...
+}
+
+{
+   readline_realloc
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:xrealloc
+   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.2
+   ...
+}
+
+{
+   readline_calloc
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.2
+   ...
+}
+
+{
+   ncurses_malloc
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.6.4
+   ...
+}
+
+{
+   ncurses_strdup
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:strdup
+   obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.6.4
+   ...
+}
+
+{
+   ncurses_realloc
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:realloc
+   fun:_nc_doalloc
+   obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.6.4
+   ...
+}
+
+{
+   ncurses_calloc
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.6.4
+   ...
+}
+
+{
+   tsearch_leak
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:tsearch
+   obj:/usr/lib/x86_64-linux-gnu/libtinfo.so.6.4
+   ...
+}
+
+{
+   readline_history
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:*history*
+   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.2
+   ...
+}
+
+{
+   readline_keymap
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:xmalloc
+   fun:rl_make_bare_keymap
+   obj:/usr/lib/x86_64-linux-gnu/libreadline.so.8.2
+   ...
+}

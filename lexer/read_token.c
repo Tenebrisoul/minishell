@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   read_token.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ivar <ivar@student.42kocaeli.com.tr>       +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/08 20:39:22 by ivar              #+#    #+#             */
-/*   Updated: 2025/07/08 21:45:21 by ivar             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "lexer.h"
 #include <stdlib.h>
 
@@ -32,6 +20,8 @@ t_token	*read_operator(t_lexer *lexer)
 		advance_char(lexer);
 		if (c == '|')
 			return (create_token(TOKEN_PIPE, "|"));
+		else if (c == ';')
+			return (create_token(TOKEN_SEMICOLON, ";"));
 		else if (c == '<')
 			return (create_token(TOKEN_REDIR_IN, "<"));
 		else if (c == '>')

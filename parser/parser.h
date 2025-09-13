@@ -19,6 +19,7 @@ typedef enum e_node_type
 {
 	NODE_COMMAND,
 	NODE_PIPELINE,
+	NODE_SEQUENCE,
 }	t_node_type;
 
 typedef enum e_redir_type
@@ -54,6 +55,11 @@ typedef struct s_ast_node
 			struct s_ast_node	*left;
 			struct s_ast_node	*right;
 		}	s_pipeline;
+		struct
+		{
+			struct s_ast_node	*left;
+			struct s_ast_node	*right;
+		}	s_sequence;
 	}	u_data;
 }	t_ast_node;
 

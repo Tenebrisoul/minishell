@@ -1,0 +1,2 @@
+minishell: echa: command not found
+free(): double free detected in tcache 2
