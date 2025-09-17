@@ -233,7 +233,6 @@ static void exec_child_process(const t_command *cmd, char **argv)
 	exe = find_exec_in_path(argv[0]);
 	if (!exe)
 	{
-		write(2, "minishell: ", 11);
 		write(2, cmd->args[0], sh_strlen(cmd->args[0]));
 		write(2, ": command not found\n", 20);
 		exit(127);

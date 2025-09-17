@@ -1,0 +1,859 @@
+{
+  "echo": [
+    {
+      "name": "basic_echo",
+      "command": "echo hello world",
+      "description": "Basic echo test",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_with_quotes",
+      "command": "echo \"hello world\"",
+      "description": "Echo with double quotes",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_single_quotes",
+      "command": "echo 'hello world'",
+      "description": "Echo with single quotes",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_empty",
+      "command": "echo",
+      "description": "Echo without arguments",
+      "expected_output": "\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_n_flag",
+      "command": "echo -n hello",
+      "description": "Echo with -n flag",
+      "expected_output": "hello",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_multiple_n",
+      "command": "echo -n -n hello",
+      "description": "Echo with multiple -n flags",
+      "expected_output": "hello",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_n_combined",
+      "command": "echo -nnnn hello",
+      "description": "Echo with combined -n flags",
+      "expected_output": "hello",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_n_quoted",
+      "command": "echo \"-n\" hello",
+      "description": "Echo with quoted -n",
+      "expected_output": "hello",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_empty_quotes",
+      "command": "echo \"\"",
+      "description": "Echo with empty double quotes",
+      "expected_output": "\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_empty_single_quotes",
+      "command": "echo ''",
+      "description": "Echo with empty single quotes",
+      "expected_output": "\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "echo_invalid_flag",
+      "command": "echo -x hello",
+      "description": "Echo with invalid flag (should treat as argument)",
+      "expected_output": "-x hello\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "cd": [
+    {
+      "name": "cd_home",
+      "command": "cd && pwd",
+      "description": "Change to home directory",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "cd_dot",
+      "command": "cd . && pwd",
+      "description": "Change to current directory",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "cd_parent",
+      "command": "cd .. && pwd",
+      "description": "Change to parent directory",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "cd_root",
+      "command": "cd / && pwd",
+      "description": "Change to root directory",
+      "expected_output": "/\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "cd_nonexistent",
+      "command": "cd /nonexistent_directory_test_123",
+      "description": "Change to non-existent directory",
+      "expected_exit_code": 1
+    },
+    {
+      "name": "cd_too_many_args",
+      "command": "cd /tmp /usr",
+      "description": "CD with too many arguments",
+      "expected_exit_code": 1
+    },
+    {
+      "name": "cd_tilde",
+      "command": "cd ~ && pwd",
+      "description": "Change to home using tilde",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "cd_empty_string",
+      "command": "cd \"\"",
+      "description": "CD with empty string",
+      "expected_exit_code": 1
+    }
+  ],
+  "pwd": [
+    {
+      "name": "basic_pwd",
+      "command": "pwd",
+      "description": "Basic pwd test",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "pwd_with_args",
+      "command": "pwd arg1",
+      "description": "PWD with arguments (should error)",
+      "expected_exit_code": 1
+    },
+    {
+      "name": "pwd_after_cd",
+      "command": "cd /tmp && pwd",
+      "description": "PWD after changing directory",
+      "expected_output": "/tmp\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "env": [
+    {
+      "name": "basic_env",
+      "command": "env | grep HOME",
+      "description": "Basic env test - find HOME",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "env_with_args",
+      "command": "env arg1 2>/dev/null || echo \"env error\"",
+      "description": "ENV with arguments (should error)",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "env_grep_custom",
+      "command": "export CUSTOM_VAR=test123 && env | grep CUSTOM_VAR",
+      "description": "Env shows custom exported variables",
+      "expected_output": "CUSTOM_VAR=test123\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "export": [
+    {
+      "name": "export_simple",
+      "command": "export TEST=hello && echo $TEST",
+      "description": "Simple export test",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "export_empty",
+      "command": "export TEST= && echo \"[$TEST]\"",
+      "description": "Export empty variable",
+      "expected_output": "[]\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "export_multiple",
+      "command": "export A=1 B=2 && echo $A$B",
+      "description": "Export multiple variables",
+      "expected_output": "12\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "export_invalid_name",
+      "command": "export 123=value 2>/dev/null || echo \"invalid name\"",
+      "description": "Export with invalid variable name",
+      "expected_output": "invalid name\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "export_no_equals",
+      "command": "export PATH && echo \"export success\"",
+      "description": "Export existing variable",
+      "expected_output": "export success\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "export_with_spaces",
+      "command": "export TEST=\"hello world\" && echo $TEST",
+      "description": "Export variable with spaces",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "export_display_all",
+      "command": "export | grep HOME",
+      "description": "Export without arguments shows all exported vars",
+      "expected_exit_code": 0
+    }
+  ],
+  "unset": [
+    {
+      "name": "unset_variable",
+      "command": "export TEST=hello && unset TEST && echo \"[$TEST]\"",
+      "description": "Unset a variable",
+      "expected_output": "[]\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "unset_nonexistent",
+      "command": "unset NONEXISTENT_VAR_12345",
+      "description": "Unset non-existent variable",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "unset_multiple",
+      "command": "export A=1 B=2 && unset A B && echo \"[$A][$B]\"",
+      "description": "Unset multiple variables",
+      "expected_output": "[][]\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "unset_path",
+      "command": "unset PATH && echo \"PATH unset\"",
+      "description": "Unset PATH variable",
+      "expected_output": "PATH unset\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "exit": [
+    {
+      "name": "exit_zero",
+      "command": "exit 0",
+      "description": "Exit with code 0",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "exit_one",
+      "command": "exit 1",
+      "description": "Exit with code 1",
+      "expected_exit_code": 1
+    },
+    {
+      "name": "exit_42",
+      "command": "exit 42",
+      "description": "Exit with code 42",
+      "expected_exit_code": 42
+    },
+    {
+      "name": "exit_negative",
+      "command": "exit -1",
+      "description": "Exit with negative code",
+      "expected_exit_code": 255
+    },
+    {
+      "name": "exit_256",
+      "command": "exit 256",
+      "description": "Exit with code 256 (wraps to 0)",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "exit_invalid_arg",
+      "command": "exit abc",
+      "description": "Exit with invalid argument",
+      "expected_exit_code": 255
+    },
+    {
+      "name": "exit_with_last_status",
+      "command": "false; exit",
+      "description": "Exit without argument uses last command status",
+      "expected_exit_code": 1
+    }
+  ],
+  "pipes": [
+    {
+      "name": "simple_pipe",
+      "command": "echo hello | cat",
+      "description": "Simple pipe test",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "multiple_pipes",
+      "command": "echo hello | cat | cat",
+      "description": "Multiple pipes",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "pipe_with_grep",
+      "command": "echo hello | grep hello",
+      "description": "Pipe with grep",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "pipe_grep_nomatch",
+      "command": "echo hello | grep world",
+      "description": "Pipe with grep (no match)",
+      "expected_output": "",
+      "expected_exit_code": 1
+    },
+    {
+      "name": "pipe_wc",
+      "command": "echo \"hello world\" | wc -w",
+      "description": "Pipe with word count",
+      "expected_output": "2\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "pipe_long_chain",
+      "command": "echo hello | cat | cat | cat | cat",
+      "description": "Long pipe chain",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "builtin_with_pipe",
+      "command": "pwd | cat",
+      "description": "Builtin command with pipe",
+      "expected_exit_code": 0
+    }
+  ],
+  "redirections": [
+    {
+      "name": "output_redirect",
+      "command": "echo hello > test_output.txt && cat test_output.txt",
+      "description": "Output redirection",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0,
+      "creates_files": ["test_output.txt"]
+    },
+    {
+      "name": "append_redirect",
+      "command": "echo hello > test_append.txt && echo world >> test_append.txt && cat test_append.txt",
+      "description": "Append redirection",
+      "expected_output": "hello\nworld\n",
+      "expected_exit_code": 0,
+      "creates_files": ["test_append.txt"]
+    },
+    {
+      "name": "input_redirect",
+      "command": "echo test > input_test.txt && cat < input_test.txt",
+      "description": "Input redirection",
+      "expected_output": "test\n",
+      "expected_exit_code": 0,
+      "creates_files": ["input_test.txt"]
+    },
+    {
+      "name": "redirect_overwrite",
+      "command": "echo first > overwrite.txt && echo second > overwrite.txt && cat overwrite.txt",
+      "description": "Redirection overwrite",
+      "expected_output": "second\n",
+      "expected_exit_code": 0,
+      "creates_files": ["overwrite.txt"]
+    },
+    {
+      "name": "redirect_to_dev_null",
+      "command": "echo hello > /dev/null && echo success",
+      "description": "Redirect to /dev/null",
+      "expected_output": "success\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "multiple_redirections",
+      "command": "echo test > file1.txt > file2.txt && cat file2.txt",
+      "description": "Multiple output redirections (last one wins)",
+      "expected_output": "test\n",
+      "expected_exit_code": 0,
+      "creates_files": ["file1.txt", "file2.txt"]
+    },
+    {
+      "name": "pipe_with_redirect",
+      "command": "echo hello | cat > pipe_redirect.txt && cat pipe_redirect.txt",
+      "description": "Pipe with output redirection",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0,
+      "creates_files": ["pipe_redirect.txt"]
+    }
+  ],
+  "heredoc": [
+    {
+      "name": "simple_heredoc",
+      "command": "cat << EOF\nhello world\nEOF",
+      "description": "Simple heredoc test",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "heredoc_with_variables",
+      "command": "export TEST=world && cat << EOF\nhello $TEST\nEOF",
+      "description": "Heredoc with variable expansion",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "heredoc_quoted_delimiter",
+      "command": "cat << \"EOF\"\nhello world\nEOF",
+      "description": "Heredoc with quoted delimiter (no expansion)",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "heredoc_multiple_lines",
+      "command": "cat << END\nline 1\nline 2\nline 3\nEND",
+      "description": "Multi-line heredoc",
+      "expected_output": "line 1\nline 2\nline 3\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "heredoc_empty",
+      "command": "cat << EOF\nEOF",
+      "description": "Empty heredoc",
+      "expected_output": "",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "heredoc_with_pipe",
+      "command": "cat << EOF | grep hello\nhello world\ntest line\nEOF",
+      "description": "Heredoc with pipe",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "variables": [
+    {
+      "name": "home_variable",
+      "command": "echo $HOME",
+      "description": "HOME variable expansion",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "path_variable",
+      "command": "echo $PATH | grep bin",
+      "description": "PATH variable expansion",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "exit_status_true",
+      "command": "true && echo $?",
+      "description": "Exit status after true",
+      "expected_output": "0\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "exit_status_false",
+      "command": "false; echo $?",
+      "description": "Exit status after false",
+      "expected_output": "1\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "question_mark_command_not_found",
+      "command": "nonexistent_cmd_xyz 2>/dev/null; echo $?",
+      "description": "Exit status after command not found",
+      "expected_output": "127\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "undefined_variable",
+      "command": "echo \"[$UNDEFINED_VARIABLE_123]\"",
+      "description": "Undefined variable expansion",
+      "expected_output": "[]\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "variable_concatenation",
+      "command": "export A=hello B=world && echo $A$B",
+      "description": "Variable concatenation",
+      "expected_output": "helloworld\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "variable_with_text",
+      "command": "export TEST=world && echo \"Hello $TEST!\"",
+      "description": "Variable expansion with surrounding text",
+      "expected_output": "Hello world!\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "dollar_sign_alone",
+      "command": "echo $",
+      "description": "Dollar sign alone",
+      "expected_output": "$\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "quotes": [
+    {
+      "name": "double_quotes_with_var",
+      "command": "export TEST=world && echo \"hello $TEST\"",
+      "description": "Variable expansion in double quotes",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "single_quotes_no_var",
+      "command": "export TEST=world && echo 'hello $TEST'",
+      "description": "No variable expansion in single quotes",
+      "expected_output": "hello $TEST\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "mixed_quotes_double_single",
+      "command": "echo \"hello 'world'\"",
+      "description": "Mixed quotes - double containing single",
+      "expected_output": "hello 'world'\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "mixed_quotes_single_double",
+      "command": "echo 'hello \"world\"'",
+      "description": "Mixed quotes - single containing double",
+      "expected_output": "hello \"world\"\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "concatenated_quotes",
+      "command": "echo \"hello\"world",
+      "description": "Concatenated quoted and unquoted text",
+      "expected_output": "helloworld\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "quotes_with_spaces",
+      "command": "echo \"  hello  world  \"",
+      "description": "Quotes preserving spaces",
+      "expected_output": "  hello  world  \n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "double_quotes_escaped",
+      "command": "echo \"hello\\\"world\\\"\"",
+      "description": "Double quotes with escaped quotes",
+      "expected_output": "hello\"world\"\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "syntax_errors": [
+    {
+      "name": "unclosed_quote_double",
+      "command": "echo \"hello",
+      "description": "Unclosed double quote",
+      "expected_exit_code": 258
+    },
+    {
+      "name": "unclosed_quote_single",
+      "command": "echo 'hello",
+      "description": "Unclosed single quote",
+      "expected_exit_code": 258
+    },
+    {
+      "name": "pipe_at_start",
+      "command": "| echo hello",
+      "description": "Pipe at start of command",
+      "expected_exit_code": 258
+    },
+    {
+      "name": "pipe_at_end",
+      "command": "echo hello |",
+      "description": "Pipe at end of command",
+      "expected_exit_code": 258
+    },
+    {
+      "name": "double_pipe",
+      "command": "echo hello || echo world",
+      "description": "Double pipe (not supported)",
+      "expected_exit_code": 258
+    },
+    {
+      "name": "double_ampersand",
+      "command": "echo hello && echo world",
+      "description": "Double ampersand (not supported)",
+      "expected_exit_code": 258
+    },
+    {
+      "name": "multiple_semicolons",
+      "command": "echo hello;; echo world",
+      "description": "Multiple semicolons",
+      "expected_exit_code": 258
+    },
+    {
+      "name": "redirect_no_file",
+      "command": "echo hello >",
+      "description": "Redirection without filename",
+      "expected_exit_code": 258
+    },
+    {
+      "name": "input_redirect_no_file",
+      "command": "cat <",
+      "description": "Input redirection without filename",
+      "expected_exit_code": 258
+    }
+  ],
+  "errors": [
+    {
+      "name": "command_not_found",
+      "command": "nonexistent_command_12345 2>/dev/null || echo \"command not found\"",
+      "description": "Command not found error",
+      "expected_output": "command not found\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "file_not_found",
+      "command": "cat nonexistent_file_12345.txt 2>/dev/null || echo \"file not found\"",
+      "description": "File not found error",
+      "expected_output": "file not found\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "permission_denied",
+      "command": "echo test > /root/test.txt 2>/dev/null || echo \"permission denied\"",
+      "description": "Permission denied error",
+      "expected_output": "permission denied\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "absolute_path_not_found",
+      "command": "/nonexistent/command 2>/dev/null || echo \"absolute path error\"",
+      "description": "Absolute path command not found",
+      "expected_output": "absolute path error\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "relative_path_not_found",
+      "command": "./nonexistent_command 2>/dev/null || echo \"relative path error\"",
+      "description": "Relative path command not found",
+      "expected_output": "relative path error\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "signals": [
+    {
+      "name": "ctrl_c_interactive",
+      "command": "sleep 2",
+      "description": "Test Ctrl+C signal handling",
+      "interactive": true,
+      "expected_exit_code": 130
+    },
+    {
+      "name": "ctrl_d_exit",
+      "command": "",
+      "description": "Test Ctrl+D (EOF) handling",
+      "interactive": true,
+      "expected_exit_code": 0
+    },
+    {
+      "name": "signal_during_command",
+      "command": "sleep 1",
+      "description": "Signal handling during command execution",
+      "interactive": true,
+      "timeout": 3,
+      "expected_exit_code": 130
+    }
+  ],
+  "complex": [
+    {
+      "name": "pipe_and_redirect",
+      "command": "echo hello | cat > complex1.txt && cat complex1.txt",
+      "description": "Pipe with output redirection",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0,
+      "creates_files": ["complex1.txt"]
+    },
+    {
+      "name": "multiple_commands_semicolon",
+      "command": "echo first; echo second; echo third",
+      "description": "Multiple commands with semicolon",
+      "expected_output": "first\nsecond\nthird\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "variable_in_pipe",
+      "command": "export MSG=hello && echo $MSG | grep hello",
+      "description": "Variable expansion in pipe",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "cd_and_pwd",
+      "command": "cd /tmp && pwd && cd / && pwd",
+      "description": "Change directory and show path",
+      "expected_output": "/tmp\n/\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "export_and_unset",
+      "command": "export TEMP=test && echo $TEMP && unset TEMP && echo \"[$TEMP]\"",
+      "description": "Export then unset variable",
+      "expected_output": "test\n[]\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "nested_quotes",
+      "command": "echo \"outer 'inner' quotes\"",
+      "description": "Nested quotes test",
+      "expected_output": "outer 'inner' quotes\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "long_pipe_chain",
+      "command": "echo \"test data\" | cat | cat | cat | head -1",
+      "description": "Long chain of pipes",
+      "expected_output": "test data\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "edge_cases": [
+    {
+      "name": "very_long_command",
+      "command": "echo this is a very long command line with many words to test the parser limits and see how it handles really long input that might exceed normal buffer sizes in the shell implementation",
+      "description": "Very long command line",
+      "expected_output": "this is a very long command line with many words to test the parser limits and see how it handles really long input that might exceed normal buffer sizes in the shell implementation\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "many_spaces",
+      "command": "echo    hello    world    with    many    spaces",
+      "description": "Command with many spaces",
+      "expected_output": "hello world with many spaces\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "empty_pipe",
+      "command": "echo \"\" | cat",
+      "description": "Empty string through pipe",
+      "expected_output": "\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "special_characters",
+      "command": "echo \"!@#$%^&*()_+-=[]{}|;:,.<>?\"",
+      "description": "Echo with special characters",
+      "expected_output": "!@#$%^&*()_+-=[]{}|;:,.<>?\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "semicolon_at_end",
+      "command": "echo hello;",
+      "description": "Semicolon at end of command",
+      "expected_output": "hello\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "tabs_and_spaces",
+      "command": "echo\thello\tworld",
+      "description": "Command with tabs",
+      "expected_output": "hello world\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "only_spaces",
+      "command": "     ",
+      "description": "Command with only spaces",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "backslash_at_end",
+      "command": "echo hello\\",
+      "description": "Backslash at end of command",
+      "expected_output": "hello\\\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "dollar_at_end",
+      "command": "echo hello$",
+      "description": "Dollar sign at end",
+      "expected_output": "hello$\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "multiple_dollars",
+      "command": "echo $$",
+      "description": "Multiple dollar signs",
+      "expected_output": "$$\n",
+      "expected_exit_code": 0
+    }
+  ],
+  "minishell_specific": [
+    {
+      "name": "prompt_display",
+      "command": "",
+      "description": "Check minishell prompt display",
+      "interactive": true,
+      "expected_exit_code": 0
+    },
+    {
+      "name": "history_navigation",
+      "command": "echo test1; echo test2",
+      "description": "History navigation test",
+      "interactive": true,
+      "expected_exit_code": 0
+    },
+    {
+      "name": "empty_command_line",
+      "command": "",
+      "description": "Empty command line handling",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "builtin_vs_external",
+      "command": "/bin/echo builtin_test",
+      "description": "External echo vs builtin echo",
+      "expected_output": "builtin_test\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "path_resolution",
+      "command": "ls /bin/ls > /dev/null && echo success",
+      "description": "PATH resolution test",
+      "expected_output": "success\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "working_directory_persistence",
+      "command": "cd /tmp && pwd && cd / && pwd",
+      "description": "Working directory persistence",
+      "expected_output": "/tmp\n/\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "environment_inheritance",
+      "command": "export MINISHELL_TEST=success && env | grep MINISHELL_TEST",
+      "description": "Environment variable inheritance",
+      "expected_output": "MINISHELL_TEST=success\n",
+      "expected_exit_code": 0
+    },
+    {
+      "name": "exit_code_preservation",
+      "command": "(exit 42); echo $?",
+      "description": "Exit code preservation",
+      "expected_output": "42\n",
+      "expected_exit_code": 0
+    }
+  ]
+}

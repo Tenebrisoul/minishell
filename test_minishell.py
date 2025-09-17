@@ -1,1078 +1,892 @@
 #!/usr/bin/env python3
 """
-Minishell Test Suite
-Author: AI Assistant
-Date: 2025-09-17
+École 42 Minishell Test Suite
+Comprehensive testing framework for minishell project
 
-This test suite covers the mandatory functionality of the minishell project:
-- Basic commands
-- Built-in commands (echo -n, cd, pwd, export, unset, env, exit)
-- Redirections (<, >, <<, >>)
-- Pipes (|)
-- Environment variables ($VAR, $?)
-- Quote handling (' and ")
-- Signal handling (basic tests)
-- Essential error cases
-
-Note: Does not test semicolon (;) or backslash (\) as these are explicitly 
-excluded from the mandatory requirements.
+Usage:
+    python3 test_minishell.py <shell_program> [options]
+    
+Examples:
+    python3 test_minishell.py bash
+    python3 test_minishell.py ./minishell
+    python3 test_minishell.py /bin/bash --verbose
+    python3 test_minishell.py ./minishell --category echo
+    python3 test_minishell.py ./minishell --timeout 10
 """
 
-import subprocess
-import os
-import sys
-import tempfile
-import time
-from pathlib import Path
-from typing import List, Dict, Tuple, Optional
 import json
+import subprocess
+import sys
+import os
+import time
+import argparse
 import signal
+from typing import Dict, List, Tuple, Optional
+import tempfile
+import shutil
+from dataclasses import dataclass
+from enum import Enum
+import threading
+from datetime import datetime
+import re
 
-class Colors:
-    """ANSI color codes for terminal output"""
-    RESET = '\033[0m'
-    RED = '\033[31m'
-    GREEN = '\033[32m'
-    YELLOW = '\033[33m'
-    BLUE = '\033[34m'
-    MAGENTA = '\033[35m'
-    CYAN = '\033[36m'
-    WHITE = '\033[37m'
-    BOLD = '\033[1m'
-    DIM = '\033[2m'
-    UNDERLINE = '\033[4m'
-    
-    # Background colors
-    BG_RED = '\033[41m'
-    BG_GREEN = '\033[42m'
-    BG_YELLOW = '\033[43m'
-    BG_BLUE = '\033[44m'
-    BG_MAGENTA = '\033[45m'
-    BG_CYAN = '\033[46m'
-    
-    # Bright colors
-    BRIGHT_RED = '\033[91m'
-    BRIGHT_GREEN = '\033[92m'
-    BRIGHT_YELLOW = '\033[93m'
-    BRIGHT_BLUE = '\033[94m'
-    BRIGHT_MAGENTA = '\033[95m'
-    BRIGHT_CYAN = '\033[96m'
-    BRIGHT_WHITE = '\033[97m'
+class TestResult(Enum):
+    PASSED = "\033[92m✅ PASSED\033[0m"
+    FAILED = "\033[91m❌ FAILED\033[0m"
+    ERROR = "\033[95m💥 ERROR\033[0m"
+    TIMEOUT = "\033[93m⏰ TIMEOUT\033[0m"
+    SKIPPED = "\033[96m⏭️ SKIPPED\033[0m"
 
-class Symbols:
-    """Unicode symbols for better visual output"""
-    CHECK = '✅'
-    CROSS = '❌'
-    WARNING = '⚠️'
-    INFO = 'ℹ️'
-    ROCKET = '🚀'
-    GEAR = '⚙️'
-    BUG = '🐛'
-    TROPHY = '🏆'
-    TARGET = '🎯'
-    CHART = '📊'
-    CLOCK = '⏱️'
-    FIRE = '🔥'
-    SPARKLES = '✨'
-    ARROW_RIGHT = '→'
-    ARROW_DOWN = '↓'
-    DOUBLE_ARROW = '⇒'
-    BULLET = '•'
-    DIAMOND = '◆'
-    STAR = '⭐'
-
-class TestResult:
-    """Class to track individual test results"""
-    def __init__(self, name: str, category: str, expected: str, actual: str, 
-                 passed: bool, error_msg: str = "", command: str = ""):
-        self.name = name
-        self.category = category
-        self.expected = expected
-        self.actual = actual
-        self.passed = passed
-        self.error_msg = error_msg
-        self.command = command
+@dataclass
+class TestCase:
+    name: str
+    command: str
+    category: str
+    description: str
+    expected_output: Optional[str] = None
+    expected_exit_code: Optional[int] = None
+    timeout: int = 5
+    interactive: bool = False
+    requires_files: List[str] = None
+    creates_files: List[str] = None
 
 class MinishellTester:
-    """Main test class for minishell"""
-    
-    def __init__(self, minishell_path: str = "./minishell"):
-        self.minishell_path = minishell_path
-        self.results: List[TestResult] = []
-        self.temp_dir = tempfile.mkdtemp()
-        self.original_cwd = os.getcwd()
-        
-        # Verify minishell exists
-        if not os.path.exists(minishell_path):
-            raise FileNotFoundError(f"Minishell not found at {minishell_path}")
-    
-    def run_command(self, command: str, timeout: int = 5, 
-                   input_data: str = None) -> Tuple[str, str, int]:
-        """Run a command in minishell and return stdout, stderr, exit_code"""
-        try:
-            # Create input with command and exit
-            if input_data is None:
-                input_text = f"{command}\nexit\n"
-            else:
-                input_text = f"{input_data}\nexit\n"
-            
-            process = subprocess.Popen(
-                [self.minishell_path],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                cwd=self.original_cwd
-            )
-            
-            stdout, stderr = process.communicate(input=input_text, timeout=timeout)
-            
-            # Remove the "exit" output and clean up
-            lines = stdout.strip().split('\n')
-            # Filter out shell prompt and exit messages
-            filtered_lines = []
-            for line in lines:
-                if line and not line.startswith('minishell>') and line != 'exit':
-                    filtered_lines.append(line)
-            
-            return '\n'.join(filtered_lines), stderr, process.returncode
-            
-        except subprocess.TimeoutExpired:
-            process.kill()
-            return "", "TIMEOUT", 124
-        except Exception as e:
-            return "", str(e), 1
-    
-    def run_bash_command(self, command: str) -> Tuple[str, str, int]:
-        """Run command in bash for comparison"""
-        try:
-            process = subprocess.run(
-                command,
-                shell=True,
-                capture_output=True,
-                text=True,
-                timeout=5,
-                cwd=self.original_cwd
-            )
-            return process.stdout.strip(), process.stderr.strip(), process.returncode
-        except subprocess.TimeoutExpired:
-            return "", "TIMEOUT", 124
-        except Exception as e:
-            return "", str(e), 1
-    
-    def assert_equal(self, name: str, category: str, command: str, 
-                    expected_output: str = None, expected_exit: int = None,
-                    compare_with_bash: bool = False):
-        """Assert that command output matches expected"""
-        
-        minishell_out, minishell_err, minishell_exit = self.run_command(command)
-        
-        if compare_with_bash:
-            bash_out, bash_err, bash_exit = self.run_bash_command(command)
-            expected_output = bash_out
-            expected_exit = bash_exit
-        
-        # Check output
-        output_match = True
-        exit_match = True
-        error_msg = ""
-        
-        if expected_output is not None:
-            output_match = minishell_out.strip() == expected_output.strip()
-            if not output_match:
-                error_msg += f"Output mismatch. Expected: '{expected_output}', Got: '{minishell_out}'"
-        
-        if expected_exit is not None:
-            exit_match = minishell_exit == expected_exit
-            if not exit_match:
-                error_msg += f" Exit code mismatch. Expected: {expected_exit}, Got: {minishell_exit}"
-        
-        passed = output_match and exit_match
-        
-        result = TestResult(
-            name=name,
-            category=category,
-            expected=f"Output: '{expected_output}', Exit: {expected_exit}",
-            actual=f"Output: '{minishell_out}', Exit: {minishell_exit}",
-            passed=passed,
-            error_msg=error_msg,
-            command=command
-        )
-        
-        self.results.append(result)
-        return passed
-    
-    def test_basic_commands(self):
-        """Test basic command execution"""
-        print(f"{Colors.BRIGHT_BLUE}{Symbols.ROCKET} Testing Basic Commands...{Colors.RESET}")
-        
-        # Basic echo tests
-        self.assert_equal("echo_simple", "basic", "echo hello", "hello")
-        self.assert_equal("echo_multiple_args", "basic", "echo hello world", "hello world")
-        self.assert_equal("echo_empty", "basic", "echo", "")
-        self.assert_equal("echo_with_flags", "basic", "echo -n hello", compare_with_bash=True)
-        
-        # Navigation commands
-        self.assert_equal("pwd", "basic", "pwd", compare_with_bash=True)
-        self.assert_equal("ls_exists", "basic", "ls", compare_with_bash=True)
-        self.assert_equal("ls_with_flags", "basic", "ls -la", compare_with_bash=True)
-        
-        # System commands
-        self.assert_equal("date", "basic", "date", compare_with_bash=True)
-        self.assert_equal("whoami", "basic", "whoami", compare_with_bash=True)
-        self.assert_equal("uname", "basic", "uname", compare_with_bash=True)
-        
-        # Command variants
-        self.assert_equal("cat_version", "basic", "cat --version", compare_with_bash=True)
-        self.assert_equal("which_ls", "basic", "which ls", compare_with_bash=True)
-        
-        # Error cases
-        self.assert_equal("nonexistent_command", "basic", "nonexistentcommand123", 
-                         expected_exit=127)
-        self.assert_equal("permission_denied_cmd", "basic", "/etc/shadow", 
-                         expected_exit=126)
-    
-    def test_builtin_commands(self):
-        """Test built-in commands"""
-        print(f"{Colors.BRIGHT_MAGENTA}{Symbols.GEAR} Testing Built-in Commands...{Colors.RESET}")
-        
-        # Test cd variations
-        self.assert_equal("cd_root", "builtins", "cd /; pwd", "/")
-        self.assert_equal("cd_home", "builtins", "cd ~; pwd", os.path.expanduser("~"))
-        self.assert_equal("cd_home_explicit", "builtins", "cd $HOME; pwd", os.path.expanduser("~"))
-        self.assert_equal("cd_back", "builtins", "cd /tmp; cd -; pwd", compare_with_bash=True)
-        self.assert_equal("cd_parent", "builtins", "cd ..; pwd", compare_with_bash=True)
-        self.assert_equal("cd_current", "builtins", "cd .; pwd", compare_with_bash=True)
-        self.assert_equal("cd_nonexistent", "builtins", "cd /nonexistent/path", 
-                         expected_exit=1)
-        self.assert_equal("cd_no_args", "builtins", "cd; pwd", os.path.expanduser("~"))
-        
-        # Test env variations
-        self.assert_equal("env_display", "builtins", "env | sort", compare_with_bash=True)
-        self.assert_equal("env_with_command", "builtins", "env echo hello", "hello")
-        
-        # Test export variations
-        self.assert_equal("export_simple", "builtins", "export TEST_VAR=hello; echo $TEST_VAR", 
-                         "hello")
-        self.assert_equal("export_with_spaces", "builtins", "export TEST_VAR='hello world'; echo $TEST_VAR", 
-                         "hello world")
-        self.assert_equal("export_empty", "builtins", "export EMPTY_VAR=; echo $EMPTY_VAR", "")
-        self.assert_equal("export_no_value", "builtins", "export JUST_NAME; env | grep JUST_NAME", 
-                         compare_with_bash=True)
-        self.assert_equal("export_overwrite", "builtins", 
-                         "export TEST_VAR=first; export TEST_VAR=second; echo $TEST_VAR", "second")
-        
-        # Test unset variations
-        self.assert_equal("unset_existing", "builtins", 
-                         "export TEST_VAR=hello; unset TEST_VAR; echo $TEST_VAR", "")
-        self.assert_equal("unset_nonexistent", "builtins", "unset NONEXISTENT_VAR", expected_exit=0)
-        self.assert_equal("unset_multiple", "builtins", 
-                         "export VAR1=a VAR2=b; unset VAR1 VAR2; echo $VAR1$VAR2", "")
-        
-        # Test exit variations
-        self.assert_equal("exit_success", "builtins", "exit 0", expected_exit=0)
-        self.assert_equal("exit_failure", "builtins", "exit 42", expected_exit=42)
-        self.assert_equal("exit_no_arg", "builtins", "exit", expected_exit=0)
-        self.assert_equal("exit_invalid", "builtins", "exit abc", expected_exit=2)
-    
-    def test_redirections(self):
-        """Test input/output redirections"""
-        print(f"{Colors.BRIGHT_CYAN}{Symbols.ARROW_RIGHT} Testing Redirections...{Colors.RESET}")
-        
-        # Create test files
-        test_file = os.path.join(self.temp_dir, "test_input.txt")
-        with open(test_file, 'w') as f:
-            f.write("test content\nline2\nline3\n")
-        
-        output_file = os.path.join(self.temp_dir, "test_output.txt")
-        
-        # Test input redirection variations
-        self.assert_equal("input_redirect", "redirections", 
-                         f"cat < {test_file}", "test content\nline2\nline3")
-        self.assert_equal("input_redirect_wc", "redirections", 
-                         f"wc -l < {test_file}", "3")
-        self.assert_equal("input_redirect_nonexistent", "redirections", 
-                         f"cat < /nonexistent/file", expected_exit=1)
-        
-        # Test output redirection variations
-        cmd = f"echo 'hello world' > {output_file}; cat {output_file}"
-        self.assert_equal("output_redirect", "redirections", cmd, "hello world")
-        
-        cmd2 = f"echo 'line1' > {output_file}; echo 'line2' > {output_file}; cat {output_file}"
-        self.assert_equal("output_redirect_overwrite", "redirections", cmd2, "line2")
-        
-        # Test append redirection variations
-        append_file = os.path.join(self.temp_dir, "append_test.txt")
-        cmd = f"echo 'line1' > {append_file}; echo 'line2' >> {append_file}; cat {append_file}"
-        self.assert_equal("append_redirect", "redirections", cmd, "line1\nline2")
-        
-        cmd2 = f"echo 'a' > {append_file}; echo 'b' >> {append_file}; echo 'c' >> {append_file}; cat {append_file}"
-        self.assert_equal("append_multiple", "redirections", cmd2, "a\nb\nc")
-        
-        # Test redirection with commands
-        self.assert_equal("redirect_with_args", "redirections", 
-                         f"echo hello world > {output_file}; cat {output_file}", "hello world")
-        
-        # Test multiple redirections
-        input2 = os.path.join(self.temp_dir, "input2.txt")
-        output2 = os.path.join(self.temp_dir, "output2.txt")
-        with open(input2, 'w') as f:
-            f.write("input data\n")
-        
-        cmd = f"cat < {input2} > {output2}; cat {output2}"
-        self.assert_equal("input_output_redirect", "redirections", cmd, "input data")
-        
-        # Test redirection permissions
-        readonly_file = os.path.join(self.temp_dir, "readonly.txt")
-        try:
-            with open(readonly_file, 'w') as f:
-                f.write("readonly")
-            os.chmod(readonly_file, 0o444)
-            self.assert_equal("redirect_readonly", "redirections", 
-                             f"echo test > {readonly_file}", expected_exit=1)
-        except:
-            pass
-    
-    def test_pipes(self):
-        """Test pipe functionality"""
-        print(f"{Colors.BRIGHT_YELLOW}{Symbols.DOUBLE_ARROW} Testing Pipes...{Colors.RESET}")
-        
-        # Basic pipe tests
-        self.assert_equal("simple_pipe", "pipes", "echo hello | cat", "hello")
-        self.assert_equal("pipe_chain", "pipes", "echo hello | cat | cat", "hello")
-        self.assert_equal("pipe_chain_long", "pipes", "echo test | cat | cat | cat", "test")
-        
-        # Pipe with common commands
-        self.assert_equal("echo_pipe_wc", "pipes", "echo 'line1\nline2\nline3' | wc -l", "3")
-        self.assert_equal("ls_pipe_wc", "pipes", "ls | wc -l", compare_with_bash=True)
-        self.assert_equal("echo_pipe_grep", "pipes", 
-                         "echo 'hello\\nworld\\nhello' | grep hello", compare_with_bash=True)
-        self.assert_equal("cat_pipe_sort", "pipes", 
-                         "echo 'c\\nb\\na' | sort", "a\nb\nc")
-        
-        # Pipe with built-ins
-        self.assert_equal("env_pipe_grep", "pipes", "env | grep HOME", compare_with_bash=True)
-        self.assert_equal("echo_pipe_head", "pipes", 
-                         "echo 'line1\\nline2\\nline3' | head -n 2", "line1\nline2")
-        self.assert_equal("echo_pipe_tail", "pipes", 
-                         "echo 'line1\\nline2\\nline3' | tail -n 1", "line3")
-        
-        # Complex pipe chains
-        self.assert_equal("complex_pipe", "pipes", 
-                         "echo 'apple\\nbanana\\napple\\ncherry' | sort | uniq", 
-                         "apple\nbanana\ncherry")
-        
-        # Pipe with variables
-        self.assert_equal("pipe_with_vars", "pipes", 
-                         "export VAR=hello; echo $VAR | cat", "hello")
-        
-        # Error cases in pipes
-        self.assert_equal("pipe_command_not_found", "pipes", 
-                         "echo hello | nonexistentcommand", expected_exit=127)
-        self.assert_equal("broken_pipe_start", "pipes", 
-                         "nonexistentcommand | cat", expected_exit=127)
-    
-    def test_environment_variables(self):
-        """Test environment variable handling"""
-        print(f"{Colors.BRIGHT_GREEN}{Symbols.TARGET} Testing Environment Variables...{Colors.RESET}")
-        
-        # Basic variable expansion
-        self.assert_equal("var_expansion", "env_vars", "echo $HOME", os.environ.get('HOME', ''))
-        self.assert_equal("var_expansion_user", "env_vars", "echo $USER", os.environ.get('USER', ''))
-        self.assert_equal("var_expansion_path", "env_vars", "echo $PATH", os.environ.get('PATH', ''))
-        
-        # Variable in different positions
-        self.assert_equal("var_in_middle", "env_vars", "echo hello$USER", f"hello{os.environ.get('USER', '')}")
-        self.assert_equal("var_at_start", "env_vars", "echo $USER world", f"{os.environ.get('USER', '')} world")
-        self.assert_equal("var_multiple", "env_vars", "echo $USER $HOME", 
-                         f"{os.environ.get('USER', '')} {os.environ.get('HOME', '')}")
-        
-        # Undefined variables
-        self.assert_equal("undefined_var", "env_vars", "echo $UNDEFINED_VAR_12345", "")
-        self.assert_equal("undefined_with_text", "env_vars", "echo hello$UNDEFINED_VAR", "hello")
-        
-        # Special variables
-        self.assert_equal("exit_status_success", "env_vars", "true; echo $?", "0")
-        self.assert_equal("exit_status_failure", "env_vars", "false; echo $?", "1")
-        self.assert_equal("exit_status_command_not_found", "env_vars", "nonexistentcmd; echo $?", "127")
-        
-        # Variable edge cases
-        self.assert_equal("dollar_alone", "env_vars", "echo $", "$")
-        self.assert_equal("double_dollar", "env_vars", "echo $$", compare_with_bash=True)
-        self.assert_equal("var_with_braces", "env_vars", "echo ${HOME}", os.environ.get('HOME', ''))
-        self.assert_equal("var_in_quotes", "env_vars", 'echo "$USER"', os.environ.get('USER', ''))
-        
-        # Custom variables
-        self.assert_equal("custom_var_simple", "env_vars", 
-                         "export CUSTOM=test; echo $CUSTOM", "test")
-        self.assert_equal("custom_var_override", "env_vars", 
-                         "export PATH=custom; echo $PATH", "custom")
-        self.assert_equal("custom_var_unset", "env_vars", 
-                         "export TEMP=value; unset TEMP; echo $TEMP", "")
-        
-        # Variables in commands
-        self.assert_equal("var_in_command", "env_vars", 
-                         "export CMD=echo; $CMD hello", "hello")
-        self.assert_equal("var_as_argument", "env_vars", 
-                         "export ARG=hello; echo $ARG", "hello")
-    
-    def test_quotes_and_escaping(self):
-        """Test quote handling"""
-        print(f"{Colors.MAGENTA}{Symbols.SPARKLES} Testing Quotes and Escaping...{Colors.RESET}")
-        
-        # Single quotes - no expansion
-        self.assert_equal("single_quotes", "quotes", "echo 'hello world'", "hello world")
-        self.assert_equal("single_quotes_no_expansion", "quotes", 
-                         "echo '$HOME'", "$HOME")
-        self.assert_equal("single_quotes_with_spaces", "quotes", 
-                         "echo '  multiple   spaces  '", "  multiple   spaces  ")
-        self.assert_equal("single_quotes_special_chars", "quotes", 
-                         "echo '!@#$%^&*()'", "!@#$%^&*()")
-        
-        # Double quotes - with expansion
-        self.assert_equal("double_quotes", "quotes", 'echo "hello world"', "hello world")
-        self.assert_equal("double_quotes_expansion", "quotes", 
-                         f'echo "hello $USER"', f"hello {os.environ.get('USER', '')}")
-        self.assert_equal("double_quotes_with_singles", "quotes", 
-                         '''echo "It's working"''', "It's working")
-        self.assert_equal("double_quotes_multiple_vars", "quotes", 
-                         f'echo "$USER at $HOME"', f"{os.environ.get('USER', '')} at {os.environ.get('HOME', '')}")
-        
-        # Mixed quotes
-        self.assert_equal("mixed_quotes", "quotes", 
-                         """echo 'single' "double" normal""", "single double normal")
-        self.assert_equal("quotes_in_quotes", "quotes", 
-                         '''echo "He said 'hello'"''', "He said 'hello'")
-        self.assert_equal("nested_quotes", "quotes", 
-                         """echo 'User is "$USER"' """, 'User is "$USER"')
-        
-        # Empty quotes
-        self.assert_equal("empty_single_quotes", "quotes", "echo ''", "")
-        self.assert_equal("empty_double_quotes", "quotes", 'echo ""', "")
-        self.assert_equal("quotes_with_empty", "quotes", 
-                         "echo hello '' world", "hello  world")
-        
-        # Quote edge cases
-        self.assert_equal("unclosed_single_quote", "quotes", 
-                         "echo 'unclosed", expected_exit=2)
-        self.assert_equal("unclosed_double_quote", "quotes", 
-                         'echo "unclosed', expected_exit=2)
-        
-        # Quotes with pipes and redirections
-        self.assert_equal("quotes_with_pipe", "quotes", 
-                         "echo 'hello world' | cat", "hello world")
-        
-        # Complex quote scenarios
-        self.assert_equal("complex_quotes", "quotes", 
-                         """echo "Start 'middle' end" """, "Start 'middle' end")
-    
-    def test_error_handling(self):
-        """Test essential error conditions"""
-        print(f"{Colors.RED}{Symbols.BUG} Testing Error Handling...{Colors.RESET}")
-        
-        # Quote syntax errors
-        self.assert_equal("unclosed_single_quote", "errors", "echo 'unclosed", expected_exit=2)
-        self.assert_equal("unclosed_double_quote", "errors", 'echo "unclosed', expected_exit=2)
-        
-        # Pipe syntax errors
-        self.assert_equal("invalid_pipe_start", "errors", "| echo hello", expected_exit=2)
-        self.assert_equal("invalid_pipe_end", "errors", "echo hello |", expected_exit=2)
-        
-        # File/directory errors
-        self.assert_equal("invalid_redirect_input", "errors", "cat < /nonexistent/file", 
-                         expected_exit=1)
-        
-        # Command errors
-        self.assert_equal("command_not_found", "errors", "nonexistentcommand123", 
-                         expected_exit=127)
-        self.assert_equal("invalid_builtin_args", "errors", "cd too many args", 
-                         expected_exit=1)
-        
-        # Directory navigation errors
-        self.assert_equal("cd_nonexistent", "errors", "cd /nonexistent/path", expected_exit=1)
-        
-        # Pipe errors
-        self.assert_equal("pipe_to_invalid_command", "errors", 
-                         "echo hello | nonexistentcommand", expected_exit=127)
-        
-        # Empty command handling
-        self.assert_equal("empty_command", "errors", "", expected_exit=0)
-        self.assert_equal("spaces_only", "errors", "   ", expected_exit=0)
-        
-        # Exit code tests
-        self.assert_equal("exit_string", "errors", "exit hello", expected_exit=2)
-    
-    def test_edge_cases(self):
-        """Test important edge cases"""
-        print(f"{Colors.YELLOW}{Symbols.WARNING} Testing Edge Cases...{Colors.RESET}")
-        
-        # Basic formatting
-        self.assert_equal("multiple_spaces", "edge_cases", 
-                         "echo    hello     world", "hello world")
-        self.assert_equal("leading_trailing_spaces", "edge_cases", 
-                         "   echo hello world   ", "hello world")
-        
-        # Special characters in quotes
-        self.assert_equal("special_chars_in_quotes", "edge_cases", 
-                         "echo 'special: !@#$%^&*()'", "special: !@#$%^&*()")
-        
-        # Variable edge cases
-        self.assert_equal("var_with_numbers", "edge_cases", 
-                         "export VAR123=test; echo $VAR123", "test")
-        self.assert_equal("var_with_underscores", "edge_cases", 
-                         "export MY_VAR_123=test; echo $MY_VAR_123", "test")
-        
-        # Zero-length scenarios
-        self.assert_equal("zero_length_var", "edge_cases", 
-                         "export EMPTY=; echo [$EMPTY]", "[]")
-        
-        # Hidden file access
-        dot_file = os.path.join(self.temp_dir, ".hidden_file")
-        with open(dot_file, 'w') as f:
-            f.write("hidden content")
-        self.assert_equal("hidden_file_access", "edge_cases", 
-                         f"cat {dot_file}", "hidden content")
-    
-    def test_signal_handling(self):
-        """Test signal handling (basic test)"""
-        print(f"{Colors.BRIGHT_RED}{Symbols.CLOCK} Testing Signal Handling...{Colors.RESET}")
-        
-        # Test Ctrl+C doesn't crash shell (basic test)
-        try:
-            process = subprocess.Popen(
-                [self.minishell_path],
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True
-            )
-            
-            # Send interrupt signal
-            process.send_signal(signal.SIGINT)
-            time.sleep(0.1)
-            
-            # Try to continue
-            stdout, stderr = process.communicate(input="echo hello\nexit\n", timeout=2)
-            
-            # If we get here, signal was handled properly
-            self.assert_equal("sigint_handling", "signals", "echo after_signal", 
-                             expected_output="after_signal")
-            
-        except subprocess.TimeoutExpired:
-            process.kill()
-            # Signal handling might not be implemented
-            result = TestResult("sigint_handling", "signals", "Shell continues after SIGINT", 
-                              "TIMEOUT", False, "Signal handling test timed out", "SIGINT test")
-            self.results.append(result)
-        except Exception as e:
-            result = TestResult("sigint_handling", "signals", "Shell continues after SIGINT", 
-                              str(e), False, f"Signal test failed: {e}", "SIGINT test")
-            self.results.append(result)
-    
-    def run_all_tests(self):
-        """Run all test categories"""
-        print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}")
-        print("╔" + "═" * 68 + "╗")
-        print("║" + f"{Symbols.ROCKET} MINISHELL MANDATORY TEST SUITE {Symbols.ROCKET}".center(66) + "║")
-        print("║" + f"{Symbols.CHART} Essential Tests for Required Features {Symbols.CHART}".center(66) + "║")
-        print("╚" + "═" * 68 + "╝")
-        print(f"{Colors.RESET}")
-        
-        # Change to temp directory for tests
-        os.chdir(self.temp_dir)
-        
-        try:
-            # Run mandatory test categories only
-            self.test_basic_commands()
-            self.test_builtin_commands()
-            self.test_redirections()
-            self.test_pipes()
-            self.test_environment_variables()
-            self.test_quotes_and_escaping()
-            self.test_error_handling()
-            self.test_edge_cases()
-            self.test_signal_handling()
-            self.test_combinations()
-            
-        finally:
-            # Restore original directory
-            os.chdir(self.original_cwd)
-    
-    def test_combinations(self):
-        """Test combinations of mandatory features"""
-        print(f"{Colors.BRIGHT_WHITE}{Symbols.FIRE} Testing Feature Combinations...{Colors.RESET}")
-        
-        # Pipes + Redirections
-        temp_in = os.path.join(self.temp_dir, "combo_in.txt")
-        temp_out = os.path.join(self.temp_dir, "combo_out.txt")
-        with open(temp_in, 'w') as f:
-            f.write("line1\nline2\nline3\n")
-        
-        self.assert_equal("pipe_with_input_redirect", "combinations", 
-                         f"cat < {temp_in} | grep line2", "line2")
-        self.assert_equal("pipe_with_output_redirect", "combinations", 
-                         f"echo hello | cat > {temp_out}; cat {temp_out}", "hello")
-        
-        # Pipes + Environment Variables
-        self.assert_equal("pipe_with_env_vars", "combinations", 
-                         "export WORD=hello; echo $WORD | cat", "hello")
-        self.assert_equal("env_var_in_pipe", "combinations", 
-                         "echo test | grep $USER", compare_with_bash=True)
-        
-        # Quotes + Environment Variables
-        self.assert_equal("quotes_env_combo", "combinations", 
-                         'export VAR=test; echo "Value: $VAR"', "Value: test")
-        self.assert_equal("single_quotes_no_env", "combinations", 
-                         "export VAR=test; echo 'Value: $VAR'", "Value: $VAR")
-        
-        # Quotes + Pipes
-        self.assert_equal("quotes_pipe_combo", "combinations", 
-                         "echo 'hello world' | cat", "hello world")
-        self.assert_equal("complex_quotes_pipe", "combinations", 
-                         '''echo "He said 'hello'" | cat''', "He said 'hello'")
-        
-        # Nested redirections and pipes
-        nested_temp = os.path.join(self.temp_dir, "nested.txt")
-        with open(nested_temp, 'w') as f:
-            f.write("nested content\n")
-        self.assert_equal("nested_redirect_pipe", "combinations", 
-                         f"cat < {nested_temp} | cat | cat", "nested content")
-        
-        # Multiple environment variables in complex command
-        self.assert_equal("multi_env_complex", "combinations", 
-                         'export A=hello; export B=world; echo "$A $B" | cat', "hello world")
-    
-    def generate_report(self, output_mode='full'):
-        """Generate comprehensive test report with different output modes"""
-        # Calculate statistics by category
-        categories = {}
-        for result in self.results:
-            if result.category not in categories:
-                categories[result.category] = {'total': 0, 'passed': 0, 'failed': 0}
-            categories[result.category]['total'] += 1
-            if result.passed:
-                categories[result.category]['passed'] += 1
-            else:
-                categories[result.category]['failed'] += 1
-        
-        total_tests = len(self.results)
-        total_passed = sum(1 for r in self.results if r.passed)
-        total_failed = total_tests - total_passed
-        overall_percentage = (total_passed / total_tests * 100) if total_tests > 0 else 0
-        
-        # JSON only mode
-        if output_mode == 'json':
-            json_data = {
-                'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'total_tests': total_tests,
-                'passed': total_passed,
-                'failed': total_failed,
-                'success_rate': round(overall_percentage, 1),
-                'categories': {}
-            }
-            for category, stats in categories.items():
-                percentage = (stats['passed'] / stats['total'] * 100) if stats['total'] > 0 else 0
-                json_data['categories'][category] = {
-                    'total': stats['total'],
-                    'passed': stats['passed'],
-                    'failed': stats['failed'],
-                    'success_rate': round(percentage, 1)
-                }
-            print(json.dumps(json_data, indent=2))
-            return overall_percentage
-        
-        # Quiet mode - only final result
-        if output_mode == 'quiet':
-            if overall_percentage >= 90:
-                status = f"{Colors.BRIGHT_GREEN}{Symbols.TROPHY} EXCELLENT{Colors.RESET}"
-            elif overall_percentage >= 80:
-                status = f"{Colors.GREEN}{Symbols.CHECK} PASS{Colors.RESET}"
-            elif overall_percentage >= 60:
-                status = f"{Colors.YELLOW}{Symbols.WARNING} POOR{Colors.RESET}"
-            else:
-                status = f"{Colors.RED}{Symbols.CROSS} FAIL{Colors.RESET}"
-                
-            print(f"{status}: {total_passed}/{total_tests} ({overall_percentage:.1f}%)")
-            return overall_percentage
-        
-        # Summary mode - only key statistics
-        if output_mode == 'summary':
-            print(f"\n{Colors.BOLD}{Colors.BRIGHT_CYAN}╔══════════════════════════════════════╗{Colors.RESET}")
-            print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}║{Colors.RESET} {Symbols.CHART} {Colors.BOLD}TEST SUMMARY{Colors.RESET} {Symbols.CHART}".ljust(50) + f"{Colors.BOLD}{Colors.BRIGHT_CYAN}║{Colors.RESET}")
-            print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}╚══════════════════════════════════════╝{Colors.RESET}")
-            print(f"{Symbols.BULLET} Total Tests: {Colors.BOLD}{total_tests}{Colors.RESET}")
-            print(f"{Symbols.BULLET} Passed: {Colors.BRIGHT_GREEN}{total_passed}{Colors.RESET}")
-            print(f"{Symbols.BULLET} Failed: {Colors.BRIGHT_RED}{total_failed}{Colors.RESET}")
-            
-            if overall_percentage >= 90:
-                status_symbol = Symbols.TROPHY
-                status_color = Colors.BRIGHT_GREEN
-            elif overall_percentage >= 80:
-                status_symbol = Symbols.CHECK
-                status_color = Colors.GREEN
-            elif overall_percentage >= 60:
-                status_symbol = Symbols.WARNING
-                status_color = Colors.YELLOW
-            else:
-                status_symbol = Symbols.CROSS
-                status_color = Colors.RED
-                
-            print(f"{Symbols.BULLET} Success Rate: {status_color}{status_symbol} {overall_percentage:.1f}%{Colors.RESET}")
-            return overall_percentage
-        
-        # Brief mode - only category counts
-        if output_mode == 'brief':
-            print(f"\n{Colors.BOLD}{Colors.BRIGHT_CYAN}╔══════════════════════════════════════╗{Colors.RESET}")
-            print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}║{Colors.RESET} {Symbols.CHART} {Colors.BOLD}CATEGORY RESULTS{Colors.RESET} {Symbols.CHART}".ljust(50) + f"{Colors.BOLD}{Colors.BRIGHT_CYAN}        ║{Colors.RESET}")
-            print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}╚══════════════════════════════════════╝{Colors.RESET}")
-            
-            for category, stats in categories.items():
-                percentage = (stats['passed'] / stats['total'] * 100) if stats['total'] > 0 else 0
-                
-                if percentage >= 90:
-                    color = Colors.BRIGHT_GREEN
-                    symbol = Symbols.CHECK
-                elif percentage >= 80:
-                    color = Colors.GREEN
-                    symbol = Symbols.CHECK
-                elif percentage >= 60:
-                    color = Colors.YELLOW
-                    symbol = Symbols.WARNING
-                else:
-                    color = Colors.RED
-                    symbol = Symbols.CROSS
-                    
-                print(f"{symbol} {category.upper():<15s}: {color}{stats['passed']:2d}/{stats['total']:2d}{Colors.RESET}")
-            return overall_percentage
-        
-        # Percentage mode - only success rates
-        if output_mode == 'percentage':
-            print(f"\n{Colors.BOLD}{Colors.BRIGHT_CYAN}╔══════════════════════════════════════╗{Colors.RESET}")
-            print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}║{Colors.RESET} {Symbols.TARGET} {Colors.BOLD}SUCCESS RATES{Colors.RESET} {Symbols.TARGET}".ljust(50) + f"{Colors.BOLD}{Colors.BRIGHT_CYAN}        ║{Colors.RESET}")
-            print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}╚══════════════════════════════════════╝{Colors.RESET}")
-            
-            # Overall first
-            if overall_percentage >= 90:
-                overall_color = Colors.BRIGHT_GREEN
-                overall_symbol = Symbols.TROPHY
-            elif overall_percentage >= 80:
-                overall_color = Colors.GREEN
-                overall_symbol = Symbols.CHECK
-            elif overall_percentage >= 60:
-                overall_color = Colors.YELLOW
-                overall_symbol = Symbols.WARNING
-            else:
-                overall_color = Colors.RED
-                overall_symbol = Symbols.CROSS
-                
-            print(f"{overall_symbol} {Colors.BOLD}{'OVERALL':<15s}: {overall_color}{overall_percentage:5.1f}%{Colors.RESET}")
-            print(f"{Colors.DIM}{'─' * 30}{Colors.RESET}")
-            
-            for category, stats in categories.items():
-                percentage = (stats['passed'] / stats['total'] * 100) if stats['total'] > 0 else 0
-                
-                if percentage >= 90:
-                    color = Colors.BRIGHT_GREEN
-                    symbol = Symbols.TROPHY
-                elif percentage >= 80:
-                    color = Colors.GREEN
-                    symbol = Symbols.CHECK
-                elif percentage >= 60:
-                    color = Colors.YELLOW
-                    symbol = Symbols.WARNING
-                else:
-                    color = Colors.RED
-                    symbol = Symbols.CROSS
-                    
-                print(f"{symbol} {category.upper():<15s}: {color}{percentage:5.1f}%{Colors.RESET}")
-            return overall_percentage
-        
-        # Failed only mode - only failed test details
-        if output_mode == 'failed':
-            failed_tests = [r for r in self.results if not r.passed]
-            if not failed_tests:
-                print(f"\n{Colors.BRIGHT_GREEN}╔══════════════════════════════════════╗{Colors.RESET}")
-                print(f"{Colors.BRIGHT_GREEN}║{Colors.RESET} {Symbols.TROPHY} {Colors.BOLD}{Colors.BRIGHT_GREEN}ALL TESTS PASSED!{Colors.RESET} {Symbols.TROPHY}".ljust(50) + f"{Colors.BRIGHT_GREEN}║{Colors.RESET}")
-                print(f"{Colors.BRIGHT_GREEN}╚══════════════════════════════════════╝{Colors.RESET}")
-                print(f"{Colors.BRIGHT_GREEN}{Symbols.SPARKLES} Congratulations! Your minishell is working perfectly! {Symbols.SPARKLES}{Colors.RESET}")
-                return overall_percentage
-            
-            print(f"\n{Colors.BOLD}{Colors.BRIGHT_RED}╔══════════════════════════════════════╗{Colors.RESET}")
-            print(f"{Colors.BOLD}{Colors.BRIGHT_RED}║{Colors.RESET} {Symbols.BUG} {Colors.BOLD}FAILED TESTS ({len(failed_tests)}/{total_tests}){Colors.RESET} {Symbols.BUG}".ljust(50) + f"{Colors.BOLD}{Colors.BRIGHT_RED}        ║{Colors.RESET}")
-            print(f"{Colors.BOLD}{Colors.BRIGHT_RED}╚══════════════════════════════════════╝{Colors.RESET}")
-            
-            by_category = {}
-            for test in failed_tests:
-                if test.category not in by_category:
-                    by_category[test.category] = []
-                by_category[test.category].append(test)
-            
-            for category, tests in by_category.items():
-                print(f"\n{Colors.BOLD}{Colors.BRIGHT_BLUE}┌─ {category.upper()} {Symbols.ARROW_DOWN}{Colors.RESET}")
-                for test in tests:
-                    print(f"{Colors.DIM}│{Colors.RESET} {Symbols.CROSS} {test.name:<30s} [{Colors.BRIGHT_RED}FAILED{Colors.RESET}]")
-                    # Show the command that was tested
-                    if test.command:
-                        print(f"{Colors.DIM}│{Colors.RESET}   {Colors.CYAN}{Symbols.GEAR} Command: {Colors.WHITE}{test.command}{Colors.RESET}")
-                    if test.error_msg:
-                        print(f"{Colors.DIM}│{Colors.RESET}   {Colors.DIM}{Symbols.ARROW_RIGHT} {test.error_msg}{Colors.RESET}")
-                    else:
-                        print(f"{Colors.DIM}│{Colors.RESET}   {Colors.DIM}{Symbols.BULLET} Expected: {test.expected}{Colors.RESET}")
-                        print(f"{Colors.DIM}│{Colors.RESET}   {Colors.DIM}{Symbols.BULLET} Actual:   {test.actual}{Colors.RESET}")
-                print(f"{Colors.DIM}└{'─' * 40}{Colors.RESET}")
-            return overall_percentage
-        
-        # Full mode (default) - complete report
-        # Print summary
-        print(f"\n{Colors.BOLD}{Colors.BRIGHT_CYAN}╔══════════════════════════════════════════════════════════╗{Colors.RESET}")
-        print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}║{Colors.RESET} {Symbols.CHART} {Colors.BOLD}TEST RESULTS SUMMARY{Colors.RESET} {Symbols.CHART}".ljust(70) + f"{Colors.BOLD}{Colors.BRIGHT_CYAN}        ║{Colors.RESET}")
-        print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}╚══════════════════════════════════════════════════════════╝{Colors.RESET}")
-        
-        # Overall status with big visual indicator
-        if overall_percentage >= 90:
-            overall_color = Colors.BRIGHT_GREEN
-            overall_symbol = Symbols.TROPHY
-            status_text = "EXCELLENT"
-        elif overall_percentage >= 80:
-            overall_color = Colors.GREEN
-            overall_symbol = Symbols.CHECK
-            status_text = "GOOD"
-        elif overall_percentage >= 60:
-            overall_color = Colors.YELLOW
-            overall_symbol = Symbols.WARNING
-            status_text = "NEEDS WORK"
-        else:
-            overall_color = Colors.RED
-            overall_symbol = Symbols.CROSS
-            status_text = "POOR"
-        
-        print(f"\n{overall_color}{overall_symbol} Overall Results: {Colors.BRIGHT_GREEN}{total_passed}{Colors.RESET} passed, "
-              f"{Colors.BRIGHT_RED}{total_failed}{Colors.RESET} failed - "
-              f"{overall_color}{overall_percentage:.1f}% ({status_text}){Colors.RESET}")
-        print()
-        
-        # Category breakdown with visual bars
-        print(f"{Colors.BOLD}{Colors.CYAN}┌─ Category Breakdown{Colors.RESET}")
-        for i, (category, stats) in enumerate(categories.items()):
-            percentage = (stats['passed'] / stats['total'] * 100) if stats['total'] > 0 else 0
-            
-            if percentage >= 90:
-                color = Colors.BRIGHT_GREEN
-                symbol = Symbols.TROPHY
-            elif percentage >= 80:
-                color = Colors.GREEN
-                symbol = Symbols.CHECK
-            elif percentage >= 60:
-                color = Colors.YELLOW
-                symbol = Symbols.WARNING
-            else:
-                color = Colors.RED
-                symbol = Symbols.CROSS
-            
-            # Create visual bar
-            bar_length = 20
-            filled_length = int(bar_length * percentage / 100)
-            bar = "█" * filled_length + "░" * (bar_length - filled_length)
-            
-            is_last = i == len(categories) - 1
-            prefix = "└─" if is_last else "├─"
-            
-            print(f"{Colors.CYAN}{prefix}{Colors.RESET} {symbol} {category.upper():<15s}: "
-                  f"{color}{stats['passed']:2d}/{stats['total']:2d} "
-                  f"[{bar}] {percentage:5.1f}%{Colors.RESET}")
-        
-        print(f"\n{Colors.BOLD}{Colors.BRIGHT_CYAN}╔══════════════════════════════════════════════════════════╗{Colors.RESET}")
-        print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}║{Colors.RESET} {Symbols.INFO} {Colors.BOLD}DETAILED TEST RESULTS{Colors.RESET} {Symbols.INFO}".ljust(70) + f"{Colors.BOLD}{Colors.BRIGHT_CYAN}            ║{Colors.RESET}")
-        print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}╚══════════════════════════════════════════════════════════╝{Colors.RESET}")
-        
-        for category in categories.keys():
-            category_stats = categories[category]
-            category_percentage = (category_stats['passed'] / category_stats['total'] * 100) if category_stats['total'] > 0 else 0
-            
-            if category_percentage >= 90:
-                category_color = Colors.BRIGHT_GREEN
-            elif category_percentage >= 80:
-                category_color = Colors.GREEN
-            elif category_percentage >= 60:
-                category_color = Colors.YELLOW
-            else:
-                category_color = Colors.RED
-            
-            print(f"\n{Colors.BOLD}{category_color}┌─ {category.upper()} "
-                  f"({category_stats['passed']}/{category_stats['total']}) {Colors.RESET}")
-            
-            category_results = [r for r in self.results if r.category == category]
-            for j, result in enumerate(category_results):
-                is_last_in_category = j == len(category_results) - 1
-                prefix = "└─" if is_last_in_category else "├─"
-                
-                if result.passed:
-                    status_color = Colors.BRIGHT_GREEN
-                    status_symbol = Symbols.CHECK
-                    status = "PASS"
-                else:
-                    status_color = Colors.BRIGHT_RED
-                    status_symbol = Symbols.CROSS
-                    status = "FAIL"
-                
-                print(f"{Colors.DIM}{prefix}{Colors.RESET} {status_symbol} {result.name:<30s} "
-                      f"[{status_color}{status}{Colors.RESET}]")
-                
-                if not result.passed and not is_last_in_category:
-                    continuation = "│"
-                elif not result.passed:
-                    continuation = " "
-                else:
-                    continue
-                    
-                if not result.passed:
-                    # Show the command that was tested
-                    if result.command:
-                        print(f"{Colors.DIM}{continuation}    {Colors.CYAN}{Symbols.GEAR} Command: {Colors.WHITE}{result.command}{Colors.RESET}")
-                    print(f"{Colors.DIM}{continuation}    {Symbols.BULLET} Expected: {result.expected}{Colors.RESET}")
-                    print(f"{Colors.DIM}{continuation}    {Symbols.BULLET} Actual:   {result.actual}{Colors.RESET}")
-                    if result.error_msg:
-                        print(f"{Colors.DIM}{continuation}    {Symbols.ARROW_RIGHT} {result.error_msg}{Colors.RESET}")
-        
-        # Save detailed log
-        self.save_log()
-        
-        return overall_percentage
-    
-    def save_log(self):
-        """Save detailed test log to file"""
-        log_data = {
-            'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
-            'total_tests': len(self.results),
-            'passed': sum(1 for r in self.results if r.passed),
-            'failed': sum(1 for r in self.results if not r.passed),
-            'results': []
+    def __init__(self, shell_program: str, verbose: bool = False, timeout: int = 5, detailed: bool = False):
+        self.shell_program = shell_program
+        self.verbose = verbose
+        self.detailed = detailed
+        self.default_timeout = timeout
+        self.test_dir = tempfile.mkdtemp(prefix="minishell_test_")
+        self.original_dir = os.getcwd()
+        self.start_time = None
+        self.failed_tests = []
+        self.results = {
+            TestResult.PASSED: 0,
+            TestResult.FAILED: 0,
+            TestResult.ERROR: 0,
+            TestResult.TIMEOUT: 0,
+            TestResult.SKIPPED: 0
         }
         
-        for result in self.results:
-            log_data['results'].append({
-                'name': result.name,
-                'category': result.category,
-                'passed': result.passed,
-                'expected': result.expected,
-                'actual': result.actual,
-                'error_msg': result.error_msg,
-                'command': result.command
-            })
+    def __enter__(self):
+        os.chdir(self.test_dir)
+        return self
         
-        log_file = 'minishell_test_log.json'
-        with open(log_file, 'w') as f:
-            json.dump(log_data, f, indent=2)
-        
-        print(f"\n{Colors.CYAN}Detailed test log saved to: {log_file}{Colors.RESET}")
-    
-    def cleanup(self):
-        """Clean up temporary files"""
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        os.chdir(self.original_dir)
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+
+    def load_test_cases(self, json_file: str) -> List[TestCase]:
+        """Load test cases from JSON file"""
+        # Check if file exists with absolute path
+        if not os.path.isabs(json_file):
+            json_file = os.path.abspath(json_file)
+            
+        if not os.path.exists(json_file):
+            print(f"❌ Test file {json_file} not found!")
+            print(f"Current working directory: {os.getcwd()}")
+            print(f"Looking for file at: {json_file}")
+            sys.exit(1)
+            
         try:
-            import shutil
-            shutil.rmtree(self.temp_dir)
-        except:
-            pass
+            with open(json_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+            
+            test_cases = []
+            for category, tests in data.items():
+                for test in tests:
+                    test_case = TestCase(
+                        name=test['name'],
+                        command=test['command'],
+                        category=category,
+                        description=test.get('description', ''),
+                        expected_output=test.get('expected_output'),
+                        expected_exit_code=test.get('expected_exit_code'),
+                        timeout=test.get('timeout', self.default_timeout),
+                        interactive=test.get('interactive', False),
+                        requires_files=test.get('requires_files', []),
+                        creates_files=test.get('creates_files', [])
+                    )
+                    test_cases.append(test_case)
+            return test_cases
+            
+        except json.JSONDecodeError as e:
+            print(f"❌ Error parsing JSON file: {e}")
+            sys.exit(1)
+
+    def setup_test_files(self, test_case: TestCase) -> bool:
+        """Setup required files for test"""
+        try:
+            for file_spec in test_case.requires_files or []:
+                if isinstance(file_spec, str):
+                    # Simple file creation
+                    with open(file_spec, 'w') as f:
+                        f.write("test content\n")
+                elif isinstance(file_spec, dict):
+                    # File with specific content
+                    filename = file_spec['name']
+                    content = file_spec.get('content', 'test content\n')
+                    mode = file_spec.get('mode', 'w')
+                    with open(filename, mode) as f:
+                        f.write(content)
+            return True
+        except Exception as e:
+            if self.verbose:
+                print(f"Error setting up test files: {e}")
+            return False
+
+    def cleanup_test_files(self, test_case: TestCase):
+        """Cleanup files created by test"""
+        for filename in test_case.creates_files or []:
+            try:
+                if os.path.exists(filename):
+                    os.remove(filename)
+            except:
+                pass
+
+    def run_command(self, command: str, timeout: int) -> Tuple[str, str, int]:
+        """Run a command and return stdout, stderr, exit_code"""
+        try:
+            # For minishell, we need to pipe the command with exit
+            if "minishell" in self.shell_program:
+                process = subprocess.Popen(
+                    [self.shell_program],
+                    stdin=subprocess.PIPE,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    env=os.environ.copy()
+                )
+                
+                # Send command + exit to minishell
+                input_text = f"{command}\nexit\n"
+                
+                try:
+                    stdout, stderr = process.communicate(input=input_text, timeout=timeout)
+                    exit_code = process.returncode
+                    
+                    # Clean up minishell prompt from output
+                    lines = stdout.split('\n')
+                    cleaned_lines = []
+                    for line in lines:
+                        # Remove minishell prompt and empty lines
+                        if not line.startswith('minishell>') and line.strip() != 'exit' and line.strip():
+                            cleaned_lines.append(line)
+                    
+                    cleaned_output = '\n'.join(cleaned_lines)
+                    return cleaned_output, stderr, exit_code
+                    
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.communicate()
+                    return "", "Process timed out", -1
+            else:
+                # For other shells (bash, etc.), use normal shell execution
+                process = subprocess.Popen(
+                    command,
+                    shell=True,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    executable=self.shell_program,
+                    env=os.environ.copy()
+                )
+                
+                try:
+                    stdout, stderr = process.communicate(timeout=timeout)
+                    exit_code = process.returncode
+                    return stdout, stderr, exit_code
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.communicate()
+                    return "", "Process timed out", -1
+                
+        except Exception as e:
+            return "", f"Error running command: {e}", -1
+
+    def compare_outputs(self, expected: str, actual: str) -> bool:
+        """Compare expected and actual outputs"""
+        if expected is None:
+            return True
+            
+        # Normalize whitespace
+        expected_lines = [line.rstrip() for line in expected.split('\n')]
+        actual_lines = [line.rstrip() for line in actual.split('\n')]
+        
+        # Remove empty lines at the end
+        while expected_lines and expected_lines[-1] == '':
+            expected_lines.pop()
+        while actual_lines and actual_lines[-1] == '':
+            actual_lines.pop()
+            
+        return expected_lines == actual_lines
+
+    def run_single_test(self, test_case: TestCase) -> Tuple[TestResult, Dict]:
+        """Run a single test case and return result with details"""
+        test_details = {
+            'stdout': '',
+            'stderr': '',
+            'exit_code': None,
+            'execution_time': 0,
+            'error_message': ''
+        }
+
+        if test_case.interactive:
+            return TestResult.SKIPPED, test_details
+
+        # Setup test files
+        if not self.setup_test_files(test_case):
+            test_details['error_message'] = 'Failed to setup test files'
+            return TestResult.ERROR, test_details
+
+        try:
+            start_time = time.time()
+
+            # Run the command
+            stdout, stderr, exit_code = self.run_command(
+                test_case.command,
+                test_case.timeout
+            )
+
+            test_details['stdout'] = stdout
+            test_details['stderr'] = stderr
+            test_details['exit_code'] = exit_code
+            test_details['execution_time'] = time.time() - start_time
+
+            # Check for timeout
+            if exit_code == -1 and "timed out" in stderr:
+                test_details['error_message'] = 'Command timed out'
+                return TestResult.TIMEOUT, test_details
+
+            # Check exit code
+            if test_case.expected_exit_code is not None:
+                if exit_code != test_case.expected_exit_code:
+                    test_details['error_message'] = f"Exit code mismatch: expected {test_case.expected_exit_code}, got {exit_code}"
+                    return TestResult.FAILED, test_details
+
+            # Check output
+            if not self.compare_outputs(test_case.expected_output, stdout):
+                test_details['error_message'] = f"Output mismatch\nExpected: {repr(test_case.expected_output)}\nActual: {repr(stdout)}"
+                return TestResult.FAILED, test_details
+
+            return TestResult.PASSED, test_details
+
+        except Exception as e:
+            test_details['error_message'] = f"Exception during test execution: {str(e)}"
+            return TestResult.ERROR, test_details
+
+        finally:
+            self.cleanup_test_files(test_case)
+
+    def create_progress_bar(self, current: int, total: int, width: int = 50) -> str:
+        """Create a progress bar string"""
+        percentage = current / total
+        filled = int(width * percentage)
+        bar = '█' * filled + '░' * (width - filled)
+        return f"[{bar}] {percentage:.1%} ({current}/{total})"
+
+    def run_tests(self, test_cases: List[TestCase], category_filter: str = None) -> None:
+        """Run all test cases with enhanced output"""
+        filtered_tests = test_cases
+        if category_filter:
+            filtered_tests = [t for t in test_cases if t.category == category_filter]
+
+        total_tests = len(filtered_tests)
+        self.start_time = datetime.now()
+
+        # Print header with styling
+        print("\033[1;36m" + "=" * 80 + "\033[0m")
+        print(f"\033[1;36m🚀 ÉCOLE 42 MINISHELL TEST SUITE\033[0m")
+        print(f"\033[1;37mShell Program:\033[0m {self.shell_program}")
+        print(f"\033[1;37mTotal Tests:\033[0m {total_tests}")
+        if category_filter:
+            print(f"\033[1;37mCategory Filter:\033[0m {category_filter}")
+        print(f"\033[1;37mTest Directory:\033[0m {self.test_dir}")
+        print(f"\033[1;37mStarted:\033[0m {self.start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+        print("\033[1;36m" + "=" * 80 + "\033[0m")
+
+        # Group tests by category for better organization
+        categories = {}
+        for test in filtered_tests:
+            if test.category not in categories:
+                categories[test.category] = []
+            categories[test.category].append(test)
+
+        test_number = 0
+        for category, tests in categories.items():
+            print(f"\n\033[1;33m📂 Category: {category.upper()} ({len(tests)} tests)\033[0m")
+            print("\033[33m" + "-" * 60 + "\033[0m")
+
+            for test_case in tests:
+                test_number += 1
+
+                # Progress bar
+                progress = self.create_progress_bar(test_number, total_tests)
+                print(f"\033[2K\r{progress}", end="")
+
+                print(f"\n[{test_number:3d}/{total_tests}] \033[1m{test_case.name}\033[0m")
+
+                if self.verbose or self.detailed:
+                    print(f"    \033[90mCommand:\033[0m {test_case.command}")
+                    print(f"    \033[90mDescription:\033[0m {test_case.description}")
+
+                start_time = time.time()
+                result, details = self.run_single_test(test_case)
+                end_time = time.time()
+
+                self.results[result] += 1
+                duration = end_time - start_time
+
+                # Display result with details
+                print(f"    \033[1mResult:\033[0m {result.value} ({duration:.3f}s)")
+
+                # Show detailed information for failed tests or in verbose mode
+                if result in [TestResult.FAILED, TestResult.ERROR, TestResult.TIMEOUT] or self.detailed:
+                    if details['error_message']:
+                        print(f"    \033[91mError:\033[0m {details['error_message']}")
+                    if self.detailed and details['stdout']:
+                        print(f"    \033[94mOutput:\033[0m {repr(details['stdout'])}")
+                    if self.detailed and details['stderr']:
+                        print(f"    \033[93mStderr:\033[0m {repr(details['stderr'])}")
+                    if details['exit_code'] is not None:
+                        print(f"    \033[90mExit Code:\033[0m {details['exit_code']}")
+
+                # Store failed tests for summary
+                if result in [TestResult.FAILED, TestResult.ERROR, TestResult.TIMEOUT]:
+                    self.failed_tests.append({
+                        'test': test_case,
+                        'result': result,
+                        'details': details
+                    })
+
+        print("\n")
+        self.print_summary()
+
+    def print_summary(self):
+        """Print enhanced test results summary"""
+        total = sum(self.results.values())
+        end_time = datetime.now()
+        duration = end_time - self.start_time if self.start_time else None
+
+        print("\033[1;36m" + "=" * 80 + "\033[0m")
+        print(f"\033[1;36m📊 TEST EXECUTION SUMMARY\033[0m")
+        print("\033[1;36m" + "=" * 80 + "\033[0m")
+
+        # Time information
+        if duration:
+            print(f"\033[1;37mExecution Time:\033[0m {duration.total_seconds():.2f} seconds")
+            print(f"\033[1;37mCompleted:\033[0m {end_time.strftime('%Y-%m-%d %H:%M:%S')}")
+            print()
+
+        # Results breakdown
+        for result, count in self.results.items():
+            percentage = (count / total * 100) if total > 0 else 0
+            print(f"{result.value}: {count:3d} ({percentage:5.1f}%)")
+
+        print("\033[36m" + "-" * 80 + "\033[0m")
+
+        # Overall status
+        success_rate = (self.results[TestResult.PASSED] / total * 100) if total > 0 else 0
+        print(f"\033[1;37mSuccess Rate:\033[0m {success_rate:.1f}%")
+
+        if self.results[TestResult.PASSED] == total:
+            print("\033[1;32m🎉 ALL TESTS PASSED! Excellent work!\033[0m")
+            print("\033[32m✨ Your minishell implementation appears to be working correctly!\033[0m")
+        else:
+            failed_count = self.results[TestResult.FAILED] + self.results[TestResult.ERROR] + self.results[TestResult.TIMEOUT]
+            print(f"\033[1;31m⚠️  {failed_count} TEST(S) FAILED\033[0m")
+
+            if self.failed_tests:
+                print("\n\033[1;31m📋 FAILED TESTS SUMMARY:\033[0m")
+                print("\033[31m" + "-" * 60 + "\033[0m")
+
+                for i, failure in enumerate(self.failed_tests[:10], 1):  # Show first 10 failures
+                    test = failure['test']
+                    result = failure['result']
+                    details = failure['details']
+
+                    print(f"\033[1;31m{i}. {test.category}: {test.name}\033[0m")
+                    print(f"   \033[90mCommand:\033[0m {test.command}")
+                    print(f"   \033[91mResult:\033[0m {result.value}")
+                    if details['error_message']:
+                        # Truncate long error messages
+                        error_msg = details['error_message']
+                        if len(error_msg) > 100:
+                            error_msg = error_msg[:97] + "..."
+                        print(f"   \033[91mError:\033[0m {error_msg}")
+                    print()
+
+                if len(self.failed_tests) > 10:
+                    print(f"\033[90m... and {len(self.failed_tests) - 10} more failed tests\033[0m")
+
+        print("\033[1;36m" + "=" * 80 + "\033[0m")
+
+        # Recommendations
+        if self.results[TestResult.FAILED] > 0:
+            print("\033[1;33m💡 RECOMMENDATIONS:\033[0m")
+            print("\033[33m• Run with --verbose flag for detailed error information\033[0m")
+            print("\033[33m• Run with --detailed flag for complete test output\033[0m")
+            print("\033[33m• Focus on failed test categories first\033[0m")
+            print("\033[33m• Check your shell's error handling and edge cases\033[0m")
+
+def create_test_json():
+    """Create the test cases JSON file"""
+    test_cases = {
+        "echo": [
+            {
+                "name": "basic_echo",
+                "command": "echo hello world",
+                "description": "Basic echo test",
+                "expected_output": "hello world\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "echo_with_quotes",
+                "command": "echo \"hello world\"",
+                "description": "Echo with double quotes",
+                "expected_output": "hello world\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "echo_single_quotes",
+                "command": "echo 'hello world'",
+                "description": "Echo with single quotes",
+                "expected_output": "hello world\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "echo_empty",
+                "command": "echo",
+                "description": "Echo without arguments",
+                "expected_output": "\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "echo_n_flag",
+                "command": "echo -n hello",
+                "description": "Echo with -n flag",
+                "expected_output": "hello",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "echo_multiple_n",
+                "command": "echo -n -n hello",
+                "description": "Echo with multiple -n flags",
+                "expected_output": "hello",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "echo_n_combined",
+                "command": "echo -nnnn hello",
+                "description": "Echo with combined -n flags",
+                "expected_output": "hello",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "echo_n_quoted",
+                "command": "echo \"-n\" hello",
+                "description": "Echo with quoted -n",
+                "expected_output": "-n hello\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "echo_empty_quotes",
+                "command": "echo \"\"",
+                "description": "Echo with empty double quotes",
+                "expected_output": "\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "echo_empty_single_quotes",
+                "command": "echo ''",
+                "description": "Echo with empty single quotes",
+                "expected_output": "\n",
+                "expected_exit_code": 0
+            }
+        ],
+        "cd": [
+            {
+                "name": "cd_home",
+                "command": "cd && pwd",
+                "description": "Change to home directory",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "cd_dot",
+                "command": "cd . && pwd",
+                "description": "Change to current directory",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "cd_parent",
+                "command": "cd .. && pwd",
+                "description": "Change to parent directory",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "cd_root",
+                "command": "cd / && pwd",
+                "description": "Change to root directory",
+                "expected_output": "/\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "cd_nonexistent",
+                "command": "cd /nonexistent_directory_test_123",
+                "description": "Change to non-existent directory",
+                "expected_exit_code": 1
+            },
+            {
+                "name": "cd_too_many_args",
+                "command": "cd /tmp /usr",
+                "description": "CD with too many arguments",
+                "expected_exit_code": 1
+            }
+        ],
+        "pwd": [
+            {
+                "name": "basic_pwd",
+                "command": "pwd",
+                "description": "Basic pwd test",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "pwd_with_args",
+                "command": "pwd arg1",
+                "description": "PWD with arguments (should error)",
+                "expected_exit_code": 1
+            },
+            {
+                "name": "pwd_after_cd",
+                "command": "cd /tmp && pwd",
+                "description": "PWD after changing directory",
+                "expected_output": "/tmp\n",
+                "expected_exit_code": 0
+            }
+        ],
+        "env": [
+            {
+                "name": "basic_env",
+                "command": "env | grep HOME",
+                "description": "Basic env test - find HOME",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "env_with_args",
+                "command": "env arg1",
+                "description": "ENV with arguments (should error)",
+                "expected_exit_code": 125
+            }
+        ],
+        "export": [
+            {
+                "name": "export_simple",
+                "command": "export TEST=hello && echo $TEST",
+                "description": "Simple export test",
+                "expected_output": "hello\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "export_empty",
+                "command": "export TEST= && echo \"[$TEST]\"",
+                "description": "Export empty variable",
+                "expected_output": "[]\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "export_multiple",
+                "command": "export A=1 B=2 && echo $A$B",
+                "description": "Export multiple variables",
+                "expected_output": "12\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "export_invalid_name",
+                "command": "export 123=value",
+                "description": "Export with invalid variable name",
+                "expected_exit_code": 1
+            },
+            {
+                "name": "export_no_equals",
+                "command": "export TEST",
+                "description": "Export existing variable",
+                "expected_exit_code": 0
+            }
+        ],
+        "unset": [
+            {
+                "name": "unset_variable",
+                "command": "export TEST=hello && unset TEST && echo \"[$TEST]\"",
+                "description": "Unset a variable",
+                "expected_output": "[]\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "unset_nonexistent",
+                "command": "unset NONEXISTENT_VAR_12345",
+                "description": "Unset non-existent variable",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "unset_multiple",
+                "command": "export A=1 B=2 && unset A B && echo \"[$A][$B]\"",
+                "description": "Unset multiple variables",
+                "expected_output": "[][]\n",
+                "expected_exit_code": 0
+            }
+        ],
+        "exit": [
+            {
+                "name": "exit_no_args",
+                "command": "exit",
+                "description": "Exit without arguments",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "exit_zero",
+                "command": "exit 0",
+                "description": "Exit with code 0",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "exit_one",
+                "command": "exit 1",
+                "description": "Exit with code 1",
+                "expected_exit_code": 1
+            },
+            {
+                "name": "exit_42",
+                "command": "exit 42",
+                "description": "Exit with code 42",
+                "expected_exit_code": 42
+            },
+            {
+                "name": "exit_negative",
+                "command": "exit -1",
+                "description": "Exit with negative code",
+                "expected_exit_code": 255
+            },
+            {
+                "name": "exit_too_many_args",
+                "command": "exit 0 1",
+                "description": "Exit with too many arguments",
+                "expected_exit_code": 1
+            },
+            {
+                "name": "exit_invalid_arg",
+                "command": "exit abc",
+                "description": "Exit with invalid argument",
+                "expected_exit_code": 255
+            }
+        ],
+        "pipes": [
+            {
+                "name": "simple_pipe",
+                "command": "echo hello | cat",
+                "description": "Simple pipe test",
+                "expected_output": "hello\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "multiple_pipes",
+                "command": "echo hello | cat | cat",
+                "description": "Multiple pipes",
+                "expected_output": "hello\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "pipe_with_grep",
+                "command": "echo hello | grep hello",
+                "description": "Pipe with grep",
+                "expected_output": "hello\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "pipe_grep_nomatch",
+                "command": "echo hello | grep world",
+                "description": "Pipe with grep (no match)",
+                "expected_output": "",
+                "expected_exit_code": 1
+            }
+        ],
+        "redirections": [
+            {
+                "name": "output_redirect",
+                "command": "echo hello > test_output.txt && cat test_output.txt",
+                "description": "Output redirection",
+                "expected_output": "hello\n",
+                "expected_exit_code": 0,
+                "creates_files": ["test_output.txt"]
+            },
+            {
+                "name": "append_redirect",
+                "command": "echo hello > test_append.txt && echo world >> test_append.txt && cat test_append.txt",
+                "description": "Append redirection",
+                "expected_output": "hello\nworld\n",
+                "expected_exit_code": 0,
+                "creates_files": ["test_append.txt"]
+            },
+            {
+                "name": "input_redirect",
+                "command": "cat < /etc/passwd | head -1",
+                "description": "Input redirection",
+                "expected_exit_code": 0
+            }
+        ],
+        "variables": [
+            {
+                "name": "home_variable",
+                "command": "echo $HOME",
+                "description": "HOME variable expansion",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "path_variable",
+                "command": "echo $PATH | grep bin",
+                "description": "PATH variable expansion",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "exit_status",
+                "command": "true && echo $?",
+                "description": "Exit status variable",
+                "expected_output": "0\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "exit_status_false",
+                "command": "false; echo $?",
+                "description": "Exit status after false",
+                "expected_output": "1\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "undefined_variable",
+                "command": "echo \"[$UNDEFINED_VARIABLE_123]\"",
+                "description": "Undefined variable expansion",
+                "expected_output": "[]\n",
+                "expected_exit_code": 0
+            }
+        ],
+        "quotes": [
+            {
+                "name": "double_quotes_with_var",
+                "command": "export TEST=world && echo \"hello $TEST\"",
+                "description": "Variable expansion in double quotes",
+                "expected_output": "hello world\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "single_quotes_no_var",
+                "command": "export TEST=world && echo 'hello $TEST'",
+                "description": "No variable expansion in single quotes",
+                "expected_output": "hello $TEST\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "mixed_quotes",
+                "command": "echo \"hello 'world'\"",
+                "description": "Mixed quotes - double containing single",
+                "expected_output": "hello 'world'\n",
+                "expected_exit_code": 0
+            },
+            {
+                "name": "mixed_quotes_reverse",
+                "command": "echo 'hello \"world\"'",
+                "description": "Mixed quotes - single containing double",
+                "expected_output": "hello \"world\"\n",
+                "expected_exit_code": 0
+            }
+        ],
+        "errors": [
+            {
+                "name": "command_not_found",
+                "command": "nonexistent_command_12345",
+                "description": "Command not found error",
+                "expected_exit_code": 127
+            },
+            {
+                "name": "syntax_error_pipe_start",
+                "command": "| echo hello",
+                "description": "Syntax error - pipe at start",
+                "expected_exit_code": 258
+            },
+            {
+                "name": "syntax_error_pipe_end",
+                "command": "echo hello |",
+                "description": "Syntax error - pipe at end",
+                "expected_exit_code": 258
+            },
+            {
+                "name": "file_not_found",
+                "command": "cat nonexistent_file_12345.txt",
+                "description": "File not found error",
+                "expected_exit_code": 1
+            }
+        ]
+    }
+    
+    return test_cases
 
 def main():
-    """Main function to run tests"""
-    import argparse
+    parser = argparse.ArgumentParser(
+        description="École 42 Minishell Test Suite",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  %(prog)s bash
+  %(prog)s ./minishell
+  %(prog)s ./minishell --verbose
+  %(prog)s ./minishell --category echo
+  %(prog)s bash --timeout 10
+        """
+    )
     
-    parser = argparse.ArgumentParser(description='Minishell Mandatory Features Test Suite')
-    parser.add_argument('--minishell', '-m', default='./minishell',
-                       help='Path to minishell executable')
-    parser.add_argument('--category', '-c', 
-                       choices=['basic', 'builtins', 'redirections', 'pipes', 
-                               'env_vars', 'quotes', 'errors', 
-                               'edge_cases', 'signals', 'combinations'],
-                       help='Run only specific test category')
-    parser.add_argument('--summary', '-s', action='store_true',
-                       help='Show only summary statistics')
-    parser.add_argument('--brief', '-b', action='store_true',
-                       help='Show only pass/fail counts per category')
-    parser.add_argument('--percentage', '-p', action='store_true',
-                       help='Show only success percentages')
-    parser.add_argument('--failed-only', '-f', action='store_true',
-                       help='Show only failed tests details')
-    parser.add_argument('--quiet', '-q', action='store_true',
-                       help='Show only final result (pass/fail)')
-    parser.add_argument('--json-only', '-j', action='store_true',
-                       help='Output only JSON results to stdout')
+    parser.add_argument('shell_program', help='Shell program to test (e.g., bash, ./minishell)')
+    parser.add_argument('--verbose', '-v', action='store_true', help='Verbose output with detailed test information')
+    parser.add_argument('--detailed', '-d', action='store_true', help='Show detailed output including stdout/stderr for all tests')
+    parser.add_argument('--category', '-c', help='Run only tests from specific category')
+    parser.add_argument('--timeout', '-t', type=int, default=5, help='Timeout for each test (seconds)')
+    parser.add_argument('--json-file', '-j', default='test_cases.json', help='JSON file with test cases')
+    parser.add_argument('--create-json', action='store_true', help='Create default test cases JSON file')
+    parser.add_argument('--list-categories', action='store_true', help='List all available test categories')
     
     args = parser.parse_args()
     
-    try:
-        tester = MinishellTester(args.minishell)
-        
-        # Determine output mode
-        output_mode = 'full'  # default
-        if args.json_only:
-            output_mode = 'json'
-        elif args.quiet:
-            output_mode = 'quiet'
-        elif args.summary:
-            output_mode = 'summary'
-        elif args.brief:
-            output_mode = 'brief'
-        elif args.percentage:
-            output_mode = 'percentage'
-        elif args.failed_only:
-            output_mode = 'failed'
-        
-        # Suppress test run output for quiet modes
-        if output_mode in ['quiet', 'json']:
-            import sys
-            from io import StringIO
-            old_stdout = sys.stdout
-            sys.stdout = StringIO()
-        
-        if args.category:
-            # Run specific category
-            category_methods = {
-                'basic': 'test_basic_commands',
-                'builtins': 'test_builtin_commands', 
-                'redirections': 'test_redirections',
-                'pipes': 'test_pipes',
-                'env_vars': 'test_environment_variables',
-                'quotes': 'test_quotes_and_escaping',
-                'errors': 'test_error_handling',
-                'edge_cases': 'test_edge_cases',
-                'signals': 'test_signal_handling',
-                'combinations': 'test_combinations'
-            }
-            
-            method_name = category_methods.get(args.category)
-            if method_name and hasattr(tester, method_name):
-                getattr(tester, method_name)()
-            else:
-                if output_mode in ['quiet', 'json']:
-                    sys.stdout = old_stdout
-                print(f"Unknown category: {args.category}")
-                return 1
-        else:
-            # Run all tests
-            tester.run_all_tests()
-        
-        # Restore stdout for output modes that suppressed it
-        if output_mode in ['quiet', 'json']:
-            sys.stdout = old_stdout
-        
-        # Generate report with specified mode
-        success_rate = tester.generate_report(output_mode)
-        
-        # Cleanup
-        tester.cleanup()
-        
-        # Exit with appropriate code
-        return 0 if success_rate >= 80 else 1
-        
-    except FileNotFoundError as e:
-        print(f"{Colors.RED}Error: {e}{Colors.RESET}")
-        print("Make sure minishell is compiled and accessible.")
-        return 1
-    except Exception as e:
-        print(f"{Colors.RED}Unexpected error: {e}{Colors.RESET}")
-        return 1
+    if args.create_json:
+        test_cases = create_test_json()
+        with open('test_cases.json', 'w', encoding='utf-8') as f:
+            json.dump(test_cases, f, indent=2, ensure_ascii=False)
+        print("✅ Created test_cases.json file")
+        return
+    
+    # Check if shell program exists
+    if not shutil.which(args.shell_program) and not os.path.exists(args.shell_program):
+        print(f"❌ Shell program '{args.shell_program}' not found!")
+        sys.exit(1)
+    
+    # Create JSON file if it doesn't exist
+    if not os.path.exists(args.json_file):
+        print(f"📝 Creating default test cases file: {args.json_file}")
+        test_cases = create_test_json()
+        with open(args.json_file, 'w', encoding='utf-8') as f:
+            json.dump(test_cases, f, indent=2, ensure_ascii=False)
+    
+    # List categories if requested
+    if args.list_categories:
+        tester = MinishellTester(args.shell_program, args.verbose, args.timeout, args.detailed)
+        test_cases = tester.load_test_cases(args.json_file)
+        categories = set(test.category for test in test_cases)
+        print("\033[1;36mAvailable test categories:\033[0m")
+        for category in sorted(categories):
+            count = len([t for t in test_cases if t.category == category])
+            print(f"  \033[1;33m{category}\033[0m ({count} tests)")
+        return
+
+    # Run tests
+    with MinishellTester(args.shell_program, args.verbose, args.timeout, args.detailed) as tester:
+        test_cases = tester.load_test_cases(args.json_file)
+        tester.run_tests(test_cases, args.category)
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

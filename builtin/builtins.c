@@ -17,11 +17,34 @@ static int bi_echo(char **argv)
 	newline = 1;
 	first = 1;
 
-	if (argv[1] && sh_strcmp(argv[1], "-n") == 0)
+	/* Handle -n flag(s) - can be multiple or combined like -nnnn */
+	while (argv[i] && argv[i][0] == '-' && argv[i][1])
 	{
-		newline = 0;
-		i = 2;
+		int j = 1;
+		int valid_n_flag = 1;
+		
+		/* Check if all characters after '-' are 'n' */
+		while (argv[i][j])
+		{
+			if (argv[i][j] != 'n')
+			{
+				valid_n_flag = 0;
+				break;
+			}
+			j++;
+		}
+		
+		if (valid_n_flag && j > 1) /* At least one 'n' after '-' */
+		{
+			newline = 0;
+			i++;
+		}
+		else
+		{
+			break; /* Not a valid -n flag, stop processing flags */
+		}
 	}
+	
 	while (argv[i])
 	{
 		if (!first)

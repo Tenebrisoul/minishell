@@ -50,18 +50,40 @@ LDFLAGS := -lreadline
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(INCLUDES) -o $@ $(OBJS) $(LDFLAGS)
-	rm -f $(OBJS)
+	@$(CC) $(CFLAGS) $(INCLUDES) -o $@ $(OBJS) $(LDFLAGS)
+	@rm -f $(OBJS)
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
+	@rm -f $(OBJS)
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -f $(NAME)
 
 re: fclean all
 
-.PHONY: all clean fclean re
+# Test targets
+test: $(NAME)
+	@./test.sh
+
+test-echo: $(NAME)
+	@./test.sh echo
+
+test-cd: $(NAME)
+	@./test.sh cd
+
+test-pipes: $(NAME)
+	@./test.sh pipes
+
+test-all: $(NAME)
+	@./test.sh
+
+test-verbose: $(NAME)
+	@./test.sh --verbose
+
+test-list:
+	@./test.sh --list
+
+.PHONY: all clean fclean re test test-echo test-cd test-pipes test-all test-verbose test-list
