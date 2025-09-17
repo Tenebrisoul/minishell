@@ -1,4 +1,6 @@
-#include "minishell.h"
+#include "shell.h"
+#include <unistd.h>
+#include <stdlib.h>
 
 static void print_echo_string(const char *str)
 {
@@ -68,28 +70,24 @@ static int env_echo_command(char **argv)
 	return (0);
 }
 
-static int print_environment(void)
+static int print_environment(t_shell *sh)
 {
-	t_env_item *node;
+	int i;
 
-	node = get_env()->first_node;
-	while (node)
+	i = 0;
+	while (i < sh->env_len)
 	{
-		if (ft_strcmp(node->key, "__INIT__"))
+		if (sh->env[i])
 		{
-			node = node->next;
-			continue;
+			write(1, sh->env[i], sh_strlen(sh->env[i]));
+			write(1, "\n", 1);
 		}
-		write(1, node->key, sh_strlen(node->key));
-		write(1, "=", 1);
-		write(1, node->value, sh_strlen(node->value));
-		write(1, "\n", 1);
-		node = node->next;
+		i++;
 	}
 	return (0);
 }
 
-static int bi_env(char **argv)
+static int bi_env(t_shell *sh, char **argv)
 {
 	if (argv[1])
 	{
@@ -103,7 +101,7 @@ static int bi_env(char **argv)
 	}
 	else
 	{
-		return (print_environment());
+		return (print_environment(sh));
 	}
 }
 
@@ -161,11 +159,11 @@ static int parse_exit_code(const char *arg)
 	return ((int)(sign * val) & 0xFF);
 }
 
-static int bi_exit(char **argv)
+static int bi_exit(t_shell *sh, char **argv)
 {
 	int code;
 
-	code = get_env()->exit_status;
+	code = sh ? sh->last_status : 0;
 	if (argv[1])
 		code = parse_exit_code(argv[1]);
 	if (isatty(STDIN_FILENO))
@@ -173,18 +171,18 @@ static int bi_exit(char **argv)
 	exit(code);
 }
 
-static const char *get_cd_target(char **argv)
+static const char *get_cd_target(t_shell *sh, char **argv)
 {
 	const char *target;
 
 	if (!argv[1])
 	{
-		target = sh_getenv_val("HOME");
+		target = sh_getenv_val(sh, "HOME");
 		return (target);
 	}
 	if (sh_strcmp(argv[1], "-") == 0)
 	{
-		target = sh_getenv_val("OLDPWD");
+		target = sh_getenv_val(sh, "OLDPWD");
 		if (!target)
 		{
 			write(2, "minishell: cd: OLDPWD not set\n", 30);
@@ -214,34 +212,34 @@ static int change_directory(const char *target)
 	return (0);
 }
 
-static void update_pwd_vars(const char *old)
+static void update_pwd_vars(t_shell *sh, const char *old)
 {
 	char buf[4096];
 
 	if (getcwd(buf, sizeof(buf)))
 	{
-		sh_env_set("OLDPWD", old, 1);
-		sh_env_set("PWD", buf, 1);
+		sh_env_set(sh, "OLDPWD", old, 1);
+		sh_env_set(sh, "PWD", buf, 1);
 	}
 }
 
-static int bi_cd(char **argv)
+static int bi_cd(t_shell *sh, char **argv)
 {
 	const char *target;
 	char old[4096];
 
-	target = get_cd_target(argv);
+	target = get_cd_target(sh, argv);
 	if (!target && argv[1] && sh_strcmp(argv[1], "-") == 0)
 		return (1);
 	if (!getcwd(old, sizeof(old)))
 		old[0] = '\0';
 	if (change_directory(target))
 		return (1);
-	update_pwd_vars(old);
+	update_pwd_vars(sh, old);
 	return (0);
 }
 
-static int bi_export(char **argv)
+static int bi_export(t_shell *sh, char **argv)
 {
 	int i;
 	int rc;
@@ -250,7 +248,7 @@ static int bi_export(char **argv)
 	i = 1;
 	rc = 0;
 	if (!argv[1])
-		return (bi_env(argv));
+		return (bi_env(sh, argv));
 	while (argv[i])
 	{
 		eq = sh_strchr(argv[i], '=');
@@ -260,7 +258,7 @@ static int bi_export(char **argv)
 			continue ;
 		}
 		*eq = '\0';
-		if (sh_env_set(argv[i], eq + 1, 1) != 0)
+		if (sh_env_set(sh, argv[i], eq + 1, 1) != 0)
 			rc = 1;
 		*eq = '=';
 		i++;
@@ -268,7 +266,7 @@ static int bi_export(char **argv)
 	return (rc);
 }
 
-static int bi_unset(char **argv)
+static int bi_unset(t_shell *sh, char **argv)
 {
 	int i;
 
@@ -277,7 +275,7 @@ static int bi_unset(char **argv)
 		return (0);
 	while (argv[i])
 	{
-		sh_env_unset(argv[i]);
+		sh_env_unset(sh, argv[i]);
 		i++;
 	}
 	return (0);
@@ -318,7 +316,7 @@ int is_builtin(const char *cmd)
 	return (0);
 }
 
-int run_builtin(char **argv)
+int run_builtin(t_shell *sh, char **argv)
 {
 	if (!argv || !argv[0])
 		return (0);
@@ -327,15 +325,15 @@ int run_builtin(char **argv)
 	if (sh_strcmp(argv[0], "pwd") == 0)
 		return (bi_pwd());
 	if (sh_strcmp(argv[0], "env") == 0)
-		return (bi_env(argv));
+		return (bi_env(sh, argv));
 	if (sh_strcmp(argv[0], "exit") == 0)
-		return (bi_exit(argv));
+		return (bi_exit(sh, argv));
 	if (sh_strcmp(argv[0], "cd") == 0)
-		return (bi_cd(argv));
+		return (bi_cd(sh, argv));
 	if (sh_strcmp(argv[0], "export") == 0)
-		return (bi_export(argv));
+		return (bi_export(sh, argv));
 	if (sh_strcmp(argv[0], "unset") == 0)
-		return (bi_unset(argv));
+		return (bi_unset(sh, argv));
 	if (sh_strcmp(argv[0], "true") == 0)
 		return (bi_true());
 	if (sh_strcmp(argv[0], "false") == 0)

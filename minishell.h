@@ -305,16 +305,4 @@ t_trash		*new_trash(void *mem);
 void		insert_to_gc(t_trash *new_trash);
 void		dump_gc(void);
 
-// Advanced GC functions
-void		*gc_malloc(size_t size);
-void		*gc_realloc(void *ptr, size_t new_size);
-char		*gc_strdup(const char *s);
-void		gc_init(void);
-void		gc_cleanup(void);
-void		gc_collect(void);
-void		gc_mark_ptr(void *ptr);
-void		gc_unmark_all(void);
-size_t		gc_get_memory_usage(void);
-void		gc_print_stats(void);
-
 #endif

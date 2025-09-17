@@ -1,4 +1,5 @@
-#include "minishell.h"
+#include "../core/shell.h"
+#include <stdlib.h>
 
 int sh_is_line_empty(const char *s)
 {
@@ -191,8 +192,6 @@ static int split_string_helper(const char *s, char **arr, int count)
 	int i;
 	int start;
 	int idx;
-	
-	(void)count;
 
 	i = 0;
 	start = 0;
@@ -232,4 +231,24 @@ char **sh_split_colon(const char *s)
 void sh_free_strarray(char **arr)
 {
     (void)arr;
+}
+
+const char *sh_getenv_val(t_shell *sh, const char *name)
+{
+	int nlen;
+	int i;
+	char *e;
+
+	if (!sh || !name)
+		return (NULL);
+	nlen = sh_strlen(name);
+	i = 0;
+	while (i < sh->env_len)
+	{
+		e = sh->env[i];
+		if (sh_strncmp(e, name, nlen) == 0 && e[nlen] == '=')
+			return (e + nlen + 1);
+		i++;
+	}
+	return (NULL);
 }

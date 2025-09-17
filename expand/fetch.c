@@ -1,4 +1,17 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fetch.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/14 20:24:11 by root              #+#    #+#             */
+/*   Updated: 2025/09/14 20:24:26 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../include/expand.h"
+#include "../environment/env.h"
 
 char *get_variable_value(char *key)
 {
@@ -9,7 +22,7 @@ char *get_variable_value(char *key)
     if (key[0] == '$' && key[1] && (key[1] == '$' || key[1] == '?' || key[1] == '0'))
     {
         if (key[1] == '$')
-            return (ft_ltoa(getpid()));
+            return (ft_ltoa(getpid())); // note
         else if (key[1] == '?')
             return (ft_ltoa(get_env()->exit_status));
         else if (key[1] == '0')

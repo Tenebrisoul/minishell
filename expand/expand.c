@@ -1,4 +1,17 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/14 20:25:27 by root              #+#    #+#             */
+/*   Updated: 2025/09/14 21:06:37 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../include/expand.h"
+#include <stdlib.h>
 
 char *find_variable_in_string(char *str, char *var_name)
 {
@@ -55,7 +68,7 @@ void apply_all_replacements(char *result)
         if (expanded_value)
         {
             replace_single_variable(result, expander->queue[i], expanded_value);
-            free(expanded_value);
+            free(expanded_value); // note
         }
         i++;
     }

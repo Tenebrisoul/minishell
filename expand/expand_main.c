@@ -1,4 +1,24 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_main.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/11 21:30:23 by root              #+#    #+#             */
+/*   Updated: 2025/09/14 22:20:32 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <readline/readline.h>
+#include <readline/history.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include "../include/expand.h"
+#include "../environment/env.h"
+#include "../libft/libft.h"
+#include "../include/shell.h"
 
 void *init_env();
 
@@ -22,7 +42,7 @@ int calculate_result_size()
         }
         i++;
     }
-    return (result_len + 100);
+    return (result_len + 100); // note
 }
 
 int calculate_final_length()

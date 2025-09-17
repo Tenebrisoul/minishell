@@ -1,4 +1,12 @@
-#include "minishell.h"
+#include "shell.h"
+#include <fcntl.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
+#include <stdio.h>
 
 static char *handle_input(char *prompt)
 {
@@ -49,7 +57,7 @@ static int is_getline_allocated(void)
 	return !(isatty(STDIN_FILENO) && isatty(STDERR_FILENO));
 }
 
-int shell_run(void)
+int shell_run(t_shell *sh)
 {
 	char *line = NULL;
 	char *prompt = "";
@@ -72,7 +80,7 @@ int shell_run(void)
 		t_token *tokens = lexer(line);
 		if (!tokens) {
 			write(2, "minishell: syntax error\n", 24);
-			get_env()->exit_status = 2;
+			sh->last_status = 2;
 			if (is_getline_allocated())
 				free(line);
 			continue;
@@ -82,15 +90,15 @@ int shell_run(void)
 		if (!ast)
 		{
 			write(2, "minishell: syntax error\n", 24);
-			get_env()->exit_status = 2;
+			sh->last_status = 2;
 			cleanup_tokens(tokens);
 			if (is_getline_allocated())
 				free(line);
 			continue;
 		}
-		int status = exec_ast(ast);
+		int status = exec_ast(sh, ast);
 		if (status >= 0)
-			get_env()->exit_status = status;
+			sh->last_status = status;
 		
 		sh_signal_reset();
 		
@@ -99,12 +107,12 @@ int shell_run(void)
 		if (is_getline_allocated()) free(line);
 	}
 
-	return get_env()->exit_status;
+	return sh ? sh->last_status : 0;
 }
 
-char *read_heredoc_input(const char *delimiter)
+char *read_heredoc_input(t_shell *sh, const char *delimiter)
 {
-	char *content = (char*)alloc(1024);
+	char *content = (char*)alloc(1024); // note
 	int content_len = 0;
 	int content_cap = 1024;
 	char *line;
@@ -114,6 +122,7 @@ char *read_heredoc_input(const char *delimiter)
 		return NULL;
 	content[0] = '\0';
 	
+	/* Set heredoc state for signal handling */
 	sh_signal_set_state(STATE_HEREDOC, 1);
 	
 	while (1)
@@ -121,15 +130,17 @@ char *read_heredoc_input(const char *delimiter)
 		if (sh_signal_interrupted()) {
 			sh_signal_reset();
 			sh_signal_set_state(STATE_HEREDOC, 0);
-			return NULL;
+			return NULL; /* Cancel heredoc */
 		}
 		
+		/* Use appropriate input method based on mode */
 		if (isatty(STDIN_FILENO))
 		{
 			line = readline("> ");
 		}
 		else
 		{
+			/* Non-interactive mode - use getline */
 			size_t len = 0;
 			ssize_t read_len = getline(&line, &len, stdin);
 			if (read_len == -1)
@@ -141,7 +152,7 @@ char *read_heredoc_input(const char *delimiter)
 				line[read_len - 1] = '\0';
 		}
 		
-		if (!line)
+		if (!line) /* EOF reached (Ctrl+D) or interrupted */
 		{
 			sh_signal_set_state(STATE_HEREDOC, 0);
 			break;
@@ -155,7 +166,8 @@ char *read_heredoc_input(const char *delimiter)
 			break;
 		}
 		
-		char *expanded = expand_string(line);
+		/* Expand variables in heredoc content */
+		char *expanded = expand_string(sh, line);
 		if (!expanded)
 			expanded = line;
 		else
@@ -163,10 +175,11 @@ char *read_heredoc_input(const char *delimiter)
 			
 		int line_len = sh_strlen(expanded);
 		
+		/* Ensure we have enough space for line + newline + null terminator */
 		while (content_len + line_len + 2 > content_cap)
 		{
 			content_cap *= 2;
-			char *new_content = (char*)alloc(content_cap);
+			char *new_content = (char*)alloc(content_cap); // note
 			if (!new_content)
 			{
 				if (expanded != line) free(expanded);
@@ -183,6 +196,7 @@ char *read_heredoc_input(const char *delimiter)
 			content = new_content;
 		}
 		
+		/* Add line to content */
 		int i;
 
 		i = 0;
@@ -200,12 +214,13 @@ char *read_heredoc_input(const char *delimiter)
 	return content;
 }
 
-int handle_heredoc(const char *delimiter)
+int handle_heredoc(t_shell *sh, const char *delimiter)
 {
-	char *content = read_heredoc_input(delimiter);
+	char *content = read_heredoc_input(sh, delimiter);
 	if (!content)
 		return -1;
 		
+	/* Create a pipe to feed the content */
 	int pipefd[2];
 	if (pipe(pipefd) < 0)
 	{
@@ -213,6 +228,7 @@ int handle_heredoc(const char *delimiter)
 		return -1;
 	}
 	
+	/* Write content to pipe */
 	int content_len = sh_strlen(content);
 	if (write(pipefd[1], content, content_len) < 0)
 	{
@@ -223,5 +239,6 @@ int handle_heredoc(const char *delimiter)
 	}
 	close(pipefd[1]);
 	
+	/* Return read end of pipe for stdin redirection */
 	return pipefd[0];
 }

@@ -44,7 +44,7 @@ SRC_SHELL := \
 SRCS := $(SRC_LEX) $(SRC_PARSE) $(SRC_GC) $(SRC_SHELL)
 OBJS := $(SRCS:.c=.o)
 
-INCLUDES := -I.
+INCLUDES := -Ilexer -Iparser -Igc -Icore -Iutils -Isignals -Ienvironment -Iexecutor -Ibuiltin -Iexpand -Ilibft -Iinclude
 LDFLAGS := -lreadline
 
 all: $(NAME)

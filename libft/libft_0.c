@@ -1,4 +1,18 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libft_0.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/27 01:10:38 by btuncer           #+#    #+#             */
+/*   Updated: 2025/09/13 18:09:11 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdbool.h>
+#include <sys/types.h>
+#include <stddef.h>
 
 void *alloc(ssize_t size);
 
@@ -32,7 +46,7 @@ bool	in(char *str, char c)
 	return (false);
 }
 
-ssize_t	len(const char *str)
+ssize_t	len(char *str)
 {
 	ssize_t	counter;
 
@@ -147,7 +161,7 @@ char *ft_ltoa(long l)
 	res[counter] = '\0';
 	return (res);
 }
-char *ft_strdup(const char *str)
+char *ft_strdup(char *str)
 {
     char *dup;
     int i;
