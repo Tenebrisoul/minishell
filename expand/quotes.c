@@ -1,4 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
+#include <stdlib.h>
+#include <stddef.h>
 
 int analyze_quotes(bool qt, bool dqt, char outer)
 {

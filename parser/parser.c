@@ -1,4 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
+#include <stdlib.h>
+#include <stddef.h>
 
 static t_ast_node	*parse_pipeline(t_parser *parser);
 

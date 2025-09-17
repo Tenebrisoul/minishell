@@ -23,8 +23,8 @@
 # define STATE_HEREDOC		2  
 # define STATE_COMMAND      4
 
-# define GET    true
-# define INIT    true
+# define GET	false
+# define INIT	true
 
 /* ================================= ENUMS =================================== */
 
@@ -242,9 +242,8 @@ int			shell_run(void);
 char		*read_heredoc_input(const char *delimiter);
 
 /* -------------------------------- EXPANSION --------------------------------- */
-char		*expand_string(const char *in);
+//char		*expand_string(const char *in);
 char		**expand_argv(char **argv, int argc);
-char		*unquote_string(const char *in);
 char		*find_variable_in_string(char *str, char *var_name);
 void		replace_single_variable(char *str, char *var_name, char *value);
 void		apply_all_replacements(char *result);

@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "../minishell.h"
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -51,138 +51,40 @@ static int bi_pwd(void)
 	return (0);
 }
 
-static int env_echo_command(char **argv)
+static int bi_env(char **argv)
 {
-	int i;
-	int first;
-
-	i = 2;
-	first = 1;
-	while (argv[i])
-	{
-		if (!first)
-			write(1, " ", 1);
-		first = 0;
-		write(1, argv[i], sh_strlen(argv[i]));
-		i++;
-	}
-	write(1, "\n", 1);
+	(void)argv;
+	print_env();
 	return (0);
 }
 
-static int print_environment(t_shell *sh)
-{
-	int i;
-
-	i = 0;
-	while (i < sh->env_len)
-	{
-		if (sh->env[i])
-		{
-			write(1, sh->env[i], sh_strlen(sh->env[i]));
-			write(1, "\n", 1);
-		}
-		i++;
-	}
-	return (0);
-}
-
-static int bi_env(t_shell *sh, char **argv)
-{
-	if (argv[1])
-	{
-		if (sh_strcmp(argv[1], "echo") == 0)
-			return (env_echo_command(argv));
-		else
-		{
-			write(2, "minishell: env: command execution not fully implemented\n", 56);
-			return (1);
-		}
-	}
-	else
-	{
-		return (print_environment(sh));
-	}
-}
-
-static int parse_exit_sign(const char *arg, int *i)
-{
-	int sign;
-
-	sign = 1;
-	if (arg[0] == '+' || arg[0] == '-')
-	{
-		if (arg[0] == '-')
-			sign = -1;
-		(*i)++;
-	}
-	return (sign);
-}
-
-static int parse_exit_digits(const char *arg, int *i, long *val)
-{
-	int has_digits;
-
-	has_digits = 0;
-	while (arg[*i] && arg[*i] >= '0' && arg[*i] <= '9')
-	{
-		*val = *val * 10 + (arg[*i] - '0');
-		(*i)++;
-		has_digits = 1;
-	}
-	return (has_digits);
-}
-
-static void exit_with_error(const char *arg)
-{
-	write(2, "minishell: exit: ", 17);
-	write(2, arg, sh_strlen(arg));
-	write(2, ": numeric argument required\n", 28);
-	if (isatty(STDIN_FILENO))
-		write(1, "exit\n", 5);
-	exit(2);
-}
-
-static int parse_exit_code(const char *arg)
-{
-	int i;
-	int sign;
-	long val;
-	int has_digits;
-
-	i = 0;
-	sign = parse_exit_sign(arg, &i);
-	val = 0;
-	has_digits = parse_exit_digits(arg, &i, &val);
-	if (arg[i] != '\0' || !has_digits)
-		exit_with_error(arg);
-	return ((int)(sign * val) & 0xFF);
-}
-
-static int bi_exit(t_shell *sh, char **argv)
+static int bi_exit(char **argv)
 {
 	int code;
 
-	code = sh ? sh->last_status : 0;
+	code = get_env()->exit_status;
 	if (argv[1])
-		code = parse_exit_code(argv[1]);
+	{
+		// Simple exit code parsing - just use atoi for now
+		code = atoi(argv[1]) & 0xFF;
+	}
 	if (isatty(STDIN_FILENO))
 		write(1, "exit\n", 5);
 	exit(code);
 }
 
-static const char *get_cd_target(t_shell *sh, char **argv)
+static const char *get_cd_target(char **argv)
 {
 	const char *target;
 
 	if (!argv[1])
 	{
-		target = sh_getenv_val(sh, "HOME");
+		target = sh_getenv_val("HOME");
 		return (target);
 	}
 	if (sh_strcmp(argv[1], "-") == 0)
 	{
-		target = sh_getenv_val(sh, "OLDPWD");
+		target = sh_getenv_val("OLDPWD");
 		if (!target)
 		{
 			write(2, "minishell: cd: OLDPWD not set\n", 30);
@@ -190,6 +92,11 @@ static const char *get_cd_target(t_shell *sh, char **argv)
 		}
 		write(1, target, sh_strlen(target));
 		write(1, "\n", 1);
+		return (target);
+	}
+	if (sh_strcmp(argv[1], "~") == 0)
+	{
+		target = sh_getenv_val("HOME");
 		return (target);
 	}
 	return (argv[1]);
@@ -212,43 +119,54 @@ static int change_directory(const char *target)
 	return (0);
 }
 
-static void update_pwd_vars(t_shell *sh, const char *old)
+static void update_pwd_vars(const char *old)
 {
 	char buf[4096];
+	t_env_item *item;
 
 	if (getcwd(buf, sizeof(buf)))
 	{
-		sh_env_set(sh, "OLDPWD", old, 1);
-		sh_env_set(sh, "PWD", buf, 1);
+		// Set OLDPWD
+		item = get_env_item("OLDPWD");
+		if (item)
+			item->value = ft_strdup(old);
+		else
+			add_env_item(new_env_item("OLDPWD", (char *)old));
+
+		// Set PWD
+		item = get_env_item("PWD");
+		if (item)
+			item->value = ft_strdup(buf);
+		else
+			add_env_item(new_env_item("PWD", buf));
 	}
 }
 
-static int bi_cd(t_shell *sh, char **argv)
+static int bi_cd(char **argv)
 {
 	const char *target;
 	char old[4096];
 
-	target = get_cd_target(sh, argv);
+	target = get_cd_target(argv);
 	if (!target && argv[1] && sh_strcmp(argv[1], "-") == 0)
 		return (1);
 	if (!getcwd(old, sizeof(old)))
 		old[0] = '\0';
 	if (change_directory(target))
 		return (1);
-	update_pwd_vars(sh, old);
+	update_pwd_vars(old);
 	return (0);
 }
 
-static int bi_export(t_shell *sh, char **argv)
+static int bi_export(char **argv)
 {
 	int i;
-	int rc;
 	char *eq;
+	t_env_item *item;
 
 	i = 1;
-	rc = 0;
 	if (!argv[1])
-		return (bi_env(sh, argv));
+		return (bi_env(argv));
 	while (argv[i])
 	{
 		eq = sh_strchr(argv[i], '=');
@@ -258,15 +176,18 @@ static int bi_export(t_shell *sh, char **argv)
 			continue ;
 		}
 		*eq = '\0';
-		if (sh_env_set(sh, argv[i], eq + 1, 1) != 0)
-			rc = 1;
+		item = get_env_item(argv[i]);
+		if (item)
+			item->value = ft_strdup(eq + 1);
+		else
+			add_env_item(new_env_item(argv[i], eq + 1));
 		*eq = '=';
 		i++;
 	}
-	return (rc);
+	return (0);
 }
 
-static int bi_unset(t_shell *sh, char **argv)
+static int bi_unset(char **argv)
 {
 	int i;
 
@@ -275,7 +196,7 @@ static int bi_unset(t_shell *sh, char **argv)
 		return (0);
 	while (argv[i])
 	{
-		sh_env_unset(sh, argv[i]);
+		unset_env_item(argv[i]);
 		i++;
 	}
 	return (0);
@@ -316,7 +237,7 @@ int is_builtin(const char *cmd)
 	return (0);
 }
 
-int run_builtin(t_shell *sh, char **argv)
+int run_builtin(char **argv)
 {
 	if (!argv || !argv[0])
 		return (0);
@@ -325,15 +246,15 @@ int run_builtin(t_shell *sh, char **argv)
 	if (sh_strcmp(argv[0], "pwd") == 0)
 		return (bi_pwd());
 	if (sh_strcmp(argv[0], "env") == 0)
-		return (bi_env(sh, argv));
+		return (bi_env(argv));
 	if (sh_strcmp(argv[0], "exit") == 0)
-		return (bi_exit(sh, argv));
+		return (bi_exit(argv));
 	if (sh_strcmp(argv[0], "cd") == 0)
-		return (bi_cd(sh, argv));
+		return (bi_cd(argv));
 	if (sh_strcmp(argv[0], "export") == 0)
-		return (bi_export(sh, argv));
+		return (bi_export(argv));
 	if (sh_strcmp(argv[0], "unset") == 0)
-		return (bi_unset(sh, argv));
+		return (bi_unset(argv));
 	if (sh_strcmp(argv[0], "true") == 0)
 		return (bi_true());
 	if (sh_strcmp(argv[0], "false") == 0)

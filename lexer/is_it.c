@@ -1,4 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
+#include <stdlib.h>
+#include <stddef.h>
 
 bool	is_whitespace(char c)
 {

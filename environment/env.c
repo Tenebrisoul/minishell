@@ -1,18 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/03 16:35:35 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/13 17:01:37 by root             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "./env.h"
-#include "./../libft/libft.h"
-#include "stdlib.h"
+#include "../minishell.h"
+#include <stdlib.h>
+#include <stddef.h>
 
 t_env_item *is_env_item_exists(char *key)
 {
@@ -87,9 +75,51 @@ void print_env()
             continue;
         }
         write(1, node->key, len(node->key));
-        write(1, ": ", 2);
+        write(1, "=", 2);
         write(1, node->value, len(node->value));
         write(1, "\n", 1);
         node = node->next;
     }
+}
+
+char **get_env_array()
+{
+    t_env_item *node;
+    char **env_array;
+    int count = 0;
+    int i;
+    
+    node = get_env()->first_node;
+    while (node)
+    {
+        if (!ft_strcmp(node->key, "__INIT__"))
+            count++;
+        node = node->next;
+    }
+    
+    env_array = alloc((count + 1) * sizeof(char *));
+    if (!env_array)
+        return NULL;
+    
+    i = 0;
+    node = get_env()->first_node;
+    while (node && i < count)
+    {
+        if (!ft_strcmp(node->key, "__INIT__"))
+        {
+            int key_len = len(node->key);
+            int val_len = len(node->value);
+            char *env_str = alloc(key_len + val_len + 2);
+            if (env_str)
+            {
+                ft_strcpy(node->key, env_str);
+                env_str[key_len] = '=';
+                ft_strcpy(node->value, env_str + key_len + 1);
+                env_array[i++] = env_str;
+            }
+        }
+        node = node->next;
+    }
+    env_array[i] = NULL;
+    return env_array;
 }

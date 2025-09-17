@@ -10,8 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/expand.h"
-#include "../environment/env.h"
+#include "../minishell.h"
 
 char *get_variable_value(char *key)
 {

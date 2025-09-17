@@ -1,4 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
+#include <stdlib.h>
+#include <stddef.h>
 
 static int apply_redir_in(const t_redirect *r)
 {
@@ -147,44 +149,38 @@ static char *find_exec_in_path(const char *file)
 	return (result);
 }
 
-static int prepare_argv(const t_command *cmd, char ***argv)
+static void	expand_args(const t_command *cmd)
 {
 	int i;
-	char *u;
+	char *expanded;
 
-	*argv = expand_argv(cmd->args, cmd->argc);
-	if (!*argv)
-		return (1);
+	if (!cmd || !cmd->args)
+		return ;
 	i = 0;
-	while (i < cmd->argc)
+	while (i < cmd->argc && cmd->args[i])
 	{
-		u = unquote_string((*argv)[i]);
-		if (u)
-			(*argv)[i] = u;
+		expanded = expand(cmd->args[i]);
+		if (expanded)
+		{
+			(cmd)->args[i] = expanded;
+		}
 		i++;
 	}
-	return (0);
 }
 
 static void expand_redirects(const t_command *cmd)
 {
 	const t_redirect *rr;
 	char *e;
-	char *u;
 
 	rr = cmd->redirects;
 	while (rr)
 	{
 		if (rr->filename)
 		{
-			e = expand_string(rr->filename);
+			e = expand(rr->filename);
 			if (e)
-			{
 				((t_redirect *)rr)->filename = e;
-				u = unquote_string(rr->filename);
-				if (u)
-					((t_redirect *)rr)->filename = u;
-			}
 		}
 		rr = rr->next;
 	}
@@ -279,7 +275,6 @@ static int exec_external_command(const t_command *cmd, char **argv)
 
 static int exec_command(const t_command *cmd)
 {
-	char **argv;
 	int rc;
 
 	if (cmd->argc <= 0)
@@ -289,21 +284,20 @@ static int exec_command(const t_command *cmd)
 		sh_signal_reset();
 		return (130);
 	}
-	if (prepare_argv(cmd, &argv))
-		return (1);
+	expand_args(cmd);
 	expand_redirects(cmd);
-	if (is_builtin(argv[0]))
+	if (is_builtin(cmd->args[0]))
 	{
 		if (cmd->redirects)
-			return (exec_builtin_with_redir(cmd, argv));
+			return (exec_builtin_with_redir(cmd, cmd->args));
 		else
 		{
-			rc = run_builtin(argv);
-			sh_free_strarray(argv);
+			rc = run_builtin(cmd->args);
+			sh_free_strarray(cmd->args);
 			return (rc);
 		}
 	}
-	return (exec_external_command(cmd, argv));
+	return (exec_external_command(cmd, cmd->args));
 }
 
 static int setup_pipe_left(const t_ast_node *left, int *pipefd)

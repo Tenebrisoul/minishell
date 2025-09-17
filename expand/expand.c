@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/expand.h"
+#include "../minishell.h"
 #include <stdlib.h>
 
 char *find_variable_in_string(char *str, char *var_name)

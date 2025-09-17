@@ -1,4 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
+#include <stdlib.h>
+#include <stddef.h>
 
 char *get_cwd();
 t_env_item *is_env_item_exists(char *key);

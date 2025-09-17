@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "../minishell.h"
 #include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,7 +57,7 @@ static int is_getline_allocated(void)
 	return !(isatty(STDIN_FILENO) && isatty(STDERR_FILENO));
 }
 
-int shell_run(t_shell *sh)
+int shell_run(void)
 {
 	char *line = NULL;
 	char *prompt = "";
@@ -69,7 +69,7 @@ int shell_run(t_shell *sh)
 		line = handle_input(prompt);
 		if (!line)
 			break;
-		if (sh_is_line_empty(line))
+		if (!line || sh_is_line_empty(line))
 		{
 			if (is_getline_allocated())
 				free(line);
@@ -80,7 +80,7 @@ int shell_run(t_shell *sh)
 		t_token *tokens = lexer(line);
 		if (!tokens) {
 			write(2, "minishell: syntax error\n", 24);
-			sh->last_status = 2;
+			get_env()->exit_status = 2;
 			if (is_getline_allocated())
 				free(line);
 			continue;
@@ -90,27 +90,28 @@ int shell_run(t_shell *sh)
 		if (!ast)
 		{
 			write(2, "minishell: syntax error\n", 24);
-			sh->last_status = 2;
+			get_env()->exit_status = 2;
 			cleanup_tokens(tokens);
 			if (is_getline_allocated())
 				free(line);
 			continue;
 		}
-		int status = exec_ast(sh, ast);
+		int status = exec_ast(ast);
 		if (status >= 0)
-			sh->last_status = status;
-		
-		sh_signal_reset();
-		
+			get_env()->exit_status = status;
+
+		if (sh_signal_interrupted())
+			sh_signal_reset();
+
 		cleanup_ast(ast);
 		cleanup_tokens(tokens);
 		if (is_getline_allocated()) free(line);
 	}
 
-	return sh ? sh->last_status : 0;
+	return get_env()->exit_status;
 }
 
-char *read_heredoc_input(t_shell *sh, const char *delimiter)
+char *read_heredoc_input(const char *delimiter)
 {
 	char *content = (char*)alloc(1024); // note
 	int content_len = 0;
@@ -128,8 +129,8 @@ char *read_heredoc_input(t_shell *sh, const char *delimiter)
 	while (1)
 	{
 		if (sh_signal_interrupted()) {
-			sh_signal_reset();
 			sh_signal_set_state(STATE_HEREDOC, 0);
+			sh_signal_reset();
 			return NULL; /* Cancel heredoc */
 		}
 		
@@ -154,6 +155,11 @@ char *read_heredoc_input(t_shell *sh, const char *delimiter)
 		
 		if (!line) /* EOF reached (Ctrl+D) or interrupted */
 		{
+			if (sh_signal_interrupted()) {
+				sh_signal_set_state(STATE_HEREDOC, 0);
+				sh_signal_reset();
+				return NULL; /* Cancel heredoc */
+			}
 			sh_signal_set_state(STATE_HEREDOC, 0);
 			break;
 		}
@@ -167,7 +173,7 @@ char *read_heredoc_input(t_shell *sh, const char *delimiter)
 		}
 		
 		/* Expand variables in heredoc content */
-		char *expanded = expand_string(sh, line);
+		char *expanded = expand(line);
 		if (!expanded)
 			expanded = line;
 		else
@@ -214,9 +220,9 @@ char *read_heredoc_input(t_shell *sh, const char *delimiter)
 	return content;
 }
 
-int handle_heredoc(t_shell *sh, const char *delimiter)
+int handle_heredoc(const char *delimiter)
 {
-	char *content = read_heredoc_input(sh, delimiter);
+	char *content = read_heredoc_input(delimiter);
 	if (!content)
 		return -1;
 		

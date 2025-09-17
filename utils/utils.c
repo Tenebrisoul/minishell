@@ -1,4 +1,4 @@
-#include "../core/shell.h"
+#include "../minishell.h"
 #include <stdlib.h>
 
 int sh_is_line_empty(const char *s)
@@ -187,7 +187,7 @@ static int process_split_segment(const char *s, char **arr, int *idx, int start,
 	return (1);
 }
 
-static int split_string_helper(const char *s, char **arr, int count)
+static int split_string_helper(const char *s, char **arr, int count __attribute__((unused)))
 {
 	int i;
 	int start;
@@ -233,22 +233,14 @@ void sh_free_strarray(char **arr)
     (void)arr;
 }
 
-const char *sh_getenv_val(t_shell *sh, const char *name)
+const char *sh_getenv_val(const char *name)
 {
-	int nlen;
-	int i;
-	char *e;
+	t_env_item *item;
 
-	if (!sh || !name)
+	if (!name)
 		return (NULL);
-	nlen = sh_strlen(name);
-	i = 0;
-	while (i < sh->env_len)
-	{
-		e = sh->env[i];
-		if (sh_strncmp(e, name, nlen) == 0 && e[nlen] == '=')
-			return (e + nlen + 1);
-		i++;
-	}
+	item = get_env_item((char *)name);
+	if (item)
+		return (item->value);
 	return (NULL);
 }

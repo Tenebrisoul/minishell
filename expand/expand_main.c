@@ -15,10 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "../include/expand.h"
-#include "../environment/env.h"
-#include "../libft/libft.h"
-#include "../include/shell.h"
+#include "../minishell.h"
 
 void *init_env();
 
@@ -81,8 +78,33 @@ char *expand(char *prompt)
     queue_expandables();
     expanded_prompt = replace_all_variables();
     if (expanded_prompt)
+    {
+        final_prompt = remove_outer_quotes(expanded_prompt);
+        if (final_prompt)
+        {
+            return final_prompt;
+        }
+    }
+    return NULL;
+}
+
+/*
+char *expand(char *prompt)
+{
+    t_expander *expander;
+    char *expanded_prompt;
+    char *final_prompt;
+
+    expander = get_expander(INIT);
+    expander->prompt = prompt;
+    expander->queue = alloc((valid_dollar_count(expander->prompt) + 1) * sizeof(char *));
+    expander->queue[valid_dollar_count(expander->prompt)] = NULL;
+    queue_expandables();
+    expanded_prompt = replace_all_variables();
+    if (expanded_prompt)
         final_prompt = remove_outer_quotes(expanded_prompt);
     else
         final_prompt = prompt;
     return (final_prompt);
 } 
+*/

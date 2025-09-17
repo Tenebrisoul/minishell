@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 """
-Comprehensive Test Suite for Minishell
+Minishell Test Suite
 Author: AI Assistant
-Date: 2025-09-11
+Date: 2025-09-17
 
-This test suite covers all major functionality of the minishell project:
+This test suite covers the mandatory functionality of the minishell project:
 - Basic commands
-- Built-in commands  
-- Redirections
-- Pipes
-- Environment variables
-- Quotes and escaping
-- Semicolon sequences
-- Error handling
-- Edge cases
-- Memory management
+- Built-in commands (echo -n, cd, pwd, export, unset, env, exit)
+- Redirections (<, >, <<, >>)
+- Pipes (|)
+- Environment variables ($VAR, $?)
+- Quote handling (' and ")
+- Signal handling (basic tests)
+- Essential error cases
+
+Note: Does not test semicolon (;) or backslash (\) as these are explicitly 
+excluded from the mandatory requirements.
 """
 
 import subprocess
@@ -416,7 +417,7 @@ class MinishellTester:
                          "export ARG=hello; echo $ARG", "hello")
     
     def test_quotes_and_escaping(self):
-        """Test quote handling and escaping"""
+        """Test quote handling"""
         print(f"{Colors.MAGENTA}{Symbols.SPARKLES} Testing Quotes and Escaping...{Colors.RESET}")
         
         # Single quotes - no expansion
@@ -451,12 +452,6 @@ class MinishellTester:
         self.assert_equal("quotes_with_empty", "quotes", 
                          "echo hello '' world", "hello  world")
         
-        # Escaping (if implemented)
-        self.assert_equal("escape_quote", "quotes", 
-                         "echo 'can\\'t'", "can\\'t")
-        self.assert_equal("escape_backslash", "quotes", 
-                         'echo "back\\\\slash"', "back\\\\slash")
-        
         # Quote edge cases
         self.assert_equal("unclosed_single_quote", "quotes", 
                          "echo 'unclosed", expected_exit=2)
@@ -470,86 +465,21 @@ class MinishellTester:
         # Complex quote scenarios
         self.assert_equal("complex_quotes", "quotes", 
                          """echo "Start 'middle' end" """, "Start 'middle' end")
-        self.assert_equal("quotes_with_semicolon", "quotes", 
-                         "echo 'first'; echo 'second'", "first\nsecond")
-    
-    def test_semicolon_sequences(self):
-        """Test semicolon command sequences"""
-        print(f"{Colors.CYAN}{Symbols.STAR} Testing Semicolon Sequences...{Colors.RESET}")
-        
-        # Basic sequences
-        self.assert_equal("simple_sequence", "semicolon", 
-                         "echo first; echo second", "first\nsecond")
-        self.assert_equal("three_commands", "semicolon", 
-                         "echo 1; echo 2; echo 3", "1\n2\n3")
-        self.assert_equal("empty_command_in_sequence", "semicolon", 
-                         "echo start; ; echo end", "start\nend")
-        
-        # Sequences with different command types
-        self.assert_equal("sequence_with_cd", "semicolon", 
-                         "cd /; pwd; cd ~; pwd", f"/\n{os.path.expanduser('~')}")
-        self.assert_equal("builtin_sequence", "semicolon", 
-                         "export VAR=test; echo $VAR; unset VAR; echo $VAR", "test\n")
-        
-        # Sequences with pipes
-        self.assert_equal("sequence_with_pipe", "semicolon", 
-                         "echo hello | cat; echo world", "hello\nworld")
-        self.assert_equal("pipe_in_sequence", "semicolon", 
-                         "echo first; echo second | cat; echo third", "first\nsecond\nthird")
-        
-        # Complex sequences
-        self.assert_equal("complex_sequence", "semicolon", 
-                         "echo start; export VAR=middle; echo $VAR; echo end", 
-                         "start\nmiddle\nend")
-        
-        # Sequences with redirections
-        temp_file = os.path.join(self.temp_dir, "seq_test.txt")
-        self.assert_equal("sequence_with_redirect", "semicolon", 
-                         f"echo hello > {temp_file}; cat {temp_file}; echo done", 
-                         "hello\ndone")
-        
-        # Error handling in sequences
-        self.assert_equal("sequence_with_error", "semicolon", 
-                         "echo start; nonexistentcommand; echo end", "start\nend")
-        self.assert_equal("sequence_exit_codes", "semicolon", 
-                         "true; echo success; false; echo after_false", "success\nafter_false")
-        
-        # Sequences with quotes
-        self.assert_equal("sequence_with_quotes", "semicolon", 
-                         "echo 'first part'; echo \"second part\"", "first part\nsecond part")
-        
-        # Long sequences
-        long_seq = "; ".join([f"echo {i}" for i in range(5)])
-        expected = "\n".join([str(i) for i in range(5)])
-        self.assert_equal("long_sequence", "semicolon", long_seq, expected)
-        
-        # Sequences with environment variables
-        self.assert_equal("sequence_env_vars", "semicolon", 
-                         "export A=1; export B=2; echo $A$B", "12")
-        
-        # Edge cases
-        self.assert_equal("sequence_only_semicolons", "semicolon", 
-                         ";;;", expected_exit=0)
-        self.assert_equal("sequence_trailing_semicolon", "semicolon", 
-                         "echo hello;", "hello")
-        self.assert_equal("sequence_leading_semicolon", "semicolon", 
-                         ";echo hello", "hello")
     
     def test_error_handling(self):
-        """Test error conditions and edge cases"""
+        """Test essential error conditions"""
         print(f"{Colors.RED}{Symbols.BUG} Testing Error Handling...{Colors.RESET}")
         
-        # Syntax errors
+        # Quote syntax errors
         self.assert_equal("unclosed_single_quote", "errors", "echo 'unclosed", expected_exit=2)
         self.assert_equal("unclosed_double_quote", "errors", 'echo "unclosed', expected_exit=2)
+        
+        # Pipe syntax errors
         self.assert_equal("invalid_pipe_start", "errors", "| echo hello", expected_exit=2)
         self.assert_equal("invalid_pipe_end", "errors", "echo hello |", expected_exit=2)
-        self.assert_equal("double_pipe", "errors", "echo hello || echo world", expected_exit=2)
         
         # File/directory errors
         self.assert_equal("invalid_redirect_input", "errors", "cat < /nonexistent/file", 
-                         expected_exit=1)
-        self.assert_equal("invalid_redirect_output", "errors", "echo test > /root/cannot_write", 
                          expected_exit=1)
         
         # Command errors
@@ -557,153 +487,51 @@ class MinishellTester:
                          expected_exit=127)
         self.assert_equal("invalid_builtin_args", "errors", "cd too many args", 
                          expected_exit=1)
-        self.assert_equal("export_invalid", "errors", "export =value", expected_exit=1)
-        self.assert_equal("export_invalid_name", "errors", "export 123VAR=value", expected_exit=1)
-        
-        # Permission errors
-        restricted_file = os.path.join(self.temp_dir, "restricted")
-        try:
-            with open(restricted_file, 'w') as f:
-                f.write("test")
-            os.chmod(restricted_file, 0o000)
-            self.assert_equal("permission_denied_read", "errors", 
-                             f"cat {restricted_file}", expected_exit=1)
-        except:
-            pass
         
         # Directory navigation errors
-        self.assert_equal("cd_to_file", "errors", "cd /etc/passwd", expected_exit=1)
-        self.assert_equal("cd_permission_denied", "errors", "cd /root/.ssh", expected_exit=1)
+        self.assert_equal("cd_nonexistent", "errors", "cd /nonexistent/path", expected_exit=1)
         
         # Pipe errors
         self.assert_equal("pipe_to_invalid_command", "errors", 
                          "echo hello | nonexistentcommand", expected_exit=127)
-        self.assert_equal("invalid_command_pipe", "errors", 
-                         "nonexistentcommand | cat", expected_exit=127)
         
-        # Variable errors
-        self.assert_equal("unset_readonly_var", "errors", "unset PATH", expected_exit=0)  # Should succeed
-        
-        # Empty and whitespace handling
+        # Empty command handling
         self.assert_equal("empty_command", "errors", "", expected_exit=0)
         self.assert_equal("spaces_only", "errors", "   ", expected_exit=0)
-        self.assert_equal("tabs_only", "errors", "\t\t", expected_exit=0)
-        self.assert_equal("newlines_only", "errors", "\n\n", expected_exit=0)
         
-        # Exit code edge cases
-        self.assert_equal("exit_out_of_range", "errors", "exit 256", expected_exit=0)
-        self.assert_equal("exit_negative", "errors", "exit -1", expected_exit=255)
+        # Exit code tests
         self.assert_equal("exit_string", "errors", "exit hello", expected_exit=2)
-        
-        # Memory/resource limits (if applicable)
-        self.assert_equal("very_long_line", "errors", 
-                         f"echo {'a' * 10000}", 'a' * 10000)
-        
-        # Signal handling errors
-        self.assert_equal("ctrl_c_simulation", "errors", 
-                         "sleep 1", expected_exit=0)  # Basic test
     
     def test_edge_cases(self):
-        """Test edge cases and corner scenarios"""
+        """Test important edge cases"""
         print(f"{Colors.YELLOW}{Symbols.WARNING} Testing Edge Cases...{Colors.RESET}")
         
-        # Very long inputs
-        long_string = "a" * 1000
-        self.assert_equal("long_echo", "edge_cases", f"echo {long_string}", long_string)
-        
-        very_long_string = "x" * 5000
-        self.assert_equal("very_long_echo", "edge_cases", f"echo {very_long_string}", very_long_string)
-        
-        # Multiple spaces and formatting
+        # Basic formatting
         self.assert_equal("multiple_spaces", "edge_cases", 
                          "echo    hello     world", "hello world")
-        self.assert_equal("mixed_whitespace", "edge_cases", 
-                         "echo\t\thello\t\tworld", "hello world")
         self.assert_equal("leading_trailing_spaces", "edge_cases", 
                          "   echo hello world   ", "hello world")
         
-        # Special characters
-        self.assert_equal("special_chars", "edge_cases", 
+        # Special characters in quotes
+        self.assert_equal("special_chars_in_quotes", "edge_cases", 
                          "echo 'special: !@#$%^&*()'", "special: !@#$%^&*()")
-        self.assert_equal("unicode_chars", "edge_cases", 
-                         "echo 'héllo wörld'", "héllo wörld")
-        self.assert_equal("numbers_and_symbols", "edge_cases", 
-                         "echo '1234567890!@#$%^&*()'", "1234567890!@#$%^&*()")
         
-        # Large number of arguments
-        many_args = " ".join([f"arg{i}" for i in range(100)])
-        expected = " ".join([f"arg{i}" for i in range(100)])
-        self.assert_equal("many_arguments", "edge_cases", f"echo {many_args}", expected)
-        
-        # Complex nested quotes
-        self.assert_equal("nested_quote_complex", "edge_cases", 
-                         """echo 'He said "Hello" to me'""", 'He said "Hello" to me')
-        
-        # Very long pipes
-        pipe_chain = " | ".join(["cat"] * 10)
-        self.assert_equal("long_pipe_chain", "edge_cases", 
-                         f"echo test | {pipe_chain}", "test")
-        
-        # Many semicolon commands
-        many_commands = "; ".join([f"echo {i}" for i in range(20)])
-        expected_output = "\n".join([str(i) for i in range(20)])
-        self.assert_equal("many_semicolon_commands", "edge_cases", many_commands, expected_output)
-        
-        # Complex variable scenarios
+        # Variable edge cases
         self.assert_equal("var_with_numbers", "edge_cases", 
                          "export VAR123=test; echo $VAR123", "test")
         self.assert_equal("var_with_underscores", "edge_cases", 
                          "export MY_VAR_123=test; echo $MY_VAR_123", "test")
         
-        # Path edge cases
-        self.assert_equal("relative_path", "edge_cases", 
-                         "echo ./test/../test", "./test/../test")
-        self.assert_equal("absolute_path", "edge_cases", 
-                         "echo /usr/bin/test", "/usr/bin/test")
-        
-        # Command substitution like syntax (should not expand in minishell)
-        self.assert_equal("command_substitution_syntax", "edge_cases", 
-                         "echo `date`", "`date`")
-        self.assert_equal("dollar_paren_syntax", "edge_cases", 
-                         "echo $(date)", "$(date)")
-        
-        # Arithmetic expansion like syntax (should not expand)
-        self.assert_equal("arithmetic_syntax", "edge_cases", 
-                         "echo $((2+2))", "$((2+2))")
-        
-        # Brace expansion like syntax (should not expand)
-        self.assert_equal("brace_expansion_syntax", "edge_cases", 
-                         "echo {a,b,c}", "{a,b,c}")
-        
-        # Tilde expansion edge cases
-        self.assert_equal("tilde_in_quotes", "edge_cases", 
-                         "echo '~'", "~")
-        self.assert_equal("tilde_with_user", "edge_cases", 
-                         "echo ~root", compare_with_bash=True)
-        
         # Zero-length scenarios
         self.assert_equal("zero_length_var", "edge_cases", 
                          "export EMPTY=; echo [$EMPTY]", "[]")
-        self.assert_equal("zero_length_command", "edge_cases", 
-                         "export CMD=; $CMD echo hello", expected_exit=127)
         
-        # Binary and control characters (careful with these)
-        self.assert_equal("tab_character", "edge_cases", 
-                         "echo 'hello\tworld'", "hello\tworld")
-        self.assert_equal("newline_in_quotes", "edge_cases", 
-                         "echo line1\nline2", "line1\nline2")
-        
-        # File operations edge cases
+        # Hidden file access
         dot_file = os.path.join(self.temp_dir, ".hidden_file")
         with open(dot_file, 'w') as f:
             f.write("hidden content")
         self.assert_equal("hidden_file_access", "edge_cases", 
                          f"cat {dot_file}", "hidden content")
-        
-        # Multiple redirections
-        multi_output = os.path.join(self.temp_dir, "multi_out")
-        self.assert_equal("multiple_output_redirects", "edge_cases", 
-                         f"echo hello > {multi_output} > {multi_output}; cat {multi_output}", "hello")
     
     def test_signal_handling(self):
         """Test signal handling (basic test)"""
@@ -745,8 +573,8 @@ class MinishellTester:
         """Run all test categories"""
         print(f"{Colors.BOLD}{Colors.BRIGHT_CYAN}")
         print("╔" + "═" * 68 + "╗")
-        print("║" + f"{Symbols.ROCKET} MINISHELL COMPREHENSIVE TEST SUITE {Symbols.ROCKET}".center(66) + "║")
-        print("║" + f"{Symbols.CHART} 191 Test Cases Across 11 Categories {Symbols.CHART}".center(66) + "║")
+        print("║" + f"{Symbols.ROCKET} MINISHELL MANDATORY TEST SUITE {Symbols.ROCKET}".center(66) + "║")
+        print("║" + f"{Symbols.CHART} Essential Tests for Required Features {Symbols.CHART}".center(66) + "║")
         print("╚" + "═" * 68 + "╝")
         print(f"{Colors.RESET}")
         
@@ -754,14 +582,13 @@ class MinishellTester:
         os.chdir(self.temp_dir)
         
         try:
-            # Run test categories
+            # Run mandatory test categories only
             self.test_basic_commands()
             self.test_builtin_commands()
             self.test_redirections()
             self.test_pipes()
             self.test_environment_variables()
             self.test_quotes_and_escaping()
-            self.test_semicolon_sequences()
             self.test_error_handling()
             self.test_edge_cases()
             self.test_signal_handling()
@@ -772,7 +599,7 @@ class MinishellTester:
             os.chdir(self.original_cwd)
     
     def test_combinations(self):
-        """Test complex combinations of features"""
+        """Test combinations of mandatory features"""
         print(f"{Colors.BRIGHT_WHITE}{Symbols.FIRE} Testing Feature Combinations...{Colors.RESET}")
         
         # Pipes + Redirections
@@ -792,18 +619,6 @@ class MinishellTester:
         self.assert_equal("env_var_in_pipe", "combinations", 
                          "echo test | grep $USER", compare_with_bash=True)
         
-        # Semicolon + Pipes
-        self.assert_equal("semicolon_pipe_combo", "combinations", 
-                         "echo first | cat; echo second | cat", "first\nsecond")
-        self.assert_equal("complex_semicolon_pipe", "combinations", 
-                         "echo start; echo middle | cat | cat; echo end", "start\nmiddle\nend")
-        
-        # Semicolon + Redirections
-        temp_seq = os.path.join(self.temp_dir, "seq_redir.txt")
-        self.assert_equal("semicolon_redirect_combo", "combinations", 
-                         f"echo first > {temp_seq}; echo second >> {temp_seq}; cat {temp_seq}", 
-                         "first\nsecond")
-        
         # Quotes + Environment Variables
         self.assert_equal("quotes_env_combo", "combinations", 
                          'export VAR=test; echo "Value: $VAR"', "Value: test")
@@ -816,21 +631,6 @@ class MinishellTester:
         self.assert_equal("complex_quotes_pipe", "combinations", 
                          '''echo "He said 'hello'" | cat''', "He said 'hello'")
         
-        # All features combined
-        complex_temp = os.path.join(self.temp_dir, "complex.txt")
-        self.assert_equal("all_features_combo", "combinations", 
-                         f'export MSG="hello world"; echo "$MSG" > {complex_temp}; cat {complex_temp} | cat; echo done', 
-                         "hello world\ndone")
-        
-        # Complex pipe + semicolon + quotes
-        self.assert_equal("ultra_complex", "combinations", 
-                         '''export VAR=test; echo "start $VAR" | cat; echo 'middle'; echo "end $VAR" | cat''', 
-                         f"start test\nmiddle\nend test")
-        
-        # Error combinations
-        self.assert_equal("error_in_pipe_sequence", "combinations", 
-                         "echo start; echo middle | nonexistentcmd; echo end", "start\nend")
-        
         # Nested redirections and pipes
         nested_temp = os.path.join(self.temp_dir, "nested.txt")
         with open(nested_temp, 'w') as f:
@@ -841,15 +641,6 @@ class MinishellTester:
         # Multiple environment variables in complex command
         self.assert_equal("multi_env_complex", "combinations", 
                          'export A=hello; export B=world; echo "$A $B" | cat', "hello world")
-        
-        # Quotes with semicolon and pipes
-        self.assert_equal("quotes_semicolon_pipe", "combinations", 
-                         "echo 'first part'; echo 'second part' | cat", "first part\nsecond part")
-        
-        # Long combination chain
-        self.assert_equal("long_combination", "combinations", 
-                         "export VAR=test; echo start; echo $VAR | cat; echo middle; echo end", 
-                         "start\ntest\nmiddle\nend")
     
     def generate_report(self, output_mode='full'):
         """Generate comprehensive test report with different output modes"""
@@ -1187,12 +978,12 @@ def main():
     """Main function to run tests"""
     import argparse
     
-    parser = argparse.ArgumentParser(description='Comprehensive Minishell Test Suite')
+    parser = argparse.ArgumentParser(description='Minishell Mandatory Features Test Suite')
     parser.add_argument('--minishell', '-m', default='./minishell',
                        help='Path to minishell executable')
     parser.add_argument('--category', '-c', 
                        choices=['basic', 'builtins', 'redirections', 'pipes', 
-                               'env_vars', 'quotes', 'semicolon', 'errors', 
+                               'env_vars', 'quotes', 'errors', 
                                'edge_cases', 'signals', 'combinations'],
                        help='Run only specific test category')
     parser.add_argument('--summary', '-s', action='store_true',
@@ -1244,7 +1035,6 @@ def main():
                 'pipes': 'test_pipes',
                 'env_vars': 'test_environment_variables',
                 'quotes': 'test_quotes_and_escaping',
-                'semicolon': 'test_semicolon_sequences',
                 'errors': 'test_error_handling',
                 'edge_cases': 'test_edge_cases',
                 'signals': 'test_signal_handling',

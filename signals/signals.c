@@ -1,4 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
+#include <stdlib.h>
+#include <stddef.h>
 
 static volatile sig_atomic_t	g_shell_state = 0;
 
@@ -14,6 +16,9 @@ static void	sigint_handler(int signo)
 	if (g_shell_state & STATE_HEREDOC)
 	{
 		write(STDERR_FILENO, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 		return ;
 	}
 	if (g_shell_state & STATE_COMMAND)

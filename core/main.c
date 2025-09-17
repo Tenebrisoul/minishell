@@ -1,11 +1,12 @@
-#include "minishell.h"
-#include "../environment/env.h"
+#include "../minishell.h"
+#include <stdlib.h>
+#include <stddef.h>
 
 __attribute__((constructor))
 static void init_on_start(void)
 {
     init_env();
-	// init_signals();
+	init_signals();
 }
 
 __attribute__((destructor))
