@@ -1,5 +1,4 @@
-#include "parser.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 static t_command	*init_command(t_parser *parser)
 {

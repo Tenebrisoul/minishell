@@ -1,5 +1,4 @@
-#include "parser.h"
-#include "stdlib.h"
+#include "minishell.h"
 
 static t_ast_node	*parse_pipeline(t_parser *parser);
 
@@ -44,8 +43,8 @@ static t_ast_node	*create_sequence_node(t_ast_node *left, t_ast_node *right)
 		cleanup_ast(right);
 		return (NULL);
 	}
-	sequence->u_data.s_sequence.left = left;
-	sequence->u_data.s_sequence.right = right;
+	sequence->u_data.s_pipeline.left = left;
+	sequence->u_data.s_pipeline.right = right;
 	return (sequence);
 }
 

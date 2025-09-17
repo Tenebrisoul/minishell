@@ -1,5 +1,4 @@
-#include "lexer.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 static t_lexer	*init_lexer(char *input)
 {

@@ -1,5 +1,4 @@
-#include "parser.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 t_ast_node	*create_ast_node(t_node_type type)
 {

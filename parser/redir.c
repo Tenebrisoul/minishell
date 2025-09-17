@@ -1,6 +1,4 @@
-#include "parser.h"
-#include "stdlib.h"
-#include <unistd.h>
+#include "minishell.h"
 
 static t_redir_type	token_to_redir_type(t_token_type type)
 {

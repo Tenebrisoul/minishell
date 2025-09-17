@@ -1,5 +1,4 @@
-#include "lexer.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 t_token	*read_operator(t_lexer *lexer)
 {
@@ -38,7 +37,7 @@ static size_t	word_length(t_lexer *lexer)
 
 	length = 0;
 	in_quote = 0;
-	while (42)
+	while (1)
 	{
 		c = peek_char(lexer, length);
 		if (c == '\0')

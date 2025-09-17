@@ -1,5 +1,4 @@
-#include "lexer.h"
-#include <stdlib.h>
+#include "minishell.h"
 
 void	advance_char(t_lexer *lexer)
 {

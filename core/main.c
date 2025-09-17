@@ -1,21 +1,18 @@
-#include "shell.h"
+#include "minishell.h"
+
+__attribute__((constructor))
+static void init_on_start(void)
+{
+    init_env();
+}
 
 __attribute__((destructor))
 static void	cleanup_on_exit(void)
 {
-	gc_cleanup();
 }
 
-int	main(int argc, char **argv, char **envp)
+int	main(void)
 {
-	t_shell	sh;
-	int		code;
-
-	gc_init();
-	(void)argc; 
-	(void)argv;
-	if (sh_init(&sh, envp) != 0)
-		return 1;
-	code = shell_run(&sh);
-	return code;
+	shell_run();
+	return (get_env()->exit_status);
 }

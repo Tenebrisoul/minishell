@@ -1,4 +1,4 @@
-#include "lexer.h"
+#include "minishell.h"
 
 bool	is_whitespace(char c)
 {

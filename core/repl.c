@@ -1,19 +1,9 @@
-#include "shell.h"
-#include <fcntl.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-
-#include <stdio.h>
+#include "minishell.h"
 
 static char *handle_input(char *prompt)
 {
-	/* Check if we're in interactive mode */
 	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
 	{
-		/* Interactive mode - use TTY handling with readline */
 		int saved_in = dup(STDIN_FILENO);
 		int saved_out = dup(STDOUT_FILENO);
 		int tty = open("/dev/tty", O_RDWR);
@@ -40,7 +30,6 @@ static char *handle_input(char *prompt)
 	}
 	else
 	{
-		/* Non-interactive mode - simple line reading with getline */
 		char *line = NULL;
 		size_t len = 0;
 		ssize_t read_len = getline(&line, &len, stdin);
@@ -49,27 +38,24 @@ static char *handle_input(char *prompt)
 			if (line) free(line);
 			return NULL;
 		}
-		/* Remove trailing newline */
 		if (read_len > 0 && line[read_len - 1] == '\n')
 			line[read_len - 1] = '\0';
 		return line;
 	}
 }
 
-/* Check if line was allocated by getline (non-interactive mode) */
 static int is_getline_allocated(void)
 {
 	return !(isatty(STDIN_FILENO) && isatty(STDERR_FILENO));
 }
 
-int shell_run(t_shell *sh)
+int shell_run(void)
 {
 	char *line = NULL;
 	char *prompt = "";
 
 	if (isatty(2))
 		prompt = "minishell$ ";
-	sh_setup_signals();
 	while (1)
 	{
 		line = handle_input(prompt);
@@ -77,7 +63,8 @@ int shell_run(t_shell *sh)
 			break;
 		if (sh_is_line_empty(line))
 		{
-			if (is_getline_allocated()) free(line);
+			if (is_getline_allocated())
+				free(line);
 			continue;
 		}
 		if (isatty(0))
@@ -85,8 +72,9 @@ int shell_run(t_shell *sh)
 		t_token *tokens = lexer(line);
 		if (!tokens) {
 			write(2, "minishell: syntax error\n", 24);
-			sh->last_status = 2;
-			if (is_getline_allocated()) free(line);
+			get_env()->exit_status = 2;
+			if (is_getline_allocated())
+				free(line);
 			continue;
 		}
 
@@ -94,25 +82,29 @@ int shell_run(t_shell *sh)
 		if (!ast)
 		{
 			write(2, "minishell: syntax error\n", 24);
-			sh->last_status = 2;
+			get_env()->exit_status = 2;
 			cleanup_tokens(tokens);
-			if (is_getline_allocated()) free(line);
+			if (is_getline_allocated())
+				free(line);
 			continue;
 		}
-		int status = exec_ast(sh, ast);
+		int status = exec_ast(ast);
 		if (status >= 0)
-			sh->last_status = status;
+			get_env()->exit_status = status;
+		
+		sh_signal_reset();
+		
 		cleanup_ast(ast);
 		cleanup_tokens(tokens);
 		if (is_getline_allocated()) free(line);
 	}
 
-	return sh ? sh->last_status : 0;
+	return get_env()->exit_status;
 }
 
-char *read_heredoc_input(t_shell *sh, const char *delimiter)
+char *read_heredoc_input(const char *delimiter)
 {
-	char *content = (char*)gc_malloc(1024);
+	char *content = (char*)alloc(1024);
 	int content_len = 0;
 	int content_cap = 1024;
 	char *line;
@@ -122,16 +114,22 @@ char *read_heredoc_input(t_shell *sh, const char *delimiter)
 		return NULL;
 	content[0] = '\0';
 	
+	sh_signal_set_state(STATE_HEREDOC, 1);
+	
 	while (1)
 	{
-		/* Use appropriate input method based on mode */
+		if (sh_signal_interrupted()) {
+			sh_signal_reset();
+			sh_signal_set_state(STATE_HEREDOC, 0);
+			return NULL;
+		}
+		
 		if (isatty(STDIN_FILENO))
 		{
 			line = readline("> ");
 		}
 		else
 		{
-			/* Non-interactive mode - use getline */
 			size_t len = 0;
 			ssize_t read_len = getline(&line, &len, stdin);
 			if (read_len == -1)
@@ -143,19 +141,21 @@ char *read_heredoc_input(t_shell *sh, const char *delimiter)
 				line[read_len - 1] = '\0';
 		}
 		
-		if (!line) /* EOF reached (Ctrl+D) */
+		if (!line)
+		{
+			sh_signal_set_state(STATE_HEREDOC, 0);
 			break;
+		}
 			
-		/* Check if line matches delimiter exactly */
 		if (sh_strlen(line) == delimiter_len && 
 			sh_strncmp(line, delimiter, delimiter_len) == 0)
 		{
 			free(line);
+			sh_signal_set_state(STATE_HEREDOC, 0);
 			break;
 		}
 		
-		/* Expand variables in heredoc content */
-		char *expanded = expand_string(sh, line);
+		char *expanded = expand_string(line);
 		if (!expanded)
 			expanded = line;
 		else
@@ -163,26 +163,34 @@ char *read_heredoc_input(t_shell *sh, const char *delimiter)
 			
 		int line_len = sh_strlen(expanded);
 		
-		/* Ensure we have enough space for line + newline + null terminator */
 		while (content_len + line_len + 2 > content_cap)
 		{
 			content_cap *= 2;
-			char *new_content = (char*)gc_malloc(content_cap);
+			char *new_content = (char*)alloc(content_cap);
 			if (!new_content)
 			{
 				if (expanded != line) free(expanded);
 				return content;
 			}
 			int i;
-			for (i = 0; i < content_len; i++)
+
+			i = 0;
+			while (i < content_len)
+			{
 				new_content[i] = content[i];
+				i++;
+			}
 			content = new_content;
 		}
 		
-		/* Add line to content */
 		int i;
-		for (i = 0; i < line_len; i++)
+
+		i = 0;
+		while (i < line_len)
+		{
 			content[content_len++] = expanded[i];
+			i++;
+		}
 		content[content_len++] = '\n';
 		content[content_len] = '\0';
 		
@@ -192,13 +200,12 @@ char *read_heredoc_input(t_shell *sh, const char *delimiter)
 	return content;
 }
 
-int handle_heredoc(t_shell *sh, const char *delimiter)
+int handle_heredoc(const char *delimiter)
 {
-	char *content = read_heredoc_input(sh, delimiter);
+	char *content = read_heredoc_input(delimiter);
 	if (!content)
 		return -1;
 		
-	/* Create a pipe to feed the content */
 	int pipefd[2];
 	if (pipe(pipefd) < 0)
 	{
@@ -206,7 +213,6 @@ int handle_heredoc(t_shell *sh, const char *delimiter)
 		return -1;
 	}
 	
-	/* Write content to pipe */
 	int content_len = sh_strlen(content);
 	if (write(pipefd[1], content, content_len) < 0)
 	{
@@ -217,6 +223,5 @@ int handle_heredoc(t_shell *sh, const char *delimiter)
 	}
 	close(pipefd[1]);
 	
-	/* Return read end of pipe for stdin redirection */
 	return pipefd[0];
 }
