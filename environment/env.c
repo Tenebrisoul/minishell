@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <stdlib.h>
-#include <stddef.h>
 
 t_env_item *is_env_item_exists(char *key)
 {
@@ -75,7 +73,7 @@ void print_env()
             continue;
         }
         write(1, node->key, len(node->key));
-        write(1, "=", 2);
+        write(1, "=", 1);
         write(1, node->value, len(node->value));
         write(1, "\n", 1);
         node = node->next;

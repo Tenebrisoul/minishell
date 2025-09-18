@@ -11,14 +11,6 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <fcntl.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stdio.h>
-#include <errno.h>
 
 void	copy_content(char *dest, char *src, int len)
 {

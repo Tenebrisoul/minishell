@@ -15,6 +15,10 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+#include <dirent.h>
+#include <sys/stat.h>
+
+
 
 /* ================================= DEFINES ================================= */
 
@@ -252,6 +256,14 @@ int			exec_ast(const t_ast_node *ast);
 /* --------------------------------- BUILTINS -------------------------------- */
 int			is_builtin(const char *cmd);
 int			run_builtin(char **argv);
+char 		*get_cwd();
+int 		bi_echo(char **argv);
+int 		bi_pwd(void);
+int 		bi_env(char **argv);
+int 		bi_exit(char **argv);
+int 		bi_cd(char **argv);
+int 		bi_export(char **argv);
+int 		bi_unset(char **argv);
 
 /* --------------------------------- ENVIRONMENT ----------------------------- */
 t_env_item	*new_env_item(char *key, char *val);

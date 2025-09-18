@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <stdlib.h>
-#include <stddef.h>
 #include <errno.h>
 
 static int apply_redir_in(const t_redirect *r)

@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <stdlib.h>
-#include <stddef.h>
 
 int valid_dollar_count(char *str)
 {

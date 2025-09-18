@@ -6,12 +6,11 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 17:02:53 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/18 18:48:04 by root             ###   ########.fr       */
+/*   Updated: 2025/09/18 21:50:17 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include "builtins.h"
 
 int bi_export(char **argv)
 {

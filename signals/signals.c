@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <stdlib.h>
-#include <stddef.h>
 
 static volatile sig_atomic_t	g_shell_state = 0;
 

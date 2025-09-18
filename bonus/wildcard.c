@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <dirent.h>
-#include <sys/stat.h>
 
 t_wildcard *wildcard_init(void)
 {

@@ -6,15 +6,10 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 21:30:23 by root              #+#    #+#             */
-/*   Updated: 2025/09/18 20:10:46 by root             ###   ########.fr       */
+/*   Updated: 2025/09/18 21:48:51 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include "../minishell.h"
 
 void *init_env();
@@ -87,24 +82,3 @@ char *expand(char *prompt)
     }
     return NULL;
 }
-
-/*
-char *expand(char *prompt)
-{
-    t_expander *expander;
-    char *expanded_prompt;
-    char *final_prompt;
-
-    expander = get_expander(INIT);
-    expander->prompt = prompt;
-    expander->queue = alloc((valid_dollar_count(expander->prompt) + 1) * sizeof(char *));
-    expander->queue[valid_dollar_count(expander->prompt)] = NULL;
-    queue_expandables();
-    expanded_prompt = replace_all_variables();
-    if (expanded_prompt)
-        final_prompt = remove_outer_quotes(expanded_prompt);
-    else
-        final_prompt = prompt;
-    return (final_prompt);
-} 
-*/

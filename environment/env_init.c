@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <stdlib.h>
-#include <stddef.h>
 
 char *get_cwd();
 t_env_item *is_env_item_exists(char *key);
@@ -56,7 +54,7 @@ void configure_env()
     if (item_exists)
         item_exists->value = ft_ltoa(ft_atol(item_exists->value) + 1);
     else
-        add_env_item(new_env_item("SHLVL", "0"));
+        add_env_item(new_env_item("SHLVL", "1"));
 }
 
 void *init_env()

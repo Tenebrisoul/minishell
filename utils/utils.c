@@ -1,5 +1,4 @@
 #include "../minishell.h"
-#include <stdlib.h>
 
 int sh_is_line_empty(const char *s)
 {

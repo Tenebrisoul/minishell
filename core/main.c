@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <stdlib.h>
-#include <stddef.h>
 
 __attribute__((constructor))
 static void init_on_start(void)
@@ -12,7 +10,6 @@ static void init_on_start(void)
 __attribute__((destructor))
 static void	cleanup_on_exit(void)
 {
-	// gc_cleanup();
 }
 
 int shell_run();

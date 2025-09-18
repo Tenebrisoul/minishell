@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <stdlib.h>
-#include <stddef.h>
 
 t_ast_node	*create_ast_node(t_node_type type)
 {

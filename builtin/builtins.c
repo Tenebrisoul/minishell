@@ -6,12 +6,11 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:13:13 by root              #+#    #+#             */
-/*   Updated: 2025/09/18 16:13:40 by root             ###   ########.fr       */
+/*   Updated: 2025/09/18 21:50:12 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include "builtins.h"
 
 static int bi_true(void)
 {

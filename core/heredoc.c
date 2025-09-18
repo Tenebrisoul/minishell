@@ -11,9 +11,6 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 
 static int	is_quoted_delimiter(const char *delimiter, char **clean_delimiter)
 {
