@@ -23,3 +23,12 @@ cat << '"'eof'"'
 normalde: "eof" çıkması lazım
 
 #TODO burak $unfound_env_val = "" or " "
+
+#TODO A
+minishell$ >a<a
+minishell: parser syntax minishell$ 
+minishell: lexer syntax eminishell$ 
+minishell: lexer syntax eminishell$ 
+minishell: lexer syntax eminishell$ sad
+sad: command not found
+minishell$ 

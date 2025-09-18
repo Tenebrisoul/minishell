@@ -100,7 +100,7 @@ static t_command	*parse_command(t_parser *parser)
 		else if (result == -1)
 			break ;
 	}
-	if (cmd->argc == 0)
+	if (cmd->argc == 0 && !cmd->redirects)
 	{
 		cleanup_command(cmd);
 		return (NULL);

@@ -17,16 +17,14 @@ static void	sigint_handler(int signo)
 	if (g_shell_state & STATE_HEREDOC)
 	{
 		write(STDOUT_FILENO, "\n", 1);
-		rl_done = 1;
+		close(rl_instream->_fileno);
 		return ;
 	}
-
 	if (g_shell_state & STATE_COMMAND)
 	{
 		write(STDOUT_FILENO, "\n", 1);
 		return ;
 	}
-
 	write(STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();

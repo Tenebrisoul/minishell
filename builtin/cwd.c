@@ -1,6 +1,4 @@
 #include "../minishell.h"
-#include <stdlib.h>
-#include <stddef.h>
 
 char *get_cwd()
 {

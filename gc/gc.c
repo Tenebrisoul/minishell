@@ -4,6 +4,8 @@
 
 void *gc_exit()
 {
+    dump_gc();
+    exit(get_env()->exit_status);
     return (NULL);
 }
 

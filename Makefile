@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: btuncer <btuncer@student.42istanbul.com    +#+  +:+       +#+         #
+#    By: root <root@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/27 01:14:03 by btuncer           #+#    #+#              #
-#    Updated: 2025/09/17 08:39:46 by root             ###   ########.fr        #
+#    Updated: 2025/09/18 16:50:02 by root             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,7 +78,13 @@ SRC_EXEC    := \
 # Builtin sources
 SRC_BUILTIN := \
 	builtin/builtins.c \
-	builtin/cwd.c
+	builtin/cwd.c \
+	builtin/ms_bi_env.c \
+	builtin/ms_cd.c \
+	builtin/ms_echo.c \
+	builtin/ms_env.c \
+	builtin/ms_exit.c \
+	builtin/ms_pwd.c
 
 # Expander sources
 SRC_EXPAND  := \

@@ -75,6 +75,25 @@ int	check_delimiter(char *line, const char *delimiter, int delim_len)
 	return (0);
 }
 
+char	*safe_heredoc(char *prompt)
+{
+	int		saved_in;
+	int		saved_out;
+	int		tty;
+	char	*line;
+
+	redirect_tty(&tty, &saved_in, &saved_out);
+	line = readline(prompt);
+	insert_to_gc(new_trash(line));
+	if (tty >= 0)
+		restore_stdio(saved_in, saved_out);
+	else
+	{
+		close(saved_in);
+		close(saved_out);
+	}
+	return (line);
+}
 
 char	*get_heredoc_line(void)
 {
@@ -87,7 +106,7 @@ char	*get_heredoc_line(void)
 	{
 		if (sh_signal_interrupted())
 			return (NULL);
-		line = readline("> ");
+		line = safe_heredoc("> ");
 		if (!line || sh_signal_interrupted())
 		{
 			return (NULL);
