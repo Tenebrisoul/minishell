@@ -11,88 +11,76 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include <stdio.h>
 
-static char	*get_heredoc_line(void)
+static int	is_quoted_delimiter(const char *delimiter, char **clean_delimiter)
 {
-	char		*line;
-	size_t		len;
-	ssize_t		read_len;
+	int	len;
 
-	if (isatty(STDIN_FILENO))
-		return (readline("> "));
-	len = 0;
-	read_len = getline(&line, &len, stdin);
-	if (read_len == -1)
+	len = sh_strlen(delimiter);
+	if (len >= 2 && ((delimiter[0] == '"' && delimiter[len - 1] == '"')
+			|| (delimiter[0] == '\'' && delimiter[len - 1] == '\'')))
 	{
-		if (line)
-			free(line);
-		return (NULL);
-	}
-	if (read_len > 0 && line[read_len - 1] == '\n')
-		line[read_len - 1] = '\0';
-	return (line);
-}
-
-static void	copy_content(char *dest, char *src, int len)
-{
-	int	i;
-
-	i = 0;
-	while (i < len)
-	{
-		dest[i] = src[i];
-		i++;
-	}
-}
-
-static char	*resize_content(char *content, int *cap, int len, int line_len)
-{
-	char	*new_content;
-
-	while (len + line_len + 2 > *cap)
-	{
-		*cap *= 2;
-		new_content = (char *)alloc(*cap);
-		if (!new_content)
-			return (content);
-		copy_content(new_content, content, len);
-		content = new_content;
-	}
-	return (content);
-}
-
-static int	check_delimiter(char *line, const char *delimiter, int delim_len)
-{
-	if (sh_strlen(line) == delim_len
-		&& sh_strncmp(line, delimiter, delim_len) == 0)
-	{
-		free(line);
-		sh_signal_set_state(STATE_HEREDOC, 0);
+		*clean_delimiter = malloc(len - 1);
+		if (!*clean_delimiter)
+			return (0);
+		strncpy(*clean_delimiter, delimiter + 1, len - 2);
+		(*clean_delimiter)[len - 2] = '\0';
 		return (1);
+	}
+	*clean_delimiter = (char *)delimiter;
+	return (0);
+}
+
+static void	cleanup_heredoc_state(int quoted, char *clean_delimiter,
+					const char *delimiter)
+{
+	sh_signal_set_state(STATE_HEREDOC, 0);
+	sh_signal_reset();
+	if (quoted && clean_delimiter != delimiter)
+		free(clean_delimiter);
+}
+
+static int	process_heredoc_loop(char **content, int *content_len,
+					int *content_cap, char *clean_delimiter)
+{
+	char	*line;
+	int		delimiter_len;
+
+	delimiter_len = sh_strlen(clean_delimiter);
+	while (1)
+	{
+		if (sh_signal_interrupted())
+			return (-1);
+		line = get_heredoc_line();
+		if (!line)
+		{
+			if (sh_signal_interrupted())
+				return (-1);
+			break ;
+		}
+		if (check_delimiter(line, clean_delimiter, delimiter_len))
+			break ;
+		*content = process_heredoc_line_raw(*content, content_len,
+				content_cap, line);
+		if (!*content)
+			return (-1);
 	}
 	return (0);
 }
 
-static void	add_line_to_content(char **content, int *content_len,
-	char *expanded, int line_len)
+static char	*expand_heredoc_content(char *content, int quoted)
 {
-	int	i;
+	char	*expanded_content;
 
-	i = 0;
-	while (i < line_len)
-	{
-		(*content)[(*content_len)++] = expanded[i];
-		i++;
-	}
-	(*content)[(*content_len)++] = '\n';
-	(*content)[*content_len] = '\0';
+	if (quoted)
+		return (content);
+	expanded_content = expand(content);
+	if (!expanded_content)
+		return (content);
+	return (expanded_content);
 }
 
 char	*read_heredoc_input(const char *delimiter)
@@ -100,87 +88,51 @@ char	*read_heredoc_input(const char *delimiter)
 	char	*content;
 	int		content_len;
 	int		content_cap;
-	char	*line;
-	int		delimiter_len;
+	char	*clean_delimiter;
+	int		quoted;
 
+	quoted = is_quoted_delimiter(delimiter, &clean_delimiter);
 	content = (char *)alloc(1024);
 	if (!content)
 		return (NULL);
 	content[0] = '\0';
 	content_len = 0;
 	content_cap = 1024;
-	delimiter_len = sh_strlen(delimiter);
 	sh_signal_set_state(STATE_HEREDOC, 1);
-	while (1)
+	if (process_heredoc_loop(&content, &content_len, &content_cap,
+			clean_delimiter) == -1)
 	{
-		if (sh_signal_interrupted())
-		{
-			sh_signal_set_state(STATE_HEREDOC, 0);
-			sh_signal_reset();
-			return (NULL);
-		}
-		line = get_heredoc_line();
-		if (!line)
-		{
-			if (sh_signal_interrupted())
-			{
-				sh_signal_set_state(STATE_HEREDOC, 0);
-				sh_signal_reset();
-				return (NULL);
-			}
-			sh_signal_set_state(STATE_HEREDOC, 0);
-			break ;
-		}
-		if (check_delimiter(line, delimiter, delimiter_len))
-			break ;
-		content = process_heredoc_line(content, &content_len, &content_cap, line);
-		if (!content)
-			return (NULL);
+		cleanup_heredoc_state(quoted, clean_delimiter, delimiter);
+		get_env()->exit_status = 130;
+		content = (char *)alloc(1);
+		if (content)
+			content[0] = '\0';
+		return (content);
 	}
+	sh_signal_set_state(STATE_HEREDOC, 0);
+	if (quoted && clean_delimiter != delimiter)
+		free(clean_delimiter);
+	if (sh_signal_interrupted())
+	{
+		get_env()->exit_status = 130;
+		sh_signal_reset();
+		content = (char *)alloc(1);
+		if (content)
+			content[0] = '\0';
+		return (content);
+	}
+	content = expand_heredoc_content(content, quoted);
 	return (content);
 }
 
-char	*process_heredoc_line(char *content, int *content_len,
+char	*process_heredoc_line_raw(char *content, int *content_len,
 	int *content_cap, char *line)
 {
-	char	*expanded;
 	int		line_len;
 
-	expanded = expand(line);
-	if (!expanded)
-		expanded = line;
-	else
-		free(line);
-	line_len = sh_strlen(expanded);
+	line_len = sh_strlen(line);
 	content = resize_content(content, content_cap, *content_len, line_len);
-	add_line_to_content(&content, content_len, expanded, line_len);
-	if (expanded != line)
-		free(expanded);
+	add_line_to_content(&content, content_len, line, line_len);
+	free(line);
 	return (content);
-}
-
-int	handle_heredoc(const char *delimiter)
-{
-	char	*content;
-	int		pipefd[2];
-	int		content_len;
-
-	content = read_heredoc_input(delimiter);
-	if (!content)
-		return (-1);
-	if (pipe(pipefd) < 0)
-	{
-		perror("pipe");
-		return (-1);
-	}
-	content_len = sh_strlen(content);
-	if (write(pipefd[1], content, content_len) < 0)
-	{
-		perror("write");
-		close(pipefd[0]);
-		close(pipefd[1]);
-		return (-1);
-	}
-	close(pipefd[1]);
-	return (pipefd[0]);
 }

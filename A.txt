@@ -1,0 +1,25 @@
+cat -nnnn hello
+
+#TODO ctrl+c err
+minishell$ ^C
+minishell$ echo -nnnn hello
+minishell$ echo -nnnn hello
+-nnnn hello
+minishell$ 
+"
+
+cat << eof | cat A.txt
+
+"
+minishell$ cat << a << b << c
+> $HOME
+> a
+> b
+> c
+minishell$ 
+"/root/Desktop/minishell
+
+cat << '"'eof'"'
+normalde: "eof" çıkması lazım
+
+#TODO burak $unfound_env_val = "" or " "

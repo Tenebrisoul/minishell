@@ -7,6 +7,22 @@ static void print_echo_string(const char *str)
 	write(1, str, sh_strlen(str));
 }
 
+static int is_valid_n_flag(const char *arg)
+{
+	int i;
+
+	if (!arg || arg[0] != '-' || arg[1] != 'n')
+		return (0);
+	i = 1;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (i > 1);
+}
+
 static int bi_echo(char **argv)
 {
 	int i;
@@ -17,34 +33,11 @@ static int bi_echo(char **argv)
 	newline = 1;
 	first = 1;
 
-	/* Handle -n flag(s) - can be multiple or combined like -nnnn */
-	while (argv[i] && argv[i][0] == '-' && argv[i][1])
+	while (argv[i] && is_valid_n_flag(argv[i]))
 	{
-		int j = 1;
-		int valid_n_flag = 1;
-		
-		/* Check if all characters after '-' are 'n' */
-		while (argv[i][j])
-		{
-			if (argv[i][j] != 'n')
-			{
-				valid_n_flag = 0;
-				break;
-			}
-			j++;
-		}
-		
-		if (valid_n_flag && j > 1) /* At least one 'n' after '-' */
-		{
-			newline = 0;
-			i++;
-		}
-		else
-		{
-			break; /* Not a valid -n flag, stop processing flags */
-		}
+		newline = 0;
+		i++;
 	}
-	
 	while (argv[i])
 	{
 		if (!first)

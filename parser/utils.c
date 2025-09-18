@@ -60,10 +60,15 @@ void	cleanup_ast(t_ast_node *node)
 		return ;
 	if (node->type == NODE_COMMAND)
 		cleanup_command(node->u_data.command);
-	else if (node->type == NODE_PIPELINE)
+	else if (node->type == NODE_PIPELINE || node->type == NODE_SEQUENCE ||
+	         node->type == NODE_AND || node->type == NODE_OR)
 	{
-		cleanup_ast(node->u_data.s_pipeline.left);
-		cleanup_ast(node->u_data.s_pipeline.right);
+		cleanup_ast(node->u_data.s_binary.left);
+		cleanup_ast(node->u_data.s_binary.right);
+	}
+	else if (node->type == NODE_SUBSHELL)
+	{
+		cleanup_ast(node->u_data.s_subshell.child);
 	}
 	free(node);
 }

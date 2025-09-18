@@ -13,19 +13,20 @@ static void	sigint_handler(int signo)
 {
 	(void)signo;
 	g_shell_state |= STATE_INTERRUPT;
+
 	if (g_shell_state & STATE_HEREDOC)
 	{
-		write(STDERR_FILENO, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-		rl_redisplay();
+		write(STDOUT_FILENO, "\n", 1);
+		rl_done = 1;
 		return ;
 	}
+
 	if (g_shell_state & STATE_COMMAND)
 	{
-		write(STDERR_FILENO, "\n", 1);
+		write(STDOUT_FILENO, "\n", 1);
 		return ;
 	}
+
 	write(STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
@@ -37,7 +38,7 @@ void	init_signals(void)
 	struct sigaction	sa_int;
 
 	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = SA_RESTART;
+	sa_int.sa_flags = 0;
 	sa_int.sa_handler = sigint_handler;
 	sigaction(SIGINT, &sa_int, NULL);
 	signal(SIGQUIT, SIG_IGN);
@@ -54,6 +55,11 @@ void	sh_signal_set_state(int state_type, int value)
 int	sh_signal_interrupted(void)
 {
 	return ((g_shell_state & STATE_INTERRUPT) != 0);
+}
+
+int	sh_signal_should_exit(void)
+{
+	return ((g_shell_state & STATE_INTERRUPT) && !(g_shell_state & (STATE_HEREDOC | STATE_COMMAND)));
 }
 
 void	sh_signal_reset(void)

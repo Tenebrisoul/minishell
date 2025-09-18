@@ -145,7 +145,14 @@ char *ft_ltoa(long l)
 	int counter;
 	
 	if (l == 0)
-		return ("0");
+	{
+		res = alloc(2 * sizeof(char));
+		if (!res)
+			return ((void *)0);
+		res[0] = '0';
+		res[1] = '\0';
+		return (res);
+	}
 	n = len_digit(l);
 	res = alloc((n + 1) * sizeof(char));
 	if (!res)

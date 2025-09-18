@@ -42,10 +42,14 @@ static bool	tokenize(t_lexer *lexer, t_token **token_list)
 			advance_char(lexer);
 		if (lexer->current_char == '\0')
 			break ;
-		if (is_operator(lexer->current_char))
+		if (is_logical_operator(lexer))
+			current_token = read_logical_operator(lexer);
+		else if (lexer->current_char == '(' || lexer->current_char == ')')
+			current_token = read_parentheses(lexer);
+		else if (is_operator(lexer->current_char))
 			current_token = read_operator(lexer);
-		else if (is_word_char(lexer->current_char))
-			current_token = read_word(lexer);
+		else if (is_word_char(lexer->current_char) || lexer->current_char == '*')
+			current_token = read_wildcard(lexer);
 		else
 			current_token = NULL;
 		if (!current_token)

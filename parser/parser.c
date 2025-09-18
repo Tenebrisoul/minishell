@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-static t_ast_node	*parse_pipeline(t_parser *parser);
+t_ast_node	*parse_pipeline(t_parser *parser);
 
 static t_parser	*init_parser(t_token *tokens)
 {
@@ -29,8 +29,8 @@ static t_ast_node	*create_pipeline_node(t_ast_node *left, t_ast_node *right)
 		cleanup_ast(right);
 		return (NULL);
 	}
-	pipeline->u_data.s_pipeline.left = left;
-	pipeline->u_data.s_pipeline.right = right;
+	pipeline->u_data.s_binary.left = left;
+	pipeline->u_data.s_binary.right = right;
 	return (pipeline);
 }
 
@@ -45,23 +45,23 @@ static t_ast_node	*create_sequence_node(t_ast_node *left, t_ast_node *right)
 		cleanup_ast(right);
 		return (NULL);
 	}
-	sequence->u_data.s_pipeline.left = left;
-	sequence->u_data.s_pipeline.right = right;
+	sequence->u_data.s_binary.left = left;
+	sequence->u_data.s_binary.right = right;
 	return (sequence);
 }
 
-static t_ast_node	*parse_sequence(t_parser *parser)
+t_ast_node	*parse_sequence(t_parser *parser)
 {
 	t_ast_node	*left;
 	t_ast_node	*right;
 
-	left = parse_pipeline(parser);
+	left = parse_logical_or(parser);
 	if (!left)
 		return (NULL);
 	while (parser->current && parser->current->type == TOKEN_SEMICOLON)
 	{
 		advance_token(parser);
-		right = parse_pipeline(parser);
+		right = parse_logical_or(parser);
 		if (!right)
 		{
 			cleanup_ast(left);
@@ -74,18 +74,18 @@ static t_ast_node	*parse_sequence(t_parser *parser)
 	return (left);
 }
 
-static t_ast_node	*parse_pipeline(t_parser *parser)
+t_ast_node	*parse_pipeline(t_parser *parser)
 {
 	t_ast_node	*left;
 	t_ast_node	*right;
 
-	left = parse_ast_node(parser);
+	left = parse_primary(parser);
 	if (!left)
 		return (NULL);
 	while (parser->current && parser->current->type == TOKEN_PIPE)
 	{
 		advance_token(parser);
-		right = parse_ast_node(parser);
+		right = parse_primary(parser);
 		if (!right)
 		{
 			cleanup_ast(left);
@@ -108,7 +108,7 @@ t_ast_node	*parser(t_token *tokens)
 	parser = init_parser(tokens);
 	if (!parser)
 		return (NULL);
-	ast = parse_sequence(parser);
+	ast = parse_expression(parser);
 	if (!ast)
 	{
 		if (parser)

@@ -4,10 +4,13 @@
 
 void	advance_char(t_lexer *lexer)
 {
-	if (lexer->position < lexer->length - 1)
+	if (lexer->position < lexer->length)
 	{
 		lexer->position++;
-		lexer->current_char = lexer->input[lexer->position];
+		if (lexer->position < lexer->length)
+			lexer->current_char = lexer->input[lexer->position];
+		else
+			lexer->current_char = '\0';
 	}
 	else
 	{

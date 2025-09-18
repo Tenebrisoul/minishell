@@ -37,7 +37,12 @@ typedef enum e_token_type
 	TOKEN_REDIR_IN,
 	TOKEN_REDIR_OUT,
 	TOKEN_REDIR_APPEND,
-	TOKEN_HEREDOC
+	TOKEN_HEREDOC,
+	TOKEN_AND,           // &&
+	TOKEN_OR,            // ||
+	TOKEN_LPAREN,        // (
+	TOKEN_RPAREN,        // )
+	TOKEN_WILDCARD       // *
 }	t_token_type;
 
 // AST node types
@@ -46,6 +51,9 @@ typedef enum e_node_type
 	NODE_COMMAND,
 	NODE_PIPELINE,
 	NODE_SEQUENCE,
+	NODE_AND,           // && logical operator
+	NODE_OR,            // || logical operator
+	NODE_SUBSHELL       // ( ) parentheses
 }	t_node_type;
 
 // Redirection types
@@ -85,6 +93,7 @@ typedef struct s_redirect
 {
 	t_redir_type			type;
 	char					*filename;
+	int						quoted_delimiter;
 	struct s_redirect		*next;
 }	t_redirect;
 
@@ -107,7 +116,11 @@ typedef struct s_ast_node
 		{
 			t_ast_node		*left;
 			t_ast_node		*right;
-		}	s_pipeline;
+		}	s_binary;        // for pipes, &&, ||
+		struct
+		{
+			t_ast_node		*child;
+		}	s_subshell;      // for parentheses
 	}	u_data;
 }	t_ast_node;
 
@@ -181,6 +194,14 @@ typedef struct s_expander
     int                     queue_marker;
 }	t_expander;
 
+// Wildcard expansion structure
+typedef struct s_wildcard
+{
+	char					**matches;
+	int						count;
+	int						capacity;
+}	t_wildcard;
+
 /* ========================== FUNCTION DECLARATIONS ========================= */
 
 /* --------------------------------- MAIN ----------------------------------- */
@@ -205,6 +226,7 @@ bool		is_double_operator(t_lexer *lexer);
 // Token reading
 t_token		*read_word(t_lexer *lexer);
 t_token		*read_operator(t_lexer *lexer);
+t_token		*read_wildcard(t_lexer *lexer);
 
 /* --------------------------------- PARSER --------------------------------- */
 t_ast_node	*parser(t_token *tokens);
@@ -217,10 +239,11 @@ bool		is_redirect_token(t_token_type type);
 t_ast_node	*parse_ast_node(t_parser *parser);
 t_redirect	*parse_redirections(t_parser *parser);
 t_ast_node	*parse_primary(t_parser *parser);
+t_ast_node	*parse_pipeline(t_parser *parser);
+t_ast_node	*parse_sequence(t_parser *parser);
 
 /* --------------------------------- EXECUTOR -------------------------------- */
 int			exec_ast(const t_ast_node *ast);
-int			handle_heredoc(const char *delimiter);
 
 /* --------------------------------- BUILTINS -------------------------------- */
 int			is_builtin(const char *cmd);
@@ -240,6 +263,16 @@ t_env		*new_env(void);
 /* -------------------------------- SHELL CORE ------------------------------- */
 int			shell_run(void);
 char		*read_heredoc_input(const char *delimiter);
+
+/* -------------------------------- HEREDOC UTILS ---------------------------- */
+void		copy_content(char *dest, char *src, int len);
+char		*resize_content(char *content, int *cap, int len, int line_len);
+void		add_line_to_content(char **content, int *content_len,
+				char *expanded, int line_len);
+int			check_delimiter(char *line, const char *delimiter, int delim_len);
+char		*get_heredoc_line(void);
+char		*process_heredoc_line_raw(char *content, int *content_len,
+				int *content_cap, char *line);
 
 /* -------------------------------- EXPANSION --------------------------------- */
 //char		*expand_string(const char *in);
@@ -269,6 +302,7 @@ const char	*sh_getenv_val(const char *name);
 void		init_signals(void);
 void		sh_signal_set_state(int state_type, int value);
 int			sh_signal_interrupted(void);
+int			sh_signal_should_exit(void);
 void		sh_signal_reset(void);
 
 /* -------------------------------- UTILS ------------------------------------- */
@@ -303,5 +337,33 @@ t_gc		*new_gc(void);
 t_trash		*new_trash(void *mem);
 void		insert_to_gc(t_trash *new_trash);
 void		dump_gc(void);
+
+/* -------------------------------- BONUS FEATURES --------------------------- */
+// Wildcard expansion
+t_wildcard	*wildcard_init(void);
+void		wildcard_free(t_wildcard *wc);
+bool		wildcard_match(const char *pattern, const char *string);
+char		**wildcard_expand(const char *pattern);
+void		wildcard_add_match(t_wildcard *wc, const char *match);
+
+// Logical operators
+t_ast_node	*parse_logical_and(t_parser *parser);
+t_ast_node	*parse_logical_or(t_parser *parser);
+int			execute_logical_and(const t_ast_node *node, t_shell *shell);
+int			execute_logical_or(const t_ast_node *node, t_shell *shell);
+
+// Parentheses/Subshells
+t_ast_node	*parse_parentheses(t_parser *parser);
+int			execute_subshell(const t_ast_node *node, t_shell *shell);
+
+// Bonus lexer functions
+bool		is_logical_operator(t_lexer *lexer);
+t_token		*read_logical_operator(t_lexer *lexer);
+t_token		*read_parentheses(t_lexer *lexer);
+
+// Bonus parser functions
+t_ast_node	*parse_expression(t_parser *parser);
+t_ast_node	*parse_logical_expression(t_parser *parser);
+t_ast_node	*parse_primary(t_parser *parser);
 
 #endif

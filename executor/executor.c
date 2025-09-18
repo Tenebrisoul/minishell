@@ -1,6 +1,7 @@
 #include "../minishell.h"
 #include <stdlib.h>
 #include <stddef.h>
+#include <errno.h>
 
 static int apply_redir_in(const t_redirect *r)
 {
@@ -64,21 +65,30 @@ static int apply_redir_append(const t_redirect *r)
 
 static int apply_redir_heredoc(const t_redirect *r)
 {
-	int heredoc_fd;
+	int pipefd[2];
+	int content_len;
 
-	heredoc_fd = handle_heredoc(r->filename);
-	if (heredoc_fd < 0)
+	if (pipe(pipefd) < 0)
 	{
-		write(2, "minishell: heredoc error\n", 25);
+		perror("pipe");
 		return (1);
 	}
-	if (dup2(heredoc_fd, 0) < 0)
+	content_len = sh_strlen(r->filename);
+	if (write(pipefd[1], r->filename, content_len) < 0)
+	{
+		perror("write");
+		close(pipefd[0]);
+		close(pipefd[1]);
+		return (1);
+	}
+	close(pipefd[1]);
+	if (dup2(pipefd[0], 0) < 0)
 	{
 		perror("dup2");
-		close(heredoc_fd);
+		close(pipefd[0]);
 		return (1);
 	}
-	close(heredoc_fd);
+	close(pipefd[0]);
 	return (0);
 }
 
@@ -153,16 +163,38 @@ static void	expand_args(const t_command *cmd)
 {
 	int i;
 	char *expanded;
+	char **wildcard_matches;
+	int j;
 
 	if (!cmd || !cmd->args)
 		return ;
 	i = 0;
 	while (i < cmd->argc && cmd->args[i])
 	{
+		// First expand variables
 		expanded = expand(cmd->args[i]);
 		if (expanded)
-		{
 			(cmd)->args[i] = expanded;
+
+		// Then expand wildcards if present
+		if (sh_strchr(cmd->args[i], '*'))
+		{
+			wildcard_matches = wildcard_expand(cmd->args[i]);
+			if (wildcard_matches && wildcard_matches[0])
+			{
+				// Replace the argument with first match
+				(cmd)->args[i] = wildcard_matches[0];
+
+				// TODO: Handle multiple matches by expanding args array
+				// For now, just use the first match
+				j = 1;
+				while (wildcard_matches[j])
+				{
+					// Add additional matches to args array
+					// This would require reallocating args array
+					j++;
+				}
+			}
 		}
 		i++;
 	}
@@ -176,7 +208,7 @@ static void expand_redirects(const t_command *cmd)
 	rr = cmd->redirects;
 	while (rr)
 	{
-		if (rr->filename)
+		if (rr->filename && rr->type != REDIR_HEREDOC)
 		{
 			e = expand(rr->filename);
 			if (e)
@@ -207,11 +239,14 @@ static int exec_builtin_with_redir(const t_command *cmd, char **argv)
 		exit(run_builtin(argv));
 	}
 	w = 0;
-	if (waitpid(bpid, &w, 0) < 0)
+	while (waitpid(bpid, &w, 0) < 0)
 	{
-		perror("waitpid");
-		sh_free_strarray(argv);
-		return (1);
+		if (errno != EINTR)
+		{
+			perror("waitpid");
+			sh_free_strarray(argv);
+			return (1);
+		}
 	}
 	sh_free_strarray(argv);
 	if (WIFEXITED(w))
@@ -259,10 +294,13 @@ static int exec_external_command(const t_command *cmd, char **argv)
 	if (pid == 0)
 		exec_child_process(cmd, argv);
 	wstatus = 0;
-	if (waitpid(pid, &wstatus, 0) < 0)
+	while (waitpid(pid, &wstatus, 0) < 0)
 	{
-		perror("waitpid");
-		return (1);
+		if (errno != EINTR)
+		{
+			perror("waitpid");
+			return (1);
+		}
 	}
 	sh_free_strarray(argv);
 	if (WIFEXITED(wstatus))
@@ -378,11 +416,15 @@ static int exec_pipeline(const t_ast_node *left, const t_ast_node *right)
 		return (1);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	waitpid(lpid, NULL, 0);
-	if (waitpid(rpid, &status, 0) < 0)
+	while (waitpid(lpid, NULL, 0) < 0 && errno == EINTR)
+		;
+	while (waitpid(rpid, &status, 0) < 0)
 	{
-		perror("waitpid");
-		return (1);
+		if (errno != EINTR)
+		{
+			perror("waitpid");
+			return (1);
+		}
 	}
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
@@ -415,11 +457,17 @@ int exec_ast(const t_ast_node *ast)
     if (ast->type == NODE_COMMAND)
         result = exec_command(ast->u_data.command);
     else if (ast->type == NODE_SEQUENCE)
-        result = exec_sequence(ast->u_data.s_pipeline.left, ast->u_data.s_pipeline.right);
-    else
-        result = exec_pipeline(ast->u_data.s_pipeline.left, ast->u_data.s_pipeline.right);
-    
+        result = exec_sequence(ast->u_data.s_binary.left, ast->u_data.s_binary.right);
+    else if (ast->type == NODE_PIPELINE)
+        result = exec_pipeline(ast->u_data.s_binary.left, ast->u_data.s_binary.right);
+    else if (ast->type == NODE_AND)
+        result = execute_logical_and(ast, NULL);
+    else if (ast->type == NODE_OR)
+        result = execute_logical_or(ast, NULL);
+    else if (ast->type == NODE_SUBSHELL)
+        result = execute_subshell(ast, NULL);
+
     sh_signal_set_state(STATE_COMMAND, 0);
-    
+
     return result;
 }
