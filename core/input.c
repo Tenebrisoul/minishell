@@ -53,9 +53,9 @@ static char	*handle_tty_input(char *prompt)
 
 static char	*handle_pipe_input(void)
 {
-	char		*line;
-	size_t		len;
-	ssize_t		read_len;
+	char	*line;
+	size_t	len;
+	ssize_t	read_len;
 
 	line = NULL;
 	len = 0;

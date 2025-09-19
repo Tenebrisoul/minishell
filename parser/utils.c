@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:25:21 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 12:20:38 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 t_ast_node	*create_ast_node(t_node_type type)
 {
 	t_ast_node	*node;
 
-	node = malloc(sizeof(t_ast_node));
+	node = alloc(sizeof(t_ast_node));
 	if (!node)
 		return (NULL);
 	node->type = type;
@@ -58,8 +70,8 @@ void	cleanup_ast(t_ast_node *node)
 		return ;
 	if (node->type == NODE_COMMAND)
 		cleanup_command(node->u_data.command);
-	else if (node->type == NODE_PIPELINE || node->type == NODE_SEQUENCE ||
-	         node->type == NODE_AND || node->type == NODE_OR)
+	else if (node->type == NODE_PIPELINE || node->type == NODE_SEQUENCE
+		|| node->type == NODE_AND || node->type == NODE_OR)
 	{
 		cleanup_ast(node->u_data.s_binary.left);
 		cleanup_ast(node->u_data.s_binary.right);

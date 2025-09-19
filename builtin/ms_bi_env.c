@@ -6,20 +6,20 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 17:02:53 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/18 22:38:23 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 02:39:09 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void print_export_format(void)
+static void	print_export_format(void)
 {
-	char **sorted_env;
-	int i;
+	char	**sorted_env;
+	int		i;
 
 	sorted_env = get_sorted_env();
 	if (!sorted_env)
-		return;
+		return ;
 	i = 0;
 	while (sorted_env[i])
 	{
@@ -30,11 +30,11 @@ static void print_export_format(void)
 	}
 }
 
-int bi_export(char **argv)
+int	bi_export(char **argv)
 {
-	int i;
-	char *eq;
-	t_env_item *item;
+	int			i;
+	char		*eq;
+	t_env_item	*item;
 
 	i = 1;
 	if (!argv[1])
@@ -61,16 +61,16 @@ int bi_export(char **argv)
 		{
 			write(2, "minishell: not a valid identifier\n", 34);
 			return (1);
-		}	
+		}
 		*eq = '=';
 		i++;
 	}
 	return (0);
 }
 
-int bi_unset(char **argv)
+int	bi_unset(char **argv)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	if (!argv[1])

@@ -34,8 +34,8 @@ char	*resize_content(char *content, int *cap, int len, int line_len)
 	return (content);
 }
 
-void	add_line_to_content(char **content, int *content_len,
-	char *expanded, int line_len)
+void	add_line_to_content(char **content, int *content_len, char *expanded,
+		int line_len)
 {
 	int	i;
 
@@ -51,8 +51,8 @@ void	add_line_to_content(char **content, int *content_len,
 
 int	check_delimiter(char *line, const char *delimiter, int delim_len)
 {
-	if (sh_strlen(line) == delim_len
-		&& sh_strncmp(line, delimiter, delim_len) == 0)
+	if (sh_strlen(line) == delim_len && sh_strncmp(line, delimiter,
+			delim_len) == 0)
 	{
 		free(line);
 		sh_signal_set_state(STATE_HEREDOC, 0);
@@ -62,9 +62,9 @@ int	check_delimiter(char *line, const char *delimiter, int delim_len)
 }
 
 char	*process_heredoc_line_raw(char *content, int *content_len,
-	int *content_cap, char *line)
+		int *content_cap, char *line)
 {
-	int		line_len;
+	int	line_len;
 
 	line_len = sh_strlen(line);
 	content = resize_content(content, content_cap, *content_len, line_len);

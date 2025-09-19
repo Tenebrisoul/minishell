@@ -6,15 +6,15 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 17:00:44 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/18 16:15:51 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 02:38:34 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static const char *get_cd_target(char **argv)
+static const char	*get_cd_target(char **argv)
 {
-	const char *target;
+	const char	*target;
 
 	if (!argv[1])
 	{
@@ -41,7 +41,7 @@ static const char *get_cd_target(char **argv)
 	return (argv[1]);
 }
 
-static int change_directory(const char *target)
+static int	change_directory(const char *target)
 {
 	if (!target)
 	{
@@ -58,21 +58,18 @@ static int change_directory(const char *target)
 	return (0);
 }
 
-static void update_pwd_vars(const char *old)
+static void	update_pwd_vars(const char *old)
 {
-	char buf[4096];
-	t_env_item *item;
+	char		buf[4096];
+	t_env_item	*item;
 
 	if (getcwd(buf, sizeof(buf)))
 	{
-		// Set OLDPWD
 		item = get_env_item("OLDPWD");
 		if (item)
 			item->value = ft_strdup(old);
 		else
 			add_env_item(new_env_item("OLDPWD", (char *)old));
-
-		// Set PWD
 		item = get_env_item("PWD");
 		if (item)
 			item->value = ft_strdup(buf);
@@ -81,10 +78,10 @@ static void update_pwd_vars(const char *old)
 	}
 }
 
-int bi_cd(char **argv)
+int	bi_cd(char **argv)
 {
-	const char *target;
-	char old[4096];
+	const char	*target;
+	char		old[4096];
 
 	target = get_cd_target(argv);
 	if (!target && argv[1] && sh_strcmp(argv[1], "-") == 0)

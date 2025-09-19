@@ -1,20 +1,36 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:25:28 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 02:25:29 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-int sh_is_line_empty(const char *s)
+int	sh_is_line_empty(const char *s)
 {
-    size_t i = 0;
-    if (!s) return 1;
-    while (s[i]) {
-        if (s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '\r')
-            return 0;
-        i++;
-    }
-    return 1;
+	size_t	i;
+
+	i = 0;
+	if (!s)
+		return (1);
+	while (s[i])
+	{
+		if (s[i] != ' ' && s[i] != '\t' && s[i] != '\n' && s[i] != '\r')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
-int sh_strlen(const char *s)
+int	sh_strlen(const char *s)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!s)
@@ -24,11 +40,11 @@ int sh_strlen(const char *s)
 	return (i);
 }
 
-char *sh_strdup(const char *s)
+char	*sh_strdup(const char *s)
 {
-	int len;
-	char *p;
-	int i;
+	int		len;
+	char	*p;
+	int		i;
 
 	len = sh_strlen(s);
 	p = (char *)alloc((len + 1) * sizeof(char));
@@ -44,9 +60,9 @@ char *sh_strdup(const char *s)
 	return (p);
 }
 
-int sh_strcmp(const char *a, const char *b)
+int	sh_strcmp(const char *a, const char *b)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!a || !b)
@@ -62,9 +78,9 @@ int sh_strcmp(const char *a, const char *b)
 	return (((unsigned char)a[i]) - ((unsigned char)b[i]));
 }
 
-int sh_strncmp(const char *a, const char *b, int n)
+int	sh_strncmp(const char *a, const char *b, int n)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (n <= 0)
@@ -82,9 +98,9 @@ int sh_strncmp(const char *a, const char *b, int n)
 	return (((unsigned char)a[i]) - ((unsigned char)b[i]));
 }
 
-char *sh_strchr(const char *s, int c)
+char	*sh_strchr(const char *s, int c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!s)
@@ -100,15 +116,15 @@ char *sh_strchr(const char *s, int c)
 	return (NULL);
 }
 
-char *sh_join_path(const char *dir, const char *file)
+char	*sh_join_path(const char *dir, const char *file)
 {
-	int dl;
-	int fl;
-	int need_slash;
-	int len;
-	char *p;
-	int i;
-	int j;
+	int		dl;
+	int		fl;
+	int		need_slash;
+	int		len;
+	char	*p;
+	int		i;
+	int		j;
 
 	dl = sh_strlen(dir);
 	fl = sh_strlen(file);
@@ -135,10 +151,10 @@ char *sh_join_path(const char *dir, const char *file)
 	return (p);
 }
 
-static int count_colon_segments(const char *s)
+static int	count_colon_segments(const char *s)
 {
-	int count;
-	int i;
+	int	count;
+	int	i;
 
 	count = 1;
 	i = 0;
@@ -151,10 +167,10 @@ static int count_colon_segments(const char *s)
 	return (count);
 }
 
-static char *create_segment(const char *s, int start, int len)
+static char	*create_segment(const char *s, int start, int len)
 {
-	char *seg;
-	int k;
+	char	*seg;
+	int		k;
 
 	seg = (char *)alloc(len + 1);
 	if (!seg)
@@ -169,10 +185,11 @@ static char *create_segment(const char *s, int start, int len)
 	return (seg);
 }
 
-static int process_split_segment(const char *s, char **arr, int *idx, int start, int i)
+static int	process_split_segment(const char *s, char **arr, int *idx,
+		int start, int i)
 {
-	int len;
-	char *seg;
+	int		len;
+	char	*seg;
 
 	len = i - start;
 	seg = create_segment(s, start, len);
@@ -186,11 +203,12 @@ static int process_split_segment(const char *s, char **arr, int *idx, int start,
 	return (1);
 }
 
-static int split_string_helper(const char *s, char **arr, int count __attribute__((unused)))
+static int	split_string_helper(const char *s, char **arr,
+		int count __attribute__((unused)))
 {
-	int i;
-	int start;
-	int idx;
+	int	i;
+	int	start;
+	int	idx;
 
 	i = 0;
 	start = 0;
@@ -211,10 +229,10 @@ static int split_string_helper(const char *s, char **arr, int count __attribute_
 	return (1);
 }
 
-char **sh_split_colon(const char *s)
+char	**sh_split_colon(const char *s)
 {
-	int count;
-	char **arr;
+	int		count;
+	char	**arr;
 
 	if (!s)
 		return (NULL);
@@ -227,14 +245,14 @@ char **sh_split_colon(const char *s)
 	return (arr);
 }
 
-void sh_free_strarray(char **arr)
+void	sh_free_strarray(char **arr)
 {
-    (void)arr;
+	(void)arr;
 }
 
-const char *sh_getenv_val(const char *name)
+const char	*sh_getenv_val(const char *name)
 {
-	t_env_item *item;
+	t_env_item	*item;
 
 	if (!name)
 		return (NULL);

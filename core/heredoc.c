@@ -12,19 +12,27 @@
 
 #include "../minishell.h"
 
+int	has_quotes(const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '"' || str[i] == '\'')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 static int	is_quoted_delimiter(const char *delimiter, char **clean_delimiter)
 {
-	int	len;
-
-	len = sh_strlen(delimiter);
-	if (len >= 2 && ((delimiter[0] == '"' && delimiter[len - 1] == '"')
-			|| (delimiter[0] == '\'' && delimiter[len - 1] == '\'')))
+	if (has_quotes(delimiter))
 	{
-		*clean_delimiter = malloc(len - 1);
+		*clean_delimiter = remove_outer_quotes((char *)delimiter);
 		if (!*clean_delimiter)
 			return (0);
-		strncpy(*clean_delimiter, delimiter + 1, len - 2);
-		(*clean_delimiter)[len - 2] = '\0';
 		return (1);
 	}
 	*clean_delimiter = (char *)delimiter;
@@ -32,7 +40,7 @@ static int	is_quoted_delimiter(const char *delimiter, char **clean_delimiter)
 }
 
 static void	cleanup_heredoc_state(int quoted, char *clean_delimiter,
-					const char *delimiter)
+		const char *delimiter)
 {
 	sh_signal_set_state(STATE_HEREDOC, 0);
 	sh_signal_reset();
@@ -41,7 +49,7 @@ static void	cleanup_heredoc_state(int quoted, char *clean_delimiter,
 }
 
 static int	process_heredoc_loop(char **content, int *content_len,
-					int *content_cap, char *clean_delimiter)
+		int *content_cap, char *clean_delimiter)
 {
 	char	*line;
 	int		delimiter_len;
@@ -61,8 +69,8 @@ static int	process_heredoc_loop(char **content, int *content_len,
 		}
 		if (check_delimiter(line, clean_delimiter, delimiter_len))
 			break ;
-		*content = process_heredoc_line_raw(*content, content_len,
-				content_cap, line);
+		*content = process_heredoc_line_raw(*content, content_len, content_cap,
+				line);
 		if (!*content)
 			return (-1);
 	}
@@ -70,7 +78,7 @@ static int	process_heredoc_loop(char **content, int *content_len,
 }
 
 static char	*handle_heredoc_error(int quoted, char *clean_delimiter,
-					const char *delimiter)
+		const char *delimiter)
 {
 	char	*content;
 

@@ -6,30 +6,30 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 01:10:38 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/18 21:56:16 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 02:44:36 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdbool.h>
-#include <sys/types.h>
 #include <stddef.h>
+#include <sys/types.h>
 
-void *alloc(ssize_t size);
+void	*alloc(ssize_t size);
 
-bool is_str_empty(char *str)
+bool	is_str_empty(char *str)
 {
-    int counter;
-    bool is_empty;
-    
-    counter = 0;
-    is_empty = true;
-    while (str[counter] && is_empty)
-    {
-        if (str[counter] != ' ')
-            is_empty = false;
-        counter++;
-    }
-    return (is_empty);
+	int		counter;
+	bool	is_empty;
+
+	counter = 0;
+	is_empty = true;
+	while (str[counter] && is_empty)
+	{
+		if (str[counter] != ' ')
+			is_empty = false;
+		counter++;
+	}
+	return (is_empty);
 }
 
 bool	in(char *str, char c)
@@ -58,9 +58,9 @@ ssize_t	len(char *str)
 	return (counter);
 }
 
-void ft_strcpy(char *src, char *dst)
+void	ft_strcpy(char *src, char *dst)
 {
-	ssize_t counter;
+	ssize_t	counter;
 
 	counter = 0;
 	while (counter < len(src))
@@ -71,9 +71,9 @@ void ft_strcpy(char *src, char *dst)
 	dst[counter] = '\0';
 }
 
-void ft_strncpy(char *src, char *dst, int n)
+void	ft_strncpy(char *src, char *dst, int n)
 {
-	ssize_t counter;
+	ssize_t	counter;
 
 	counter = 0;
 	while (counter < len(src) && counter < n)
@@ -84,9 +84,9 @@ void ft_strncpy(char *src, char *dst, int n)
 	dst[counter] = '\0';
 }
 
-bool ft_strcmp(char *str, char *to_cmp)
+bool	ft_strcmp(char *str, char *to_cmp)
 {
-	int counter;
+	int	counter;
 
 	counter = 0;
 	if (len(str) != len(to_cmp))
@@ -100,9 +100,9 @@ bool ft_strcmp(char *str, char *to_cmp)
 	return (true);
 }
 
-long ft_atol(char *str)
+long	ft_atol(char *str)
 {
-	long res;
+	long	res;
 
 	res = 0;
 	while (*str)
@@ -111,13 +111,12 @@ long ft_atol(char *str)
 		res = res + (*str - 48);
 		str++;
 	}
-
 	return (res);
 }
 
-long len_digit(long l)
+long	len_digit(long l)
 {
-	int n;
+	int	n;
 
 	n = 0;
 	while (l)
@@ -128,9 +127,9 @@ long len_digit(long l)
 	return (n);
 }
 
-long power_of10(long times)
+long	power_of10(long times)
 {
-	long res;
+	long	res;
 
 	res = 1;
 	while (times--)
@@ -138,12 +137,12 @@ long power_of10(long times)
 	return (res);
 }
 
-char *ft_ltoa(long l)
+char	*ft_ltoa(long l)
 {
-	char *res;
-	int n;
-	int counter;
-	
+	char	*res;
+	int		n;
+	int		counter;
+
 	if (l == 0)
 	{
 		res = alloc(2 * sizeof(char));
@@ -168,22 +167,23 @@ char *ft_ltoa(long l)
 	res[counter] = '\0';
 	return (res);
 }
-char *ft_strdup(char *str)
-{
-    char *dup;
-    int i;
 
-    if (!str)
-        return (NULL);
-    dup = alloc((len(str) + 1) * sizeof(char));
-    if (!dup)
-        return (NULL);
-    i = 0;
-    while (str[i])
-    {
-        dup[i] = str[i];
-        i++;
-    }
-    dup[i] = '\0';
-    return (dup);
+char	*ft_strdup(char *str)
+{
+	char	*dup;
+	int		i;
+
+	if (!str)
+		return (NULL);
+	dup = alloc((len(str) + 1) * sizeof(char));
+	if (!dup)
+		return (NULL);
+	i = 0;
+	while (str[i])
+	{
+		dup[i] = str[i];
+		i++;
+	}
+	dup[i] = '\0';
+	return (dup);
 }

@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:24:23 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 13:32:49 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-static int apply_redir_in(const t_redirect *r)
+static int	apply_redir_in(const t_redirect *r)
 {
-	int fd;
+	int	fd;
 
 	fd = open(r->filename, O_RDONLY);
 	if (fd < 0)
@@ -23,9 +35,9 @@ static int apply_redir_in(const t_redirect *r)
 	return (0);
 }
 
-static int apply_redir_out(const t_redirect *r)
+static int	apply_redir_out(const t_redirect *r)
 {
-	int fd;
+	int	fd;
 
 	fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
@@ -46,9 +58,9 @@ static int apply_redir_out(const t_redirect *r)
 	return (0);
 }
 
-static int apply_redir_append(const t_redirect *r)
+static int	apply_redir_append(const t_redirect *r)
 {
-	int fd;
+	int	fd;
 
 	fd = open(r->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
@@ -69,10 +81,10 @@ static int apply_redir_append(const t_redirect *r)
 	return (0);
 }
 
-static int apply_redir_heredoc(const t_redirect *r)
+static int	apply_redir_heredoc(const t_redirect *r)
 {
-	int pipefd[2];
-	int content_len;
+	int	pipefd[2];
+	int	content_len;
 
 	if (pipe(pipefd) < 0)
 	{
@@ -101,7 +113,7 @@ static int apply_redir_heredoc(const t_redirect *r)
 	return (0);
 }
 
-static int apply_redirs(const t_redirect *r)
+static int	apply_redirs(const t_redirect *r)
 {
 	while (r)
 	{
@@ -118,7 +130,7 @@ static int apply_redirs(const t_redirect *r)
 	return (0);
 }
 
-static char *check_direct_path(const char *file)
+static char	*check_direct_path(const char *file)
 {
 	if (!file || !*file)
 		return (NULL);
@@ -127,10 +139,10 @@ static char *check_direct_path(const char *file)
 	return (NULL);
 }
 
-static char *search_in_dirs(char **dirs, const char *file)
+static char	*search_in_dirs(char **dirs, const char *file)
 {
-	int i;
-	char *full;
+	int		i;
+	char	*full;
 
 	i = 0;
 	while (dirs[i])
@@ -148,11 +160,11 @@ static char *search_in_dirs(char **dirs, const char *file)
 	return (NULL);
 }
 
-static char *find_exec_in_path(const char *file)
+static char	*find_exec_in_path(const char *file)
 {
-	const char *path;
-	char **dirs;
-	char *result;
+	const char	*path;
+	char		**dirs;
+	char		*result;
 
 	result = check_direct_path(file);
 	if (result)
@@ -170,53 +182,49 @@ static char *find_exec_in_path(const char *file)
 
 static void	expand_args(const t_command *cmd)
 {
-	int i;
-	char *expanded;
-	char **wildcard_matches;
-	int j;
+	char	*expanded;
+	char	**wildcard_matches;
+	int		i;
+	int		j;
 
 	if (!cmd || !cmd->args)
 		return ;
 	i = 0;
 	while (i < cmd->argc && cmd->args[i])
 	{
-		// First expand variables
 		expanded = expand(cmd->args[i]);
+		printf("check 1\n");
 		if (expanded)
 		{
+		printf("check 2\n");
 			(cmd)->args[i] = expanded;
-			// If expanded to empty string, remove this argument
 			if (expanded[0] == '\0')
 			{
-				// Shift remaining arguments left
-				int j = i;
+		printf("check 3\n");
+				j = i;
 				while (j < cmd->argc - 1)
 				{
 					cmd->args[j] = cmd->args[j + 1];
 					j++;
 				}
+		printf("check 4\n");
 				((t_command *)cmd)->argc--;
 				cmd->args[cmd->argc] = NULL;
-				i--; // Re-check this position
+				i--;
 			}
+		printf("check 5\n");
 		}
-
-		// Then expand wildcards if present
+		printf("check 6\n");
 		if (sh_strchr(cmd->args[i], '*'))
 		{
+		printf("check 7\n");
 			wildcard_matches = wildcard_expand(cmd->args[i]);
 			if (wildcard_matches && wildcard_matches[0])
 			{
-				// Replace the argument with first match
 				(cmd)->args[i] = wildcard_matches[0];
-
-				// TODO: Handle multiple matches by expanding args array
-				// For now, just use the first match
 				j = 1;
 				while (wildcard_matches[j])
 				{
-					// Add additional matches to args array
-					// This would require reallocating args array
 					j++;
 				}
 			}
@@ -225,10 +233,10 @@ static void	expand_args(const t_command *cmd)
 	}
 }
 
-static void expand_redirects(const t_command *cmd)
+static void	expand_redirects(const t_command *cmd)
 {
-	const t_redirect *rr;
-	char *e;
+	const t_redirect	*rr;
+	char				*e;
 
 	rr = cmd->redirects;
 	while (rr)
@@ -243,10 +251,10 @@ static void expand_redirects(const t_command *cmd)
 	}
 }
 
-static int exec_builtin_with_redir(const t_command *cmd, char **argv)
+static int	exec_builtin_with_redir(const t_command *cmd, char **argv)
 {
-	pid_t bpid;
-	int w;
+	pid_t	bpid;
+	int		w;
 
 	bpid = fork();
 	if (bpid < 0)
@@ -281,11 +289,11 @@ static int exec_builtin_with_redir(const t_command *cmd, char **argv)
 	return (1);
 }
 
-static void exec_child_process(const t_command *cmd, char **argv)
+static void	exec_child_process(const t_command *cmd, char **argv)
 {
-	char *exe;
-	char **env_array;
-	struct stat st;
+	char		*exe;
+	char		**env_array;
+	struct stat	st;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -299,8 +307,6 @@ static void exec_child_process(const t_command *cmd, char **argv)
 		write(2, ": command not found\n", 20);
 		exit(127);
 	}
-
-	// Check if it's a directory
 	if (stat(exe, &st) == 0 && S_ISDIR(st.st_mode))
 	{
 		write(2, "minishell: ", 11);
@@ -308,7 +314,6 @@ static void exec_child_process(const t_command *cmd, char **argv)
 		write(2, ": Is a directory\n", 17);
 		exit(126);
 	}
-
 	env_array = get_env_array();
 	execve(exe, argv, env_array);
 	write(2, "minishell: ", 11);
@@ -317,10 +322,10 @@ static void exec_child_process(const t_command *cmd, char **argv)
 	exit(126);
 }
 
-static int exec_external_command(const t_command *cmd, char **argv)
+static int	exec_external_command(const t_command *cmd, char **argv)
 {
-	pid_t pid;
-	int wstatus;
+	pid_t	pid;
+	int		wstatus;
 
 	pid = fork();
 	if (pid < 0)
@@ -347,10 +352,10 @@ static int exec_external_command(const t_command *cmd, char **argv)
 	return (1);
 }
 
-static void update_underscore_var(const t_command *cmd)
+static void	update_underscore_var(const t_command *cmd)
 {
-	t_env_item *underscore_item;
-	char *last_arg;
+	t_env_item	*underscore_item;
+	char		*last_arg;
 
 	if (!cmd || cmd->argc <= 0 || !cmd->args)
 		return ;
@@ -362,28 +367,31 @@ static void update_underscore_var(const t_command *cmd)
 		add_env_item(underscore_item);
 }
 
-static int exec_command(const t_command *cmd)
+static int	exec_command(const t_command *cmd)
 {
-	int rc;
+	int	rc;
 
 	if (cmd->argc <= 0)
 		return (0);
+	printf("DEBUG 1\n");
 	if (sh_signal_interrupted())
 	{
 		sh_signal_reset();
 		return (130);
 	}
+	printf("DEBUG 2\n");
 	expand_args(cmd);
+	printf("DEBUG 2.5\n");
 	expand_redirects(cmd);
-
-	// Check for empty command after expansion
+	printf("DEBUG 3\n");
 	if (!cmd->args[0] || !cmd->args[0][0])
 	{
 		sh_free_strarray(cmd->args);
 		return (0);
 	}
-
+	printf("DEBUG 4\n");
 	update_underscore_var(cmd);
+	printf("DEBUG 5\n");
 	if (is_builtin(cmd->args[0]))
 	{
 		if (cmd->redirects)
@@ -395,12 +403,13 @@ static int exec_command(const t_command *cmd)
 			return (rc);
 		}
 	}
+	printf("DEBUG 6\n");
 	return (exec_external_command(cmd, cmd->args));
 }
 
-static int setup_pipe_left(const t_ast_node *left, int *pipefd)
+static int	setup_pipe_left(const t_ast_node *left, int *pipefd)
 {
-	pid_t lpid;
+	pid_t	lpid;
 
 	lpid = fork();
 	if (lpid < 0)
@@ -424,9 +433,9 @@ static int setup_pipe_left(const t_ast_node *left, int *pipefd)
 	return (lpid);
 }
 
-static int setup_pipe_right(const t_ast_node *right, int *pipefd, pid_t lpid)
+static int	setup_pipe_right(const t_ast_node *right, int *pipefd, pid_t lpid)
 {
-	pid_t rpid;
+	pid_t	rpid;
 
 	rpid = fork();
 	if (rpid < 0)
@@ -451,12 +460,12 @@ static int setup_pipe_right(const t_ast_node *right, int *pipefd, pid_t lpid)
 	return (rpid);
 }
 
-static int exec_pipeline(const t_ast_node *left, const t_ast_node *right)
+static int	exec_pipeline(const t_ast_node *left, const t_ast_node *right)
 {
-	int pipefd[2];
-	pid_t lpid;
-	pid_t rpid;
-	int status;
+	int		pipefd[2];
+	pid_t	lpid;
+	pid_t	rpid;
+	int		status;
 
 	status = 0;
 	if (sh_signal_interrupted())
@@ -494,39 +503,47 @@ static int exec_pipeline(const t_ast_node *left, const t_ast_node *right)
 	return (1);
 }
 
-static int exec_sequence(const t_ast_node *left, const t_ast_node *right)
+static int	exec_sequence(const t_ast_node *left, const t_ast_node *right)
 {
-	if (sh_signal_interrupted()) {
+	int	left_status;
+
+	if (sh_signal_interrupted())
+	{
 		sh_signal_reset();
-		return 130;
+		return (130);
 	}
-	int left_status = exec_ast(left);
+	left_status = exec_ast(left);
 	get_env()->exit_status = left_status;
-	if (sh_signal_interrupted()) {
+	if (sh_signal_interrupted())
+	{
 		sh_signal_reset();
-		return 130;
+		return (130);
 	}
-	
-	return exec_ast(right);
+	return (exec_ast(right));
 }
 
-int exec_ast(const t_ast_node *ast)
+int	exec_ast(const t_ast_node *ast)
 {
-    if (!ast) return 0;
-    sh_signal_set_state(STATE_COMMAND, 1);
-    int result = 0;
-    if (ast->type == NODE_COMMAND)
-        result = exec_command(ast->u_data.command);
-    else if (ast->type == NODE_SEQUENCE)
-        result = exec_sequence(ast->u_data.s_binary.left, ast->u_data.s_binary.right);
-    else if (ast->type == NODE_PIPELINE)
-        result = exec_pipeline(ast->u_data.s_binary.left, ast->u_data.s_binary.right);
-    else if (ast->type == NODE_AND)
-        result = execute_logical_and(ast, NULL);
-    else if (ast->type == NODE_OR)
-        result = execute_logical_or(ast, NULL);
-    else if (ast->type == NODE_SUBSHELL)
-        result = execute_subshell(ast, NULL);
-    sh_signal_set_state(STATE_COMMAND, 0);
-    return result;
+	int	result;
+
+	if (!ast)
+		return (0);
+	sh_signal_set_state(STATE_COMMAND, 1);
+	result = 0;
+	if (ast->type == NODE_COMMAND)
+		result = exec_command(ast->u_data.command);
+	else if (ast->type == NODE_SEQUENCE)
+		result = exec_sequence(ast->u_data.s_binary.left,
+				ast->u_data.s_binary.right);
+	else if (ast->type == NODE_PIPELINE)
+		result = exec_pipeline(ast->u_data.s_binary.left,
+				ast->u_data.s_binary.right);
+	else if (ast->type == NODE_AND)
+		result = execute_logical_and(ast, NULL);
+	else if (ast->type == NODE_OR)
+		result = execute_logical_or(ast, NULL);
+	else if (ast->type == NODE_SUBSHELL)
+		result = execute_subshell(ast, NULL);
+	sh_signal_set_state(STATE_COMMAND, 0);
+	return (result);
 }

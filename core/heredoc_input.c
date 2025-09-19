@@ -31,9 +31,9 @@ static void	handle_getline_error(char *line)
 
 static char	*handle_non_tty_input(void)
 {
-	char		*line;
-	size_t		len;
-	ssize_t		read_len;
+	char	*line;
+	size_t	len;
+	ssize_t	read_len;
 
 	len = 0;
 	line = NULL;

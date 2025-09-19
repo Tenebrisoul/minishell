@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   repl.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:24:04 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 13:25:41 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	redirect_tty(int *tty, int *saved_in, int *saved_out)
@@ -45,11 +57,16 @@ char	*handle_input(char *prompt)
 	return (line);
 }
 
-int shell_run(void)
+int	shell_run(void)
 {
-	char *line = NULL;
-	char *prompt = "";
+	char		*line;
+	char		*prompt;
+	t_token		*tokens;
+	t_ast_node	*ast;
+	int			status;
 
+	line = NULL;
+	prompt = "";
 	if (isatty(2))
 		prompt = "minishell$ ";
 	while (1)
@@ -63,42 +80,39 @@ int shell_run(void)
 		}
 		if (!line)
 			break ;
-		if (sh_is_line_empty(line))
+		if (sh_is_line_empty(remove_outer_quotes(line)))
 			continue ;
 		if (isatty(0))
 			add_history(line);
-		t_token *tokens = lexer(line);
-		if (!tokens) {
+		tokens = lexer(line);
+		if (!tokens)
+		{
 			write(2, "minishell: syntax error\n", 25);
 			get_env()->exit_status = 2;
-			continue;
+			continue ;
 		}
-		t_ast_node *ast = parser(tokens);
+		ast = parser(tokens);
 		if (!ast)
 		{
 			if (get_env()->exit_status == 130)
 			{
 				cleanup_tokens(tokens);
-				continue;
+				continue ;
 			}
 			write(2, "minishell: syntax error\n", 25);
 			get_env()->exit_status = 2;
 			cleanup_tokens(tokens);
-			continue;
+			continue ;
 		}
 		if (sh_signal_interrupted())
 		{
-			printf("asd\n");
-			continue;
+			continue ;
 		}
-		int status = exec_ast(ast);
+		status = exec_ast(ast);
 		if (status == 130)
 			write(STDOUT_FILENO, "\n", 1);
 		if (status >= 0)
 			get_env()->exit_status = status;
 	}
-
-	return get_env()->exit_status;
+	return (get_env()->exit_status);
 }
-
-

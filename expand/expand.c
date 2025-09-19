@@ -6,88 +6,85 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 20:25:27 by root              #+#    #+#             */
-/*   Updated: 2025/09/18 23:49:00 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 02:36:50 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char *find_variable_in_string(char *str, char *var_name)
+char	*find_variable_in_string(char *str, char *var_name)
 {
-    char *pos;
-    int i;
+	char	*pos;
+	int		i;
 
-    pos = str;
-    while (*pos)
-    {
-        if (*pos == '$')
-        {
-            i = 0;
-            while (i < len(var_name) && pos[i] == var_name[i])
-                i++;
-            if (i == len(var_name))
-                return (pos);
-        }
-        pos++;
-    }
-    return (NULL);
+	pos = str;
+	while (*pos)
+	{
+		if (*pos == '$')
+		{
+			i = 0;
+			while (i < len(var_name) && pos[i] == var_name[i])
+				i++;
+			if (i == len(var_name))
+				return (pos);
+		}
+		pos++;
+	}
+	return (NULL);
 }
 
-void replace_single_variable(char *str, char *var_name, char *value)
+void	replace_single_variable(char *str, char *var_name, char *value)
 {
-    char *pos;
-    char *backup;
-    int backup_len;
-    int var_len;
-    int val_len;
+	char	*pos;
+	char	*backup;
+	int		backup_len;
+	int		var_len;
+	int		val_len;
 
-    pos = find_variable_in_string(str, var_name);
-    if (!pos)
-        return ;
-    var_len = len(var_name);
-    val_len = len(value);
-    backup_len = len(pos + var_len);
-    backup = alloc((backup_len + 1) * sizeof(char));
-    ft_strcpy(pos + var_len, backup);
-    ft_strcpy(value, pos);
-    ft_strcpy(backup, pos + val_len);
+	pos = find_variable_in_string(str, var_name);
+	if (!pos)
+		return ;
+	var_len = len(var_name);
+	val_len = len(value);
+	backup_len = len(pos + var_len);
+	backup = alloc((backup_len + 1) * sizeof(char));
+	ft_strcpy(pos + var_len, backup);
+	ft_strcpy(value, pos);
+	ft_strcpy(backup, pos + val_len);
 }
 
-void apply_all_replacements(char *result)
+void	apply_all_replacements(char *result)
 {
-    t_expander *expander;
-    char *expanded_value;
-    int i;
+	t_expander	*expander;
+	char		*expanded_value;
+	int			i;
 
-    expander = get_expander(GET);
-    i = 0;
-    while (i < expander->queue_marker && expander->queue[i])
-    {
-        expanded_value = get_variable_value(expander->queue[i]);
-        if (expanded_value)
-        {
-            replace_single_variable(result, expander->queue[i], expanded_value);
-            free(expanded_value); // note
-        }
-        else
-        {
-            // Undefined variable - replace with empty string
-            replace_single_variable(result, expander->queue[i], "");
-        }
-        i++;
-    }
+	expander = get_expander(GET);
+	i = 0;
+	while (i < expander->queue_marker && expander->queue[i])
+	{
+		expanded_value = get_variable_value(expander->queue[i]);
+		if (expanded_value)
+		{
+			replace_single_variable(result, expander->queue[i], expanded_value);
+			free(expanded_value);
+		}
+		else
+			replace_single_variable(result, expander->queue[i], "");
+		i++;
+	}
 }
 
-char *replace_all_variables()
+char	*replace_all_variables(void)
 {
-    t_expander *expander;
-    char *result;
-    int final_len;
+	t_expander	*expander;
+	char		*result;
+	int			final_len;
 
-    expander = get_expander(GET);
-    final_len = calculate_final_length();
-    result = alloc((final_len + 1) * sizeof(char));
-    ft_strcpy(expander->prompt, result);
-    apply_all_replacements(result);
-    return (result);
+	expander = get_expander(GET);
+	final_len = calculate_final_length();
+	result = alloc((final_len + 1) * sizeof(char));
+	ft_strcpy(expander->prompt, result);
+	apply_all_replacements(result);
+	return (result);
 }

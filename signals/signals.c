@@ -1,17 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signals.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:25:24 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 02:44:06 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static volatile sig_atomic_t	g_shell_state = 0;
 
-#define STATE_NORMAL	0
-#define STATE_INTERRUPT	1
-#define STATE_HEREDOC	2
-#define STATE_COMMAND	4
+#define STATE_NORMAL 0
+#define STATE_INTERRUPT 1
+#define STATE_HEREDOC 2
+#define STATE_COMMAND 4
 
 static void	sigint_handler(int signo)
 {
 	(void)signo;
 	g_shell_state |= STATE_INTERRUPT;
-
 	if (g_shell_state & STATE_COMMAND)
 		return ;
 	if (g_shell_state & STATE_HEREDOC)
@@ -52,7 +63,8 @@ int	sh_signal_interrupted(void)
 
 int	sh_signal_should_exit(void)
 {
-	return ((g_shell_state & STATE_INTERRUPT) && !(g_shell_state & (STATE_HEREDOC | STATE_COMMAND)));
+	return ((g_shell_state & STATE_INTERRUPT)
+		&& !(g_shell_state & (STATE_HEREDOC | STATE_COMMAND)));
 }
 
 void	sh_signal_reset(void)

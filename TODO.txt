@@ -1,9 +1,9 @@
 // TODO: Heredoc Quote Parsing
 // cat << '"'eof'"' should output: "eof"
-// Fix quote handling in heredoc delimiters
+// ! Fix quote handling in heredoc delimiters
 
 // TODO: Environment Variable Handling
-// !Handle undefined environment variables - should they return "" or " "?
+// ! Handle undefined environment variables - should they return "" or " "?
 
 // TODO: Export Command Implementation
 // ! Basic export functionality
@@ -18,7 +18,7 @@
 // - Proper exit code handling
 
 // TODO: Advanced Features
-// ! Inception (nested shells)
+// - Inception (nested shells)
 // - CTRL+D handling in heredoc
 // ! Double quote parsing edge cases
 // ! Single quote parsing edge cases

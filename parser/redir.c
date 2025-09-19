@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redir.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:25:18 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 12:20:08 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static t_redir_type	token_to_redir_type(t_token_type type)
@@ -13,17 +25,6 @@ static t_redir_type	token_to_redir_type(t_token_type type)
 	return (REDIR_IN);
 }
 
-static int	has_quotes(const char *str)
-{
-	int	len;
-
-	len = sh_strlen(str);
-	if (len >= 2 && ((str[0] == '"' && str[len - 1] == '"') ||
-		(str[0] == '\'' && str[len - 1] == '\'')))
-		return (1);
-	return (0);
-}
-
 static t_redirect	*create_redirect(t_parser *parser, t_token_type redir_token)
 {
 	t_redirect	*redirect;
@@ -32,7 +33,7 @@ static t_redirect	*create_redirect(t_parser *parser, t_token_type redir_token)
 
 	if (!parser->current || parser->current->type != TOKEN_WORD)
 		return (NULL);
-	redirect = malloc(sizeof(t_redirect));
+	redirect = alloc(sizeof(t_redirect));
 	if (!redirect)
 		return (NULL);
 	redirect->type = token_to_redir_type(redir_token);
@@ -42,7 +43,8 @@ static t_redirect	*create_redirect(t_parser *parser, t_token_type redir_token)
 		quoted = has_quotes(parser->current->value);
 		redirect->quoted_delimiter = quoted;
 		content = read_heredoc_input(parser->current->value);
-		if (!content || (content && content[0] == '\0' && get_env()->exit_status == 130))
+		if (!content || (content && content[0] == '\0'
+				&& get_env()->exit_status == 130))
 		{
 			free(redirect);
 			return (NULL);
@@ -66,7 +68,7 @@ bool	is_redirect_token(t_token_type type)
 
 static t_redirect	*handle_consecutive_heredocs(t_parser *parser)
 {
-	t_redirect	*last_heredoc;
+	t_redirect		*last_heredoc;
 	t_token_type	redir_token;
 
 	last_heredoc = NULL;

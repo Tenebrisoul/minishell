@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ast.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:25:14 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 12:19:53 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static t_command	*init_command(t_parser *parser)
@@ -6,19 +18,19 @@ static t_command	*init_command(t_parser *parser)
 	t_command	*cmd;
 	size_t		size;
 
-	cmd = malloc(sizeof(t_command));
+	cmd = alloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
 	size = 0;
 	current = parser->current;
-	while (current && current->type != TOKEN_PIPE && current->type != TOKEN_SEMICOLON &&
-	       current->type != TOKEN_AND && current->type != TOKEN_OR &&
-	       current->type != TOKEN_RPAREN)
+	while (current && current->type != TOKEN_PIPE
+		&& current->type != TOKEN_SEMICOLON && current->type != TOKEN_AND
+		&& current->type != TOKEN_OR && current->type != TOKEN_RPAREN)
 	{
 		size++;
 		current = current->next;
 	}
-	cmd->args = malloc(sizeof(char *) * (size + 1));
+	cmd->args = alloc(sizeof(char *) * (size + 1));
 	if (!cmd->args)
 	{
 		free(cmd);
@@ -58,7 +70,8 @@ static int	process_token(t_parser *parser, t_command *cmd)
 			return (0);
 		add_redirect_to_command(cmd, redirects);
 	}
-	else if (parser->current->type == TOKEN_WORD || parser->current->type == TOKEN_WILDCARD)
+	else if (parser->current->type == TOKEN_WORD
+		|| parser->current->type == TOKEN_WILDCARD)
 	{
 		if (!cmd || !parser->current->value)
 			return (0);
@@ -84,10 +97,11 @@ static t_command	*parse_command(t_parser *parser)
 	cmd = init_command(parser);
 	if (!cmd)
 		return (NULL);
-	while (parser->current && parser->current->type != TOKEN_PIPE &&
-	       parser->current->type != TOKEN_SEMICOLON &&
-	       parser->current->type != TOKEN_AND && parser->current->type != TOKEN_OR &&
-	       parser->current->type != TOKEN_RPAREN)
+	while (parser->current && parser->current->type != TOKEN_PIPE
+		&& parser->current->type != TOKEN_SEMICOLON
+		&& parser->current->type != TOKEN_AND
+		&& parser->current->type != TOKEN_OR
+		&& parser->current->type != TOKEN_RPAREN)
 	{
 		result = process_token(parser, cmd);
 		if (result == 0)

@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:23:47 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 02:23:48 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-char *get_cwd()
+char	*get_cwd(void)
 {
-	char cwd[8000];
-	char *response;
-	int counter;
-	
+	char	cwd[8000];
+	char	*response;
+	int		counter;
+
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 		return (NULL);
 	response = alloc(len(cwd) + 1);
@@ -21,10 +33,11 @@ char *get_cwd()
 	return (response);
 }
 
-void pwd()
+void	pwd(void)
 {
-	char *cwd = NULL;
+	char	*cwd;
 
+	cwd = NULL;
 	cwd = get_cwd();
 	if (!cwd)
 		write(1, "pwd: couldn't fetch cwd.\n", 25);
@@ -32,13 +45,16 @@ void pwd()
 		write(1, cwd, len(cwd));
 }
 
-static char *get_prefix()
+static char	*get_prefix(void)
 {
-	char *cwd = NULL;
-	char *cwd_ptr = NULL;
-	char *prefix = NULL;
-	int counter;
-	
+	char	*cwd;
+	char	*cwd_ptr;
+	char	*prefix;
+	int		counter;
+
+	cwd = NULL;
+	cwd_ptr = NULL;
+	prefix = NULL;
 	cwd = get_cwd();
 	if (!cwd)
 		return (NULL);
@@ -46,7 +62,7 @@ static char *get_prefix()
 	while (*cwd_ptr)
 	{
 		if (*cwd_ptr == '/')
-			break;
+			break ;
 		cwd_ptr--;
 	}
 	prefix = alloc(len(cwd_ptr) + 1);
@@ -63,9 +79,9 @@ static char *get_prefix()
 	return (prefix);
 }
 
-void print_prefix()
+void	print_prefix(void)
 {
-	char *prefix;
+	char	*prefix;
 
 	prefix = get_prefix();
 	if (!prefix)

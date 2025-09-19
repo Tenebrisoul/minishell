@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lexer.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:25:02 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 12:19:12 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static t_lexer	*init_lexer(char *input)
@@ -6,7 +18,7 @@ static t_lexer	*init_lexer(char *input)
 
 	if (!input || !*input)
 		return (NULL);
-	lexer = malloc(sizeof(t_lexer));
+	lexer = alloc(sizeof(t_lexer));
 	if (!lexer)
 		return (NULL);
 	lexer->input = ft_strdup(input);
@@ -46,7 +58,8 @@ static bool	tokenize(t_lexer *lexer, t_token **token_list)
 			current_token = read_parentheses(lexer);
 		else if (is_operator(lexer->current_char))
 			current_token = read_operator(lexer);
-		else if (is_word_char(lexer->current_char) || lexer->current_char == '*')
+		else if (is_word_char(lexer->current_char)
+			|| lexer->current_char == '*')
 			current_token = read_word(lexer);
 		else
 			current_token = NULL;

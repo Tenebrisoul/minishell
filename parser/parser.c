@@ -1,5 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:25:16 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 12:19:57 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
-t_ast_node	*parse_pipeline(t_parser *parser);
+
+t_ast_node			*parse_pipeline(t_parser *parser);
 
 static t_parser	*init_parser(t_token *tokens)
 {
@@ -7,7 +20,7 @@ static t_parser	*init_parser(t_token *tokens)
 
 	if (!tokens)
 		return (NULL);
-	parser = malloc(sizeof(t_parser));
+	parser = alloc(sizeof(t_parser));
 	if (!parser)
 		return (NULL);
 	parser->tokens = tokens;

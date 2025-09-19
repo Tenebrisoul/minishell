@@ -1,5 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   read_token.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 02:25:04 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 12:19:24 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
-#include <stdio.h>
 
 t_token	*read_operator(t_lexer *lexer)
 {
@@ -70,7 +81,7 @@ t_token	*read_word(t_lexer *lexer)
 	length = word_length(lexer);
 	if (length == 0)
 		return (NULL);
-	content = malloc(length + 1);
+	content = alloc(length + 1);
 	if (!content)
 		return (NULL);
 	content[length] = '\0';

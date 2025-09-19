@@ -307,6 +307,7 @@ int			calculate_final_length(void);
 int			valid_dollar_count(char *str);
 t_expander	*get_expander(bool value);
 char        *remove_outer_quotes(char *str);
+int         has_quotes(const char *str);
 void        queue_expandables();
 int quote_status(char *str, int index);
 bool is_char(char c);
