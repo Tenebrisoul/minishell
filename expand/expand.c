@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 20:25:27 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 17:34:48 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 20:25:26 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,25 @@ char	*find_variable_in_string(char *str, char *var_name)
 	return (NULL);
 }
 
+static char	*create_backup(char *pos, int var_len, int *backup_len)
+{
+	char	*backup;
+
+	if (!pos[var_len])
+	{
+		*backup_len = 0;
+		backup = alloc(1);
+		backup[0] = '\0';
+	}
+	else
+	{
+		*backup_len = len(pos + var_len);
+		backup = alloc((*backup_len + 1) * sizeof(char));
+		ft_strcpy(pos + var_len, backup);
+	}
+	return (backup);
+}
+
 void	replace_single_variable(char *str, char *var_name, char *value)
 {
 	char	*pos;
@@ -46,18 +65,7 @@ void	replace_single_variable(char *str, char *var_name, char *value)
 		return ;
 	var_len = len(var_name);
 	val_len = len(value);
-	if (!pos[var_len])
-	{
-		backup_len = 0;
-		backup = alloc(1);
-		backup[0] = '\0';
-	}
-	else
-	{
-		backup_len = len(pos + var_len);
-		backup = alloc((backup_len + 1) * sizeof(char));
-		ft_strcpy(pos + var_len, backup);
-	}
+	backup = create_backup(pos, var_len, &backup_len);
 	ft_strcpy(value, pos);
 	if (backup_len > 0)
 		ft_strcpy(backup, pos + val_len);

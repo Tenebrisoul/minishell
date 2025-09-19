@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:36 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 17:17:54 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 18:01:43 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,19 +31,29 @@ int	valid_dollar_count(char *str)
 
 int	expandable_len(char *marked_pos)
 {
-	int	counter;
+	int		counter;
+	char	quote_char;
 
 	counter = 1;
 	if (marked_pos[1] && (marked_pos[1] == '$' || marked_pos[1] == '?'
 			|| marked_pos[1] == '0'))
 		return (2);
+	if (marked_pos[1] && (marked_pos[1] == '"' || marked_pos[1] == '\''))
+	{
+		quote_char = marked_pos[1];
+		counter = 2;
+		while (marked_pos[counter] && marked_pos[counter] != quote_char)
+			counter++;
+		if (marked_pos[counter] == quote_char)
+			counter++;
+		return (counter);
+	}
 	if (!marked_pos[1] || (!is_char(marked_pos[1]) && marked_pos[1] != '_'))
 		return (1);
 	counter++;
 	while (marked_pos[counter] && (is_char(marked_pos[counter])
 			|| is_number(marked_pos[counter]) || marked_pos[counter] == '_'))
 		counter++;
-	printf("DEBUG: expandable_len found length %d for variable starting with '%s'\n", counter, marked_pos);
 	return (counter);
 }
 
@@ -68,6 +78,22 @@ void	insert_curr_to_queue(t_expander *expander)
 	expander->queue_marker++;
 }
 
+int	is_escaped(char *str, int index)
+{
+	int	backslash_count;
+
+	if (index == 0)
+		return (0);
+	backslash_count = 0;
+	index--;
+	while (index >= 0 && str[index] == '\\')
+	{
+		backslash_count++;
+		index--;
+	}
+	return (backslash_count % 2);
+}
+
 void	queue_expandables(void)
 {
 	t_expander	*expander;
@@ -76,9 +102,9 @@ void	queue_expandables(void)
 	while (expander->prompt[expander->marker])
 	{
 		if (expander->prompt[expander->marker] == '$'
-			&& quote_status(expander->prompt, expander->marker) == 1)
+			&& quote_status(expander->prompt, expander->marker) == 1
+			&& !is_escaped(expander->prompt, expander->marker))
 			insert_curr_to_queue(expander);
 		expander->marker++;
 	}
-	// expander->queue[expander->queue_marker] = NULL;
 }

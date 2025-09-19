@@ -75,7 +75,11 @@ SRC_ENV     := \
 
 # Executor sources
 SRC_EXEC    := \
-	executor/executor.c
+	executor/executor.c \
+	executor/executor_redirs.c \
+	executor/executor_path.c \
+	executor/executor_expand.c \
+	executor/executor_exec.c
 
 # Builtin sources
 SRC_BUILTIN := \

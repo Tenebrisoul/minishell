@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:41 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:36:25 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 20:30:55 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,6 @@ char	*remove_outer_quotes(char *str)
 	int		j;
 
 	result = alloc((len(str) + 1) * sizeof(char));
-	if (!result)
-		return (NULL);
 	i = 0;
 	j = 0;
 	while (str[i])

@@ -1,29 +1,14 @@
-// TODO: Heredoc Quote Parsing
-// cat << '"'eof'"' should output: "eof"
-// ! Fix quote handling in heredoc delimiters
+#TODO exit status codes
 
-// TODO: Environment Variable Handling
-// ! Handle undefined environment variables - should they return "" or " "?
-
-// TODO: Export Command Implementation
-// ! Basic export functionality
-// ! export without arguments (show all exported vars)
-
-// TODO: Built-in Variables
-// - Implement OLDPWD variable
-// ! Implement $_ (last argument of previous command)
-
-// TODO: Exit Command
-// - Handle exit with arguments
-// - Proper exit code handling
-
-// TODO: Advanced Features
-// - Inception (nested shells)
-// - CTRL+D handling in heredoc
-// ! Double quote parsing edge cases
-// ! Single quote parsing edge cases
-// ! Relative path execution (./)
-
-// TODO: Error Output
-// ! Standardize error messages
-// ! Proper stderr redirection
+#TODO NORM
+builtin \
+core \
+environment \
+executor \
+* expand \
+gc \
+lexer \
+libft \
+parser \
+signals \
+utils \

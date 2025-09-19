@@ -12,332 +12,6 @@
 
 #include "../minishell.h"
 
-static int	apply_redir_in(const t_redirect *r)
-{
-	int	fd;
-
-	fd = open(r->filename, O_RDONLY);
-	if (fd < 0)
-	{
-		write(2, "minishell: ", 11);
-		write(2, r->filename, sh_strlen(r->filename));
-		write(2, ": No such file or directory\n", 28);
-		return (1);
-	}
-	if (dup2(fd, 0) < 0)
-	{
-		write(2, "minishell: dup2: ", 17);
-		perror("");
-		close(fd);
-		return (1);
-	}
-	close(fd);
-	return (0);
-}
-
-static int	apply_redir_out(const t_redirect *r)
-{
-	int	fd;
-
-	fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd < 0)
-	{
-		write(2, "minishell: ", 11);
-		write(2, r->filename, sh_strlen(r->filename));
-		write(2, ": Permission denied\n", 20);
-		return (1);
-	}
-	if (dup2(fd, 1) < 0)
-	{
-		write(2, "minishell: dup2: ", 17);
-		perror("");
-		close(fd);
-		return (1);
-	}
-	close(fd);
-	return (0);
-}
-
-static int	apply_redir_append(const t_redirect *r)
-{
-	int	fd;
-
-	fd = open(r->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd < 0)
-	{
-		write(2, "minishell: ", 11);
-		write(2, r->filename, sh_strlen(r->filename));
-		write(2, ": Permission denied\n", 20);
-		return (1);
-	}
-	if (dup2(fd, 1) < 0)
-	{
-		write(2, "minishell: dup2: ", 17);
-		perror("");
-		close(fd);
-		return (1);
-	}
-	close(fd);
-	return (0);
-}
-
-static int	apply_redir_heredoc(const t_redirect *r)
-{
-	int	pipefd[2];
-	int	content_len;
-
-	if (pipe(pipefd) < 0)
-	{
-		write(2, "minishell: pipe: ", 17);
-		perror("");
-		return (1);
-	}
-	content_len = sh_strlen(r->filename);
-	if (write(pipefd[1], r->filename, content_len) < 0)
-	{
-		write(2, "minishell: write: ", 18);
-		perror("");
-		close(pipefd[0]);
-		close(pipefd[1]);
-		return (1);
-	}
-	close(pipefd[1]);
-	if (dup2(pipefd[0], 0) < 0)
-	{
-		write(2, "minishell: dup2: ", 17);
-		perror("");
-		close(pipefd[0]);
-		return (1);
-	}
-	close(pipefd[0]);
-	return (0);
-}
-
-static int	apply_redirs(const t_redirect *r)
-{
-	while (r)
-	{
-		if (r->type == REDIR_IN && apply_redir_in(r))
-			return (1);
-		else if (r->type == REDIR_OUT && apply_redir_out(r))
-			return (1);
-		else if (r->type == REDIR_APPEND && apply_redir_append(r))
-			return (1);
-		else if (r->type == REDIR_HEREDOC && apply_redir_heredoc(r))
-			return (1);
-		r = r->next;
-	}
-	return (0);
-}
-
-static char	*check_direct_path(const char *file)
-{
-	if (!file || !*file)
-		return (NULL);
-	if (sh_strchr(file, '/'))
-		return (sh_strdup(file));
-	return (NULL);
-}
-
-static char	*search_in_dirs(char **dirs, const char *file)
-{
-	int		i;
-	char	*full;
-
-	i = 0;
-	while (dirs[i])
-	{
-		full = sh_join_path(dirs[i], file);
-		if (!full)
-			break ;
-		if (access(full, X_OK) == 0)
-		{
-			return (full);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
-static char	*find_exec_in_path(const char *file)
-{
-	const char	*path;
-	char		**dirs;
-	char		*result;
-
-	result = check_direct_path(file);
-	if (result)
-		return (result);
-	path = sh_getenv_val("PATH");
-	if (!path)
-		return (NULL);
-	dirs = sh_split_colon(path);
-	if (!dirs)
-		return (NULL);
-	result = search_in_dirs(dirs, file);
-	return (result);
-}
-
-static void	expand_args(const t_command *cmd)
-{
-	char	*expanded;
-	int		i;
-	int		j;
-
-	if (!cmd || !cmd->args)
-		return ;
-	i = 0;
-	while (i < cmd->argc && cmd->args[i])
-	{
-		expanded = expand(cmd->args[i]);
-		if (expanded)
-		{
-			(cmd)->args[i] = expanded;
-			if (expanded[0] == '\0')
-			{
-				j = i;
-				while (j < cmd->argc - 1)
-				{
-					cmd->args[j] = cmd->args[j + 1];
-					j++;
-				}
-				((t_command *)cmd)->argc--;
-				cmd->args[cmd->argc] = NULL;
-				i--;
-			}
-		}
-		i++;
-	}
-}
-
-static void	expand_redirects(const t_command *cmd)
-{
-	const t_redirect	*rr;
-	char				*e;
-
-	rr = cmd->redirects;
-	while (rr)
-	{
-		if (rr->filename && rr->type != REDIR_HEREDOC)
-		{
-			e = expand(rr->filename);
-			if (e)
-				((t_redirect *)rr)->filename = e;
-		}
-		rr = rr->next;
-	}
-}
-
-static int	exec_builtin_with_redir(const t_command *cmd, char **argv)
-{
-	pid_t	bpid;
-	int		w;
-
-	bpid = fork();
-	if (bpid < 0)
-	{
-		perror("fork");
-		return (1);
-	}
-	if (bpid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (apply_redirs(cmd->redirects) != 0)
-			get_env()->exit_status = 1;	
-		else
-			get_env()->exit_status = run_builtin(argv);
-		exit(-1);
-	}
-	w = 0;
-	while (waitpid(bpid, &w, 0) < 0)
-	{
-		if (errno != EINTR)
-		{
-			perror("waitpid");
-			return (1);
-		}
-	}
-	if (WIFEXITED(w))
-		return (WEXITSTATUS(w));
-	if (WIFSIGNALED(w))
-		return (128 + WTERMSIG(w));
-	return (1);
-}
-
-static int	exec_child_process(const t_command *cmd, char **argv)
-{
-	char		*exe;
-	char		**env_array;
-	struct stat	st;
-
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	if (apply_redirs(cmd->redirects) != 0)
-		return (1);
-	exe = find_exec_in_path(argv[0]);
-	if (!exe)
-	{
-		write(2, "minishell: ", 11);
-		write(2, cmd->args[0], sh_strlen(cmd->args[0]));
-		write(2, ": command not found\n", 20);
-		return (127);
-	}
-	if (stat(exe, &st) == 0 && S_ISDIR(st.st_mode))
-	{
-		write(2, "minishell: ", 11);
-		write(2, cmd->args[0], sh_strlen(cmd->args[0]));
-		write(2, ": Is a directory\n", 17);
-		return (126);
-	}
-	env_array = get_env_array();
-	execve(exe, argv, env_array);
-	write(2, "minishell: ", 11);
-	write(2, cmd->args[0], sh_strlen(cmd->args[0]));
-	if (errno == ENOENT)
-	{
-		write(2, ": No such file or directory\n", 28);
-		return (127);
-	}
-	else
-	{
-		write(2, ": Permission denied\n", 20);
-		return (126);
-	}
-}
-
-static int	exec_external_command(const t_command *cmd, char **argv)
-{
-	pid_t	pid;
-	int		wstatus;
-
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("fork");
-		return (1);
-	}
-	if (pid == 0)
-	{
-		get_env()->exit_status = exec_child_process(cmd, argv);
-		exit(-1);
-	}
-	wstatus = 0;
-	while (waitpid(pid, &wstatus, 0) < 0)
-	{
-		if (errno != EINTR)
-		{
-			perror("waitpid");
-			return (1);
-		}
-	}
-	if (WIFEXITED(wstatus))
-		return (WEXITSTATUS(wstatus));
-	if (WIFSIGNALED(wstatus))
-		return (128 + WTERMSIG(wstatus));
-	return (1);
-}
-
 static void	update_underscore_var(const t_command *cmd)
 {
 	t_env_item	*underscore_item;
@@ -367,9 +41,7 @@ static int	exec_command(const t_command *cmd)
 	expand_args(cmd);
 	expand_redirects(cmd);
 	if (!cmd->args[0] || !cmd->args[0][0])
-	{
 		return (0);
-	}
 	update_underscore_var(cmd);
 	if (is_builtin(cmd->args[0]))
 	{
@@ -382,6 +54,24 @@ static int	exec_command(const t_command *cmd)
 		}
 	}
 	return (exec_external_command(cmd, cmd->args));
+}
+
+int	exec_external_command(const t_command *cmd, char **argv)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork");
+		return (1);
+	}
+	if (pid == 0)
+	{
+		get_env()->exit_status = exec_child_process(cmd, argv);
+		exit(-1);
+	}
+	return (wait_for_child(pid));
 }
 
 static int	setup_pipe_left(const t_ast_node *left, int *pipefd)
@@ -441,14 +131,34 @@ static int	setup_pipe_right(const t_ast_node *right, int *pipefd, pid_t lpid)
 	return (rpid);
 }
 
+static int	wait_for_pipeline(pid_t lpid, pid_t rpid)
+{
+	int	status;
+
+	status = 0;
+	while (waitpid(lpid, NULL, 0) < 0 && errno == EINTR)
+		;
+	while (waitpid(rpid, &status, 0) < 0)
+	{
+		if (errno != EINTR)
+		{
+			perror("waitpid");
+			return (1);
+		}
+	}
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (1);
+}
+
 static int	exec_pipeline(const t_ast_node *left, const t_ast_node *right)
 {
 	int		pipefd[2];
 	pid_t	lpid;
 	pid_t	rpid;
-	int		status;
 
-	status = 0;
 	if (sh_signal_interrupted())
 	{
 		sh_signal_reset();
@@ -467,21 +177,7 @@ static int	exec_pipeline(const t_ast_node *left, const t_ast_node *right)
 		return (1);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	while (waitpid(lpid, NULL, 0) < 0 && errno == EINTR)
-		;
-	while (waitpid(rpid, &status, 0) < 0)
-	{
-		if (errno != EINTR)
-		{
-			perror("waitpid");
-			return (1);
-		}
-	}
-	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
-	if (WIFSIGNALED(status))
-		return (128 + WTERMSIG(status));
-	return (1);
+	return (wait_for_pipeline(lpid, rpid));
 }
 
 static int	exec_sequence(const t_ast_node *left, const t_ast_node *right)

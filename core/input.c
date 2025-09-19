@@ -63,6 +63,8 @@ static char	*handle_pipe_input(void)
 	read_len = getline(&line, &len, stdin);
 	if (read_len == -1)
 	{
+		if (line)
+			free(line);
 		return (NULL);
 	}
 	if (read_len > 0 && line[read_len - 1] == '\n')

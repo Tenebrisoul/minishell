@@ -61,11 +61,47 @@ int	calculate_final_length(void)
 	return (++final_len);
 }
 
+static void	handle_escape_char(char *str, char *result, int *i, int *j)
+{
+	if (str[*i] == '\\' && str[*i + 1])
+	{
+		if (str[*i + 1] == '$' || str[*i + 1] == '\\')
+		{
+			result[(*j)++] = str[*i + 1];
+			*i += 2;
+		}
+		else
+		{
+			result[(*j)++] = str[(*i)++];
+		}
+	}
+	else
+		result[(*j)++] = str[(*i)++];
+}
+
+char	*process_escapes(char *str)
+{
+	char	*result;
+	int		i;
+	int		j;
+
+	result = alloc((len(str) + 1) * sizeof(char));
+	if (!result)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (str[i])
+		handle_escape_char(str, result, &i, &j);
+	result[j] = '\0';
+	return (result);
+}
+
 char	*expand(char *prompt)
 {
 	t_expander	*expander;
 	char		*expanded_prompt;
 	char		*final_prompt;
+	char		*processed_prompt;
 
 	expander = get_expander(INIT);
 	expander->prompt = prompt;
@@ -79,6 +115,9 @@ char	*expand(char *prompt)
 		final_prompt = remove_outer_quotes(expanded_prompt);
 		if (final_prompt)
 		{
+			processed_prompt = process_escapes(final_prompt);
+			if (processed_prompt)
+				return (processed_prompt);
 			return (final_prompt);
 		}
 	}

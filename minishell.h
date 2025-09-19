@@ -232,6 +232,14 @@ t_ast_node	*parse_sequence(t_parser *parser);
 
 /* --------------------------------- EXECUTOR -------------------------------- */
 int			exec_ast(const t_ast_node *ast);
+int			apply_redirs(const t_redirect *r);
+char		*find_exec_in_path(const char *file);
+void		expand_args(const t_command *cmd);
+void		expand_redirects(const t_command *cmd);
+int			exec_external_command(const t_command *cmd, char **argv);
+int			exec_child_process(const t_command *cmd, char **argv);
+int			wait_for_child(pid_t pid);
+int			exec_builtin_with_redir(const t_command *cmd, char **argv);
 
 /* --------------------------------- BUILTINS -------------------------------- */
 int			is_builtin(const char *cmd);
