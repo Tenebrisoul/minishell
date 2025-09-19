@@ -6,18 +6,11 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:47 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 12:26:50 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 15:12:46 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	*gc_exit(void)
-{
-	dump_gc();
-	exit(get_env()->exit_status);
-	return (NULL);
-}
 
 t_gc	*get_gc(void)
 {
@@ -26,7 +19,7 @@ t_gc	*get_gc(void)
 	if (!gc)
 		gc = new_gc();
 	if (!gc)
-		return (gc_exit());
+		exit(-1);
 	return (gc);
 }
 
@@ -54,10 +47,16 @@ void	*alloc(ssize_t size)
 
 	mem = malloc(size);
 	if (!mem)
-		return (gc_exit());
+	{
+		exit(-1);
+		return (NULL);
+	}
 	trash = new_trash(mem);
 	if (!trash)
-		return (gc_exit());
+	{
+		exit(-1);
+		return (NULL);
+	}
 	insert_to_gc(trash);
 	return (mem);
 }
@@ -67,8 +66,17 @@ void	dump_gc(void)
 	t_trash	*trash_node;
 	t_trash	*trash_node_swap;
 	t_gc	*gc;
+	static int	already_cleaned = 0;
 
-	trash_node = get_gc()->first_node;
+	if (already_cleaned)
+		return;
+	already_cleaned = 1;
+
+	gc = get_gc();
+	if (!gc)
+		return;
+
+	trash_node = gc->first_node;
 	while (trash_node)
 	{
 		if (trash_node->mem)
@@ -77,7 +85,5 @@ void	dump_gc(void)
 		free(trash_node);
 		trash_node = trash_node_swap;
 	}
-	gc = get_gc();
-	if (gc)
-		free(gc);
+	free(gc);
 }

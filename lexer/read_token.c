@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:04 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 12:19:24 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:09:37 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,5 @@ t_token	*read_word(t_lexer *lexer)
 		i++;
 	}
 	token = create_token(TOKEN_WORD, content);
-	free(content);
 	return (token);
 }

@@ -21,12 +21,9 @@ static t_lexer	*init_lexer(char *input)
 	lexer = alloc(sizeof(t_lexer));
 	if (!lexer)
 		return (NULL);
-	lexer->input = ft_strdup(input);
+	lexer->input = sh_strdup(input);
 	if (!lexer->input)
-	{
-		free(lexer);
 		return (NULL);
-	}
 	lexer->length = ft_strlen(input);
 	lexer->position = 0;
 	lexer->current_char = lexer->input[0];
@@ -35,11 +32,7 @@ static t_lexer	*init_lexer(char *input)
 
 static void	cleanup_lexer(t_lexer *lexer)
 {
-	if (lexer)
-	{
-		free(lexer->input);
-		free(lexer);
-	}
+	(void)lexer;
 }
 
 static bool	tokenize(t_lexer *lexer, t_token **token_list)
@@ -52,14 +45,9 @@ static bool	tokenize(t_lexer *lexer, t_token **token_list)
 			advance_char(lexer);
 		if (lexer->current_char == '\0')
 			break ;
-		if (is_logical_operator(lexer))
-			current_token = read_logical_operator(lexer);
-		else if (lexer->current_char == '(' || lexer->current_char == ')')
-			current_token = read_parentheses(lexer);
-		else if (is_operator(lexer->current_char))
+		if (is_operator(lexer->current_char))
 			current_token = read_operator(lexer);
-		else if (is_word_char(lexer->current_char)
-			|| lexer->current_char == '*')
+		else if (is_word_char(lexer->current_char))
 			current_token = read_word(lexer);
 		else
 			current_token = NULL;

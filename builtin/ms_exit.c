@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:59:34 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/19 02:38:52 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 15:14:40 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,10 @@ int	bi_exit(char **argv)
 	code = get_env()->exit_status;
 	if (argv[1])
 	{
-		code = atoi(argv[1]) & 0xFF;
+		code = ft_atol(argv[1]) & 0xFF;
 	}
 	if (isatty(STDIN_FILENO))
 		write(1, "exit\n", 5);
-	exit(code);
+	get_env()->exit_status = code;
+	exit(-1);
 }

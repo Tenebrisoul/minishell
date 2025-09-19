@@ -33,52 +33,15 @@ void	advance_token(t_parser *parser)
 
 void	cleanup_redirections(t_redirect *redirects)
 {
-	t_redirect	*next;
-
-	while (redirects)
-	{
-		next = redirects->next;
-		free(redirects->filename);
-		free(redirects);
-		redirects = next;
-	}
+	(void)redirects;
 }
 
 void	cleanup_command(t_command *cmd)
 {
-	int	i;
-
-	if (!cmd)
-		return ;
-	i = 0;
-	if (cmd->args)
-	{
-		while (i < cmd->argc)
-		{
-			free(cmd->args[i]);
-			i++;
-		}
-		free(cmd->args);
-	}
-	cleanup_redirections(cmd->redirects);
-	free(cmd);
+	(void)cmd;
 }
 
 void	cleanup_ast(t_ast_node *node)
 {
-	if (!node)
-		return ;
-	if (node->type == NODE_COMMAND)
-		cleanup_command(node->u_data.command);
-	else if (node->type == NODE_PIPELINE || node->type == NODE_SEQUENCE
-		|| node->type == NODE_AND || node->type == NODE_OR)
-	{
-		cleanup_ast(node->u_data.s_binary.left);
-		cleanup_ast(node->u_data.s_binary.right);
-	}
-	else if (node->type == NODE_SUBSHELL)
-	{
-		cleanup_ast(node->u_data.s_subshell.child);
-	}
-	free(node);
+	(void)node;
 }

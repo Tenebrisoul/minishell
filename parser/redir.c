@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:18 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 12:20:08 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:16:32 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,12 @@ static t_redirect	*create_redirect(t_parser *parser, t_token_type redir_token)
 		if (!content || (content && content[0] == '\0'
 				&& get_env()->exit_status == 130))
 		{
-			free(redirect);
 			return (NULL);
 		}
 		redirect->filename = content;
 	}
 	else
-		redirect->filename = ft_strdup(parser->current->value);
+		redirect->filename = sh_strdup(parser->current->value);
 	redirect->next = NULL;
 	advance_token(parser);
 	return (redirect);
@@ -76,11 +75,6 @@ static t_redirect	*handle_consecutive_heredocs(t_parser *parser)
 	{
 		redir_token = parser->current->type;
 		advance_token(parser);
-		if (last_heredoc)
-		{
-			free(last_heredoc->filename);
-			free(last_heredoc);
-		}
 		last_heredoc = create_redirect(parser, redir_token);
 		if (!last_heredoc)
 			return (NULL);

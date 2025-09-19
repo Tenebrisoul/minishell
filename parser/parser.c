@@ -65,13 +65,13 @@ t_ast_node	*parse_sequence(t_parser *parser)
 	t_ast_node	*left;
 	t_ast_node	*right;
 
-	left = parse_logical_or(parser);
+	left = parse_pipeline(parser);
 	if (!left)
 		return (NULL);
 	while (parser->current && parser->current->type == TOKEN_SEMICOLON)
 	{
 		advance_token(parser);
-		right = parse_logical_or(parser);
+		right = parse_pipeline(parser);
 		if (!right)
 		{
 			cleanup_ast(left);
@@ -89,13 +89,13 @@ t_ast_node	*parse_pipeline(t_parser *parser)
 	t_ast_node	*left;
 	t_ast_node	*right;
 
-	left = parse_primary(parser);
+	left = parse_ast_node(parser);
 	if (!left)
 		return (NULL);
 	while (parser->current && parser->current->type == TOKEN_PIPE)
 	{
 		advance_token(parser);
-		right = parse_primary(parser);
+		right = parse_ast_node(parser);
 		if (!right)
 		{
 			cleanup_ast(left);
@@ -118,14 +118,6 @@ t_ast_node	*parser(t_token *tokens)
 	parser = init_parser(tokens);
 	if (!parser)
 		return (NULL);
-	ast = parse_expression(parser);
-	if (!ast)
-	{
-		if (parser)
-			free(parser);
-		return (NULL);
-	}
-	if (parser)
-		free(parser);
+	ast = parse_sequence(parser);
 	return (ast);
 }

@@ -54,7 +54,6 @@ int	check_delimiter(char *line, const char *delimiter, int delim_len)
 	if (sh_strlen(line) == delim_len && sh_strncmp(line, delimiter,
 			delim_len) == 0)
 	{
-		free(line);
 		sh_signal_set_state(STATE_HEREDOC, 0);
 		return (1);
 	}
@@ -69,7 +68,6 @@ char	*process_heredoc_line_raw(char *content, int *content_len,
 	line_len = sh_strlen(line);
 	content = resize_content(content, content_cap, *content_len, line_len);
 	add_line_to_content(&content, content_len, line, line_len);
-	free(line);
 	return (content);
 }
 

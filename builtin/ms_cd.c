@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 17:00:44 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/19 02:38:34 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:12:05 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,12 +67,12 @@ static void	update_pwd_vars(const char *old)
 	{
 		item = get_env_item("OLDPWD");
 		if (item)
-			item->value = ft_strdup(old);
+			item->value = sh_strdup(old);
 		else
 			add_env_item(new_env_item("OLDPWD", (char *)old));
 		item = get_env_item("PWD");
 		if (item)
-			item->value = ft_strdup(buf);
+			item->value = sh_strdup(buf);
 		else
 			add_env_item(new_env_item("PWD", buf));
 	}

@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:28 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:25:29 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:16:36 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,6 @@ static int	process_split_segment(const char *s, char **arr, int *idx,
 	if (!seg)
 	{
 		arr[*idx] = NULL;
-		sh_free_strarray(arr);
 		return (0);
 	}
 	arr[(*idx)++] = seg;
@@ -243,11 +242,6 @@ char	**sh_split_colon(const char *s)
 	if (!split_string_helper(s, arr, count))
 		return (NULL);
 	return (arr);
-}
-
-void	sh_free_strarray(char **arr)
-{
-	(void)arr;
 }
 
 const char	*sh_getenv_val(const char *name)

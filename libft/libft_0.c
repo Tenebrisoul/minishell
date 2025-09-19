@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 01:10:38 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/19 02:44:36 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:11:39 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,22 +168,3 @@ char	*ft_ltoa(long l)
 	return (res);
 }
 
-char	*ft_strdup(char *str)
-{
-	char	*dup;
-	int		i;
-
-	if (!str)
-		return (NULL);
-	dup = alloc((len(str) + 1) * sizeof(char));
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (str[i])
-	{
-		dup[i] = str[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
-}

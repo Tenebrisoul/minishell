@@ -6,18 +6,16 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by student           #+#    #+#             */
-/*   Updated: 2025/09/19 00:59:49 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:18:17 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	handle_getline_error(char *line)
+static void	handle_getline_error()
 {
 	int	stdin_fd;
 
-	if (line)
-		free(line);
 	if (sh_signal_interrupted())
 	{
 		stdin_fd = open("/dev/tty", O_RDONLY);
@@ -40,7 +38,7 @@ static char	*handle_non_tty_input(void)
 	read_len = getline(&line, &len, stdin);
 	if (read_len == -1)
 	{
-		handle_getline_error(line);
+		handle_getline_error();
 		return (NULL);
 	}
 	if (read_len > 0 && line[read_len - 1] == '\n')

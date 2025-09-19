@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 17:02:53 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/19 02:39:09 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:12:05 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	bi_export(char **argv)
 		*eq = '\0';
 		item = get_env_item(argv[i]);
 		if (item)
-			item->value = ft_strdup(eq + 1);
+			item->value = sh_strdup(eq + 1);
 		else if (add_env_item(new_env_item(argv[i], eq + 1)) == NULL)
 		{
 			write(2, "minishell: not a valid identifier\n", 34);

@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:51 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:49:21 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:16:14 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,6 @@ static void	write_word(char **str, const char **s, unsigned int len)
 	(*str)[counter] = '\0';
 }
 
-char	**free_all(char **splitted, unsigned int count)
-{
-	unsigned int	counter;
-
-	counter = 0;
-	while (counter <= count)
-	{
-		free(splitted[counter]);
-		counter++;
-	}
-	free(splitted);
-	return (NULL);
-}
-
 char	**ft_split(char const *s, char c)
 {
 	char			**splitted;
@@ -92,8 +78,6 @@ char	**ft_split(char const *s, char c)
 		while (*s == c && *s)
 			s++;
 		splitted[counter] = alloc(short_len(s, c) + 1);
-		if (!splitted[counter])
-			return (free_all(splitted, counter));
 		write_word(&splitted[counter], &s, short_len(s, c));
 		counter++;
 	}

@@ -24,18 +24,14 @@ static t_command	*init_command(t_parser *parser)
 	size = 0;
 	current = parser->current;
 	while (current && current->type != TOKEN_PIPE
-		&& current->type != TOKEN_SEMICOLON && current->type != TOKEN_AND
-		&& current->type != TOKEN_OR && current->type != TOKEN_RPAREN)
+		&& current->type != TOKEN_SEMICOLON)
 	{
 		size++;
 		current = current->next;
 	}
 	cmd->args = alloc(sizeof(char *) * (size + 1));
 	if (!cmd->args)
-	{
-		free(cmd);
 		return (NULL);
-	}
 	cmd->argc = 0;
 	cmd->args[0] = NULL;
 	cmd->redirects = NULL;
@@ -70,12 +66,11 @@ static int	process_token(t_parser *parser, t_command *cmd)
 			return (0);
 		add_redirect_to_command(cmd, redirects);
 	}
-	else if (parser->current->type == TOKEN_WORD
-		|| parser->current->type == TOKEN_WILDCARD)
+	else if (parser->current->type == TOKEN_WORD)
 	{
 		if (!cmd || !parser->current->value)
 			return (0);
-		cmd->args[cmd->argc] = ft_strdup(parser->current->value);
+		cmd->args[cmd->argc] = sh_strdup(parser->current->value);
 		if (!cmd->args[cmd->argc])
 			return (0);
 		cmd->argc++;
@@ -98,10 +93,7 @@ static t_command	*parse_command(t_parser *parser)
 	if (!cmd)
 		return (NULL);
 	while (parser->current && parser->current->type != TOKEN_PIPE
-		&& parser->current->type != TOKEN_SEMICOLON
-		&& parser->current->type != TOKEN_AND
-		&& parser->current->type != TOKEN_OR
-		&& parser->current->type != TOKEN_RPAREN)
+		&& parser->current->type != TOKEN_SEMICOLON)
 	{
 		result = process_token(parser, cmd);
 		if (result == 0)

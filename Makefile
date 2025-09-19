@@ -103,24 +103,17 @@ SRC_LIBFT   := \
 	libft/ft_split.c \
 	libft/libft_0.c
 
-# Bonus sources
-SRC_BONUS   := \
-	bonus/wildcard.c \
-	bonus/logical_operators.c \
-	bonus/parentheses.c \
-	bonus/bonus_lexer.c
-
 # Combine all sources
 SRCS        := $(SRC_LEX) $(SRC_PARSE) $(SRC_GC) $(SRC_CORE) $(SRC_UTILS) \
                $(SRC_ENV) $(SRC_EXEC) $(SRC_BUILTIN) $(SRC_EXPAND) \
-               $(SRC_LIBFT) $(SRC_BONUS)
+               $(SRC_LIBFT)
 
 OBJS        := $(SRCS:%.c=$(OBJDIR)/%.o)
 DEPS        := $(OBJS:.o=.d)
 
 # Include paths
 INCLUDES    := -I$(INCDIR) -Ilexer -Iparser -Igc -Icore -Iutils -Isignals \
-               -Ienvironment -Iexecutor -Ibuiltin -Iexpand -Ilibft -Ibonus
+               -Ienvironment -Iexecutor -Ibuiltin -Iexpand -Ilibft
 
 # ================================== RULES =================================== #
 

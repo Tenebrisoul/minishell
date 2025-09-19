@@ -39,13 +39,10 @@ static int	is_quoted_delimiter(const char *delimiter, char **clean_delimiter)
 	return (0);
 }
 
-static void	cleanup_heredoc_state(int quoted, char *clean_delimiter,
-		const char *delimiter)
+static void	cleanup_heredoc_state()
 {
 	sh_signal_set_state(STATE_HEREDOC, 0);
 	sh_signal_reset();
-	if (quoted && clean_delimiter != delimiter)
-		free(clean_delimiter);
 }
 
 static int	process_heredoc_loop(char **content, int *content_len,
@@ -77,12 +74,11 @@ static int	process_heredoc_loop(char **content, int *content_len,
 	return (0);
 }
 
-static char	*handle_heredoc_error(int quoted, char *clean_delimiter,
-		const char *delimiter)
+static char	*handle_heredoc_error(void)
 {
 	char	*content;
 
-	cleanup_heredoc_state(quoted, clean_delimiter, delimiter);
+	cleanup_heredoc_state();
 	get_env()->exit_status = 130;
 	content = (char *)alloc(1);
 	if (content)
@@ -108,12 +104,10 @@ char	*read_heredoc_input(const char *delimiter)
 	sh_signal_set_state(STATE_HEREDOC, 1);
 	if (process_heredoc_loop(&content, &content_len, &content_cap,
 			clean_delimiter) == -1)
-		return (handle_heredoc_error(quoted, clean_delimiter, delimiter));
+		return (handle_heredoc_error());
 	sh_signal_set_state(STATE_HEREDOC, 0);
-	if (quoted && clean_delimiter != delimiter)
-		free(clean_delimiter);
 	if (sh_signal_interrupted())
-		return (handle_heredoc_error(0, NULL, NULL));
+		return (handle_heredoc_error());
 	content = expand_heredoc_content(content, quoted);
 	return (content);
 }

@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 20:25:27 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:36:50 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:15:42 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	apply_all_replacements(char *result)
 		if (expanded_value)
 		{
 			replace_single_variable(result, expander->queue[i], expanded_value);
-			free(expanded_value);
 		}
 		else
 			replace_single_variable(result, expander->queue[i], "");

@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 21:30:23 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:37:17 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:15:38 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ int	calculate_result_size(void)
 		if (expanded_value)
 		{
 			result_len += len(expanded_value);
-			free(expanded_value);
 		}
 		i++;
 	}
@@ -54,7 +53,6 @@ int	calculate_final_length(void)
 		{
 			final_len = final_len - len(expander->queue[i])
 				+ len(expanded_value);
-			free(expanded_value);
 		}
 		else
 			final_len = final_len - len(expander->queue[i]);

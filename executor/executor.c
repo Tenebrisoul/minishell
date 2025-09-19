@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:23 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 13:32:49 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 15:14:03 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,6 @@ static char	*search_in_dirs(char **dirs, const char *file)
 			break ;
 		if (access(full, X_OK) == 0)
 		{
-			sh_free_strarray(dirs);
 			return (full);
 		}
 		i++;
@@ -176,14 +175,12 @@ static char	*find_exec_in_path(const char *file)
 	if (!dirs)
 		return (NULL);
 	result = search_in_dirs(dirs, file);
-	sh_free_strarray(dirs);
 	return (result);
 }
 
 static void	expand_args(const t_command *cmd)
 {
 	char	*expanded;
-	char	**wildcard_matches;
 	int		i;
 	int		j;
 
@@ -193,40 +190,20 @@ static void	expand_args(const t_command *cmd)
 	while (i < cmd->argc && cmd->args[i])
 	{
 		expanded = expand(cmd->args[i]);
-		printf("check 1\n");
 		if (expanded)
 		{
-		printf("check 2\n");
 			(cmd)->args[i] = expanded;
 			if (expanded[0] == '\0')
 			{
-		printf("check 3\n");
 				j = i;
 				while (j < cmd->argc - 1)
 				{
 					cmd->args[j] = cmd->args[j + 1];
 					j++;
 				}
-		printf("check 4\n");
 				((t_command *)cmd)->argc--;
 				cmd->args[cmd->argc] = NULL;
 				i--;
-			}
-		printf("check 5\n");
-		}
-		printf("check 6\n");
-		if (sh_strchr(cmd->args[i], '*'))
-		{
-		printf("check 7\n");
-			wildcard_matches = wildcard_expand(cmd->args[i]);
-			if (wildcard_matches && wildcard_matches[0])
-			{
-				(cmd)->args[i] = wildcard_matches[0];
-				j = 1;
-				while (wildcard_matches[j])
-				{
-					j++;
-				}
 			}
 		}
 		i++;
@@ -260,7 +237,6 @@ static int	exec_builtin_with_redir(const t_command *cmd, char **argv)
 	if (bpid < 0)
 	{
 		perror("fork");
-		sh_free_strarray(argv);
 		return (1);
 	}
 	if (bpid == 0)
@@ -268,8 +244,10 @@ static int	exec_builtin_with_redir(const t_command *cmd, char **argv)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		if (apply_redirs(cmd->redirects) != 0)
-			exit(1);
-		exit(run_builtin(argv));
+			get_env()->exit_status = 1;	
+		else
+			get_env()->exit_status = run_builtin(argv);
+		exit(-1);
 	}
 	w = 0;
 	while (waitpid(bpid, &w, 0) < 0)
@@ -277,11 +255,9 @@ static int	exec_builtin_with_redir(const t_command *cmd, char **argv)
 		if (errno != EINTR)
 		{
 			perror("waitpid");
-			sh_free_strarray(argv);
 			return (1);
 		}
 	}
-	sh_free_strarray(argv);
 	if (WIFEXITED(w))
 		return (WEXITSTATUS(w));
 	if (WIFSIGNALED(w))
@@ -289,7 +265,7 @@ static int	exec_builtin_with_redir(const t_command *cmd, char **argv)
 	return (1);
 }
 
-static void	exec_child_process(const t_command *cmd, char **argv)
+static int	exec_child_process(const t_command *cmd, char **argv)
 {
 	char		*exe;
 	char		**env_array;
@@ -298,28 +274,36 @@ static void	exec_child_process(const t_command *cmd, char **argv)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (apply_redirs(cmd->redirects) != 0)
-		exit(1);
+		return (1);
 	exe = find_exec_in_path(argv[0]);
 	if (!exe)
 	{
 		write(2, "minishell: ", 11);
 		write(2, cmd->args[0], sh_strlen(cmd->args[0]));
 		write(2, ": command not found\n", 20);
-		exit(127);
+		return (127);
 	}
 	if (stat(exe, &st) == 0 && S_ISDIR(st.st_mode))
 	{
 		write(2, "minishell: ", 11);
 		write(2, cmd->args[0], sh_strlen(cmd->args[0]));
 		write(2, ": Is a directory\n", 17);
-		exit(126);
+		return (126);
 	}
 	env_array = get_env_array();
 	execve(exe, argv, env_array);
 	write(2, "minishell: ", 11);
 	write(2, cmd->args[0], sh_strlen(cmd->args[0]));
-	write(2, ": Permission denied\n", 20);
-	exit(126);
+	if (errno == ENOENT)
+	{
+		write(2, ": No such file or directory\n", 28);
+		return (127);
+	}
+	else
+	{
+		write(2, ": Permission denied\n", 20);
+		return (126);
+	}
 }
 
 static int	exec_external_command(const t_command *cmd, char **argv)
@@ -334,7 +318,10 @@ static int	exec_external_command(const t_command *cmd, char **argv)
 		return (1);
 	}
 	if (pid == 0)
-		exec_child_process(cmd, argv);
+	{
+		get_env()->exit_status = exec_child_process(cmd, argv);
+		exit(-1);
+	}
 	wstatus = 0;
 	while (waitpid(pid, &wstatus, 0) < 0)
 	{
@@ -344,7 +331,6 @@ static int	exec_external_command(const t_command *cmd, char **argv)
 			return (1);
 		}
 	}
-	sh_free_strarray(argv);
 	if (WIFEXITED(wstatus))
 		return (WEXITSTATUS(wstatus));
 	if (WIFSIGNALED(wstatus))
@@ -373,25 +359,18 @@ static int	exec_command(const t_command *cmd)
 
 	if (cmd->argc <= 0)
 		return (0);
-	printf("DEBUG 1\n");
 	if (sh_signal_interrupted())
 	{
 		sh_signal_reset();
 		return (130);
 	}
-	printf("DEBUG 2\n");
 	expand_args(cmd);
-	printf("DEBUG 2.5\n");
 	expand_redirects(cmd);
-	printf("DEBUG 3\n");
 	if (!cmd->args[0] || !cmd->args[0][0])
 	{
-		sh_free_strarray(cmd->args);
 		return (0);
 	}
-	printf("DEBUG 4\n");
 	update_underscore_var(cmd);
-	printf("DEBUG 5\n");
 	if (is_builtin(cmd->args[0]))
 	{
 		if (cmd->redirects)
@@ -399,11 +378,9 @@ static int	exec_command(const t_command *cmd)
 		else
 		{
 			rc = run_builtin(cmd->args);
-			sh_free_strarray(cmd->args);
 			return (rc);
 		}
 	}
-	printf("DEBUG 6\n");
 	return (exec_external_command(cmd, cmd->args));
 }
 
@@ -424,11 +401,13 @@ static int	setup_pipe_left(const t_ast_node *left, int *pipefd)
 		if (dup2(pipefd[1], 1) < 0)
 		{
 			perror("dup2");
-			exit(1);
+			get_env()->exit_status = 1;
+			exit(-1);
 		}
 		close(pipefd[0]);
 		close(pipefd[1]);
-		exit(exec_ast(left));
+		get_env()->exit_status = exec_ast(left);
+		exit(-1);
 	}
 	return (lpid);
 }
@@ -451,11 +430,13 @@ static int	setup_pipe_right(const t_ast_node *right, int *pipefd, pid_t lpid)
 		if (dup2(pipefd[0], 0) < 0)
 		{
 			perror("dup2");
-			exit(1);
+			get_env()->exit_status = 1;
+			exit(-1);
 		}
 		close(pipefd[1]);
 		close(pipefd[0]);
-		exit(exec_ast(right));
+		get_env()->exit_status = exec_ast(right);
+		exit(-1);
 	}
 	return (rpid);
 }
@@ -538,12 +519,6 @@ int	exec_ast(const t_ast_node *ast)
 	else if (ast->type == NODE_PIPELINE)
 		result = exec_pipeline(ast->u_data.s_binary.left,
 				ast->u_data.s_binary.right);
-	else if (ast->type == NODE_AND)
-		result = execute_logical_and(ast, NULL);
-	else if (ast->type == NODE_OR)
-		result = execute_logical_or(ast, NULL);
-	else if (ast->type == NODE_SUBSHELL)
-		result = execute_subshell(ast, NULL);
 	sh_signal_set_state(STATE_COMMAND, 0);
 	return (result);
 }

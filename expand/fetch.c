@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 20:24:11 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:37:40 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 14:11:16 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,16 @@ char	*get_variable_value(char *key)
 			|| key[1] == '0'))
 	{
 		if (key[1] == '$')
-			return (ft_ltoa(getpid()));
+			return (ft_ltoa(getpid())); // note
 		else if (key[1] == '?')
 			return (ft_ltoa(get_env()->exit_status));
 		else if (key[1] == '0')
-			return (ft_strdup("minishell"));
+			return (sh_strdup("minishell"));
 	}
 	if (key[1] == '\0')
-		return (ft_strdup("$"));
+		return (sh_strdup("$"));
 	env_item = get_env_item(key + 1);
 	if (env_item && env_item->value)
-		return (ft_strdup(env_item->value));
-	return (ft_strdup(""));
+		return (sh_strdup(env_item->value));
+	return (sh_strdup(""));
 }
