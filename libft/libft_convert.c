@@ -1,11 +1,11 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft_0.c                                          :+:      :+:    :+:   */
+/*   libft_convert.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 01:10:38 by btuncer           #+#    #+#             */
+/*   Created: 2025/09/19 21:30:00 by root              #+#    #+#             */
 /*   Updated: 2025/09/19 21:30:00 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -14,18 +14,42 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-bool	is_str_empty(char *str)
-{
-	int		counter;
-	bool	is_empty;
+void	*alloc(ssize_t size);
+long	len_digit(long l);
+long	power_of10(long times);
 
+static char	*handle_zero_case(void)
+{
+	char	*res;
+
+	res = alloc(2 * sizeof(char));
+	if (!res)
+		return ((void *)0);
+	res[0] = '0';
+	res[1] = '\0';
+	return (res);
+}
+
+char	*ft_ltoa(long l)
+{
+	char	*res;
+	int		n;
+	int		counter;
+
+	if (l == 0)
+		return (handle_zero_case());
+	n = len_digit(l);
+	res = alloc((n + 1) * sizeof(char));
+	if (!res)
+		return ((void *)0);
 	counter = 0;
-	is_empty = true;
-	while (str[counter] && is_empty)
+	while (n > 0)
 	{
-		if (str[counter] != ' ')
-			is_empty = false;
+		res[counter] = l / power_of10(n - 1) + 48;
 		counter++;
+		l = l % power_of10(n - 1);
+		n--;
 	}
-	return (is_empty);
+	res[counter] = '\0';
+	return (res);
 }

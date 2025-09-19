@@ -82,27 +82,35 @@ static int	process_token(t_parser *parser, t_command *cmd)
 	return (1);
 }
 
-static t_command	*parse_command(t_parser *parser)
+static int	parse_command_tokens(t_parser *parser, t_command *cmd)
+{
+	int	result;
+
+	while (parser->current && parser->current->type != TOKEN_PIPE
+		&& parser->current->type != TOKEN_SEMICOLON)
+	{
+		result = process_token(parser, cmd);
+		if (result == 0)
+			return (0);
+		else if (result == -1)
+			break ;
+	}
+	return (1);
+}
+
+t_command	*parse_command(t_parser *parser)
 {
 	t_command	*cmd;
-	int			result;
 
 	if (!parser || !parser->current)
 		return (NULL);
 	cmd = init_command(parser);
 	if (!cmd)
 		return (NULL);
-	while (parser->current && parser->current->type != TOKEN_PIPE
-		&& parser->current->type != TOKEN_SEMICOLON)
+	if (!parse_command_tokens(parser, cmd))
 	{
-		result = process_token(parser, cmd);
-		if (result == 0)
-		{
-			cleanup_command(cmd);
-			return (NULL);
-		}
-		else if (result == -1)
-			break ;
+		cleanup_command(cmd);
+		return (NULL);
 	}
 	if (cmd->argc == 0 && !cmd->redirects)
 	{
@@ -110,22 +118,4 @@ static t_command	*parse_command(t_parser *parser)
 		return (NULL);
 	}
 	return (cmd);
-}
-
-t_ast_node	*parse_ast_node(t_parser *parser)
-{
-	t_command	*cmd;
-	t_ast_node	*node;
-
-	cmd = parse_command(parser);
-	if (!cmd)
-		return (NULL);
-	node = create_ast_node(NODE_COMMAND);
-	if (!node)
-	{
-		cleanup_command(cmd);
-		return (NULL);
-	}
-	node->u_data.command = cmd;
-	return (node);
 }

@@ -1,0 +1,59 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   repl_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/19 21:00:00 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 21:00:00 by root             ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
+
+static int	handle_lexer_error(void)
+{
+	write(2, "minishell: syntax error\n", 25);
+	get_env()->exit_status = 2;
+	return (1);
+}
+
+static int	handle_parser_error(t_token *tokens)
+{
+	if (get_env()->exit_status == 130)
+	{
+		cleanup_tokens(tokens);
+		return (1);
+	}
+	write(2, "minishell: syntax error\n", 25);
+	get_env()->exit_status = 2;
+	cleanup_tokens(tokens);
+	return (1);
+}
+
+int	process_line(char *line)
+{
+	t_token		*tokens;
+	t_ast_node	*ast;
+	int			status;
+
+	if (isatty(0))
+		add_history(line);
+	if (is_getline_allocated())
+		insert_to_gc(new_trash(line));
+	tokens = lexer(line);
+	if (!tokens)
+		return (handle_lexer_error());
+	ast = parser(tokens);
+	if (!ast)
+		return (handle_parser_error(tokens));
+	if (sh_signal_interrupted())
+		return (1);
+	status = exec_ast(ast);
+	if (status == 130)
+		write(STDOUT_FILENO, "\n", 1);
+	if (status >= 0)
+		get_env()->exit_status = status;
+	return (1);
+}

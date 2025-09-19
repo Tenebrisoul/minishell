@@ -1,11 +1,11 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft_0.c                                          :+:      :+:    :+:   */
+/*   libft_number.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 01:10:38 by btuncer           #+#    #+#             */
+/*   Created: 2025/09/19 21:30:00 by root              #+#    #+#             */
 /*   Updated: 2025/09/19 21:30:00 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -14,18 +14,41 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-bool	is_str_empty(char *str)
-{
-	int		counter;
-	bool	is_empty;
+void	*alloc(ssize_t size);
 
-	counter = 0;
-	is_empty = true;
-	while (str[counter] && is_empty)
+long	ft_atol(char *str)
+{
+	long	res;
+
+	res = 0;
+	while (*str)
 	{
-		if (str[counter] != ' ')
-			is_empty = false;
-		counter++;
+		res = res * 10;
+		res = res + (*str - 48);
+		str++;
 	}
-	return (is_empty);
+	return (res);
+}
+
+long	len_digit(long l)
+{
+	int	n;
+
+	n = 0;
+	while (l)
+	{
+		n++;
+		l /= 10;
+	}
+	return (n);
+}
+
+long	power_of10(long times)
+{
+	long	res;
+
+	res = 1;
+	while (times--)
+		res *= 10;
+	return (res);
 }

@@ -107,4 +107,3 @@ int	exec_child_process(const t_command *cmd, char **argv)
 		return (127);
 	return (126);
 }
-

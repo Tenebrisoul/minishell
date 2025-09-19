@@ -84,7 +84,6 @@ static int	apply_redir_append(const t_redirect *r)
 static int	apply_redir_heredoc(const t_redirect *r)
 {
 	int	pipefd[2];
-	int	content_len;
 
 	if (pipe(pipefd) < 0)
 	{
@@ -92,16 +91,8 @@ static int	apply_redir_heredoc(const t_redirect *r)
 		perror("");
 		return (1);
 	}
-	content_len = sh_strlen(r->filename);
-	if (write(pipefd[1], r->filename, content_len) < 0)
-	{
-		write(2, "minishell: write: ", 18);
-		perror("");
-		close(pipefd[0]);
-		close(pipefd[1]);
+	if (write_heredoc_content(pipefd, r->filename))
 		return (1);
-	}
-	close(pipefd[1]);
 	if (dup2(pipefd[0], 0) < 0)
 	{
 		write(2, "minishell: dup2: ", 17);

@@ -63,19 +63,17 @@ void	*alloc(ssize_t size)
 
 void	dump_gc(void)
 {
-	t_trash	*trash_node;
-	t_trash	*trash_node_swap;
-	t_gc	*gc;
+	t_trash		*trash_node;
+	t_trash		*trash_node_swap;
+	t_gc		*gc;
 	static int	already_cleaned = 0;
 
 	if (already_cleaned)
-		return;
+		return ;
 	already_cleaned = 1;
-
 	gc = get_gc();
 	if (!gc)
-		return;
-
+		return ;
 	trash_node = gc->first_node;
 	while (trash_node)
 	{

@@ -12,20 +12,6 @@
 
 #include "../minishell.h"
 
-int	has_quotes(const char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '"' || str[i] == '\'')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
 static int	is_quoted_delimiter(const char *delimiter, char **clean_delimiter)
 {
 	if (has_quotes(delimiter))
@@ -39,10 +25,11 @@ static int	is_quoted_delimiter(const char *delimiter, char **clean_delimiter)
 	return (0);
 }
 
-static void	cleanup_heredoc_state()
+static void	cleanup_heredoc_state(void)
 {
 	sh_signal_set_state(STATE_HEREDOC, 0);
-	sh_signal_reset();
+	sh_signal_set_state(STATE_INTERRUPT, 0);
+	sh_signal_set_state(STATE_COMMAND, 0);
 }
 
 static int	process_heredoc_loop(char **content, int *content_len,

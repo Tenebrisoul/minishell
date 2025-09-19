@@ -225,10 +225,15 @@ void		cleanup_command(t_command *cmd);
 void		cleanup_ast(t_ast_node *ast);
 bool		is_redirect_token(t_token_type type);
 t_ast_node	*parse_ast_node(t_parser *parser);
+t_command	*parse_command(t_parser *parser);
 t_redirect	*parse_redirections(t_parser *parser);
 t_ast_node	*parse_primary(t_parser *parser);
 t_ast_node	*parse_pipeline(t_parser *parser);
 t_ast_node	*parse_sequence(t_parser *parser);
+t_ast_node	*create_pipeline_node(t_ast_node *left, t_ast_node *right);
+t_ast_node	*create_sequence_node(t_ast_node *left, t_ast_node *right);
+t_redirect	*process_redirect_token(t_parser *parser);
+t_redirect	*create_redirect(t_parser *parser, t_token_type redir_token);
 
 /* --------------------------------- EXECUTOR -------------------------------- */
 int			exec_ast(const t_ast_node *ast);
@@ -240,11 +245,18 @@ int			exec_external_command(const t_command *cmd, char **argv);
 int			exec_child_process(const t_command *cmd, char **argv);
 int			wait_for_child(pid_t pid);
 int			exec_builtin_with_redir(const t_command *cmd, char **argv);
+int			exec_command(const t_command *cmd);
+int			exec_sequence(const t_ast_node *left, const t_ast_node *right);
+int			exec_pipeline(const t_ast_node *left, const t_ast_node *right);
+int			write_heredoc_content(int pipefd[2], const char *content);
 
 /* --------------------------------- BUILTINS -------------------------------- */
 int			is_builtin(const char *cmd);
 int			run_builtin(char **argv);
 char 		*get_cwd();
+void		fill_env_with_value(char *env_str, t_env_item *node, int key_len);
+void		fill_env_item(char **sorted_env, t_env_item *node, int *i);
+void		bubble_sort_env(char **env_array, int count);
 int 		bi_echo(char **argv);
 int 		bi_pwd(void);
 int 		bi_env(char **argv);
@@ -267,6 +279,7 @@ t_env		*new_env(void);
 
 /* -------------------------------- SHELL CORE ------------------------------- */
 int			shell_run(void);
+int			process_line(char *line);
 char		*read_heredoc_input(const char *delimiter);
 
 /* -------------------------------- HEREDOC UTILS ---------------------------- */

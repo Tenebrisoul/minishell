@@ -28,38 +28,6 @@ static t_parser	*init_parser(t_token *tokens)
 	return (parser);
 }
 
-static t_ast_node	*create_pipeline_node(t_ast_node *left, t_ast_node *right)
-{
-	t_ast_node	*pipeline;
-
-	pipeline = create_ast_node(NODE_PIPELINE);
-	if (!pipeline)
-	{
-		cleanup_ast(left);
-		cleanup_ast(right);
-		return (NULL);
-	}
-	pipeline->u_data.s_binary.left = left;
-	pipeline->u_data.s_binary.right = right;
-	return (pipeline);
-}
-
-static t_ast_node	*create_sequence_node(t_ast_node *left, t_ast_node *right)
-{
-	t_ast_node	*sequence;
-
-	sequence = create_ast_node(NODE_SEQUENCE);
-	if (!sequence)
-	{
-		cleanup_ast(left);
-		cleanup_ast(right);
-		return (NULL);
-	}
-	sequence->u_data.s_binary.left = left;
-	sequence->u_data.s_binary.right = right;
-	return (sequence);
-}
-
 t_ast_node	*parse_sequence(t_parser *parser)
 {
 	t_ast_node	*left;

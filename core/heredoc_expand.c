@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft_0.c                                          :+:      :+:    :+:   */
+/*   heredoc_expand.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 01:10:38 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/19 21:30:00 by root             ###   ########.fr       */
+/*   Created: 2025/09/19 21:00:00 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 21:00:00 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <sys/types.h>
+#include "../minishell.h"
 
-bool	is_str_empty(char *str)
+char	*expand_heredoc_content(char *content, int quoted)
 {
-	int		counter;
-	bool	is_empty;
+	char	*expanded_content;
 
-	counter = 0;
-	is_empty = true;
-	while (str[counter] && is_empty)
-	{
-		if (str[counter] != ' ')
-			is_empty = false;
-		counter++;
-	}
-	return (is_empty);
+	if (quoted)
+		return (content);
+	expanded_content = expand(content);
+	if (!expanded_content)
+		return (content);
+	return (expanded_content);
 }

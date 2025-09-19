@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static volatile sig_atomic_t	g_shell_state = 0;
+volatile sig_atomic_t	g_shell_state = 0;
 
 #define STATE_NORMAL 0
 #define STATE_INTERRUPT 1
@@ -65,9 +65,4 @@ int	sh_signal_should_exit(void)
 {
 	return ((g_shell_state & STATE_INTERRUPT)
 		&& !(g_shell_state & (STATE_HEREDOC | STATE_COMMAND)));
-}
-
-void	sh_signal_reset(void)
-{
-	g_shell_state = STATE_NORMAL;
 }

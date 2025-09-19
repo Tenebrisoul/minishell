@@ -1,14 +1,14 @@
 #TODO exit status codes
 
 #TODO NORM
-builtin \
-core \
-environment \
-executor \
+* builtin \
+* core \
+* environment \
+* executor \
 * expand \
-gc \
-lexer \
+* gc \
+* lexer \
 libft \
-parser \
-signals \
-utils \
+* parser \
+* signals \
+* utils \

@@ -6,7 +6,7 @@
 #    By: root <root@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/27 01:14:03 by btuncer           #+#    #+#              #
-#    Updated: 2025/09/18 23:12:37 by root             ###   ########.fr        #
+#    Updated: 2025/09/19 21:28:01 by root             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,8 +43,10 @@ SRC_LEX     := \
 # Parser sources
 SRC_PARSE   := \
 	parser/parser.c \
+	parser/parser_nodes.c \
 	parser/ast.c \
 	parser/redir.c \
+	parser/redir_utils.c \
 	parser/utils.c
 
 # Garbage collector sources
@@ -56,22 +58,28 @@ SRC_GC      := \
 SRC_CORE    := \
 	core/main.c \
 	core/repl.c \
-	core/shell_run.c \
+	core/repl_utils.c \
 	core/input.c \
+	core/input_utils.c \
 	core/heredoc.c \
 	core/heredoc_utils.c \
-	core/heredoc_input.c
+	core/heredoc_input.c \
+	core/heredoc_expand.c
 
 # Utility sources
 SRC_UTILS   := \
-	utils/utils.c \
+	utils/utils_1.c \
+	utils/utils_2.c \
+	utils/utils_3.c \
 	signals/signals.c
 
 # Environment sources
 SRC_ENV     := \
 	environment/env_init.c \
 	environment/env_constructors.c \
-	environment/env.c
+	environment/env_items.c \
+	environment/env_print.c \
+	environment/env_array.c
 
 # Executor sources
 SRC_EXEC    := \
@@ -79,7 +87,11 @@ SRC_EXEC    := \
 	executor/executor_redirs.c \
 	executor/executor_path.c \
 	executor/executor_expand.c \
-	executor/executor_exec.c
+	executor/executor_exec.c \
+	executor/executor_pipeline.c \
+	executor/executor_sequence.c \
+	executor/executor_command.c \
+	executor/executor_heredoc_utils.c
 
 # Builtin sources
 SRC_BUILTIN := \
@@ -87,6 +99,7 @@ SRC_BUILTIN := \
 	builtin/cwd.c \
 	builtin/ms_bi_env.c \
 	builtin/sort_env.c \
+	builtin/sort_env_utils.c \
 	builtin/ms_cd.c \
 	builtin/ms_echo.c \
 	builtin/ms_env.c \
@@ -106,7 +119,10 @@ SRC_EXPAND  := \
 # Library sources
 SRC_LIBFT   := \
 	libft/ft_split.c \
-	libft/libft_0.c
+	libft/libft_0.c \
+	libft/libft_string.c \
+	libft/libft_number.c \
+	libft/libft_convert.c
 
 # Combine all sources
 SRCS        := $(SRC_LEX) $(SRC_PARSE) $(SRC_GC) $(SRC_CORE) $(SRC_UTILS) \

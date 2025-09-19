@@ -20,8 +20,8 @@ __attribute__((constructor)) static void	init_on_start(void)
 
 __attribute__((destructor)) static void	cleanup_on_exit(void)
 {
-	t_env *env;
-	int exit_status;
+	t_env	*env;
+	int		exit_status;
 
 	env = get_env();
 	if (env)

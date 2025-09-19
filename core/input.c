@@ -81,8 +81,3 @@ char	*handle_input(char *prompt)
 		return (handle_pipe_input());
 	}
 }
-
-int	is_getline_allocated(void)
-{
-	return (!(isatty(STDIN_FILENO) && isatty(STDERR_FILENO)));
-}

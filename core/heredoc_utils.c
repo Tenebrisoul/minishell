@@ -12,6 +12,20 @@
 
 #include "../minishell.h"
 
+int	has_quotes(const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '"' || str[i] == '\'')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 char	*resize_content(char *content, int *cap, int len, int line_len)
 {
 	char	*new_content;
@@ -69,16 +83,4 @@ char	*process_heredoc_line_raw(char *content, int *content_len,
 	content = resize_content(content, content_cap, *content_len, line_len);
 	add_line_to_content(&content, content_len, line, line_len);
 	return (content);
-}
-
-char	*expand_heredoc_content(char *content, int quoted)
-{
-	char	*expanded_content;
-
-	if (quoted)
-		return (content);
-	expanded_content = expand(content);
-	if (!expanded_content)
-		return (content);
-	return (expanded_content);
 }

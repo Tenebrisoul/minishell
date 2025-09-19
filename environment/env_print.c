@@ -1,31 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft_0.c                                          :+:      :+:    :+:   */
+/*   env_print.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 01:10:38 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/19 21:30:00 by root             ###   ########.fr       */
+/*   Created: 2025/09/19 02:24:16 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 02:24:17 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <sys/types.h>
+#include "../minishell.h"
 
-bool	is_str_empty(char *str)
+void	print_env(void)
 {
-	int		counter;
-	bool	is_empty;
+	t_env_item	*node;
 
-	counter = 0;
-	is_empty = true;
-	while (str[counter] && is_empty)
+	node = get_env()->first_node;
+	while (node)
 	{
-		if (str[counter] != ' ')
-			is_empty = false;
-		counter++;
+		if (ft_strcmp(node->key, "__INIT__"))
+		{
+			node = node->next;
+			continue ;
+		}
+		write(1, node->key, len(node->key));
+		write(1, "=", 1);
+		write(1, node->value, len(node->value));
+		write(1, "\n", 1);
+		node = node->next;
 	}
-	return (is_empty);
 }

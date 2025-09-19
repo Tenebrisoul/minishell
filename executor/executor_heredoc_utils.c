@@ -1,31 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft_0.c                                          :+:      :+:    :+:   */
+/*   executor_heredoc_utils.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 01:10:38 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/19 21:30:00 by root             ###   ########.fr       */
+/*   Created: 2025/09/19 21:15:00 by root              #+#    #+#             */
+/*   Updated: 2025/09/19 21:15:00 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <sys/types.h>
+#include "../minishell.h"
 
-bool	is_str_empty(char *str)
+int	write_heredoc_content(int pipefd[2], const char *content)
 {
-	int		counter;
-	bool	is_empty;
+	int	content_len;
 
-	counter = 0;
-	is_empty = true;
-	while (str[counter] && is_empty)
+	content_len = sh_strlen(content);
+	if (write(pipefd[1], content, content_len) < 0)
 	{
-		if (str[counter] != ' ')
-			is_empty = false;
-		counter++;
+		write(2, "minishell: write: ", 18);
+		perror("");
+		close(pipefd[0]);
+		close(pipefd[1]);
+		return (1);
 	}
-	return (is_empty);
+	close(pipefd[1]);
+	return (0);
 }

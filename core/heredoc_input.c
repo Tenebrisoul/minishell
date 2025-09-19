@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static void	handle_getline_error()
+static void	handle_getline_error(void)
 {
 	int	stdin_fd;
 
