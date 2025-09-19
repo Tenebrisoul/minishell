@@ -58,7 +58,8 @@ SRC_CORE    := \
 	core/repl.c \
 	core/shell_run.c \
 	core/heredoc.c \
-	core/heredoc_utils.c
+	core/heredoc_utils.c \
+	core/heredoc_input.c
 
 # Utility sources
 SRC_UTILS   := \

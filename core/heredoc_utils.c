@@ -12,21 +12,10 @@
 
 #include "../minishell.h"
 
-void	copy_content(char *dest, char *src, int len)
-{
-	int	i;
-
-	i = 0;
-	while (i < len)
-	{
-		dest[i] = src[i];
-		i++;
-	}
-}
-
 char	*resize_content(char *content, int *cap, int len, int line_len)
 {
 	char	*new_content;
+	int		i;
 
 	while (len + line_len + 2 > *cap)
 	{
@@ -34,7 +23,12 @@ char	*resize_content(char *content, int *cap, int len, int line_len)
 		new_content = (char *)alloc(*cap);
 		if (!new_content)
 			return (content);
-		copy_content(new_content, content, len);
+		i = 0;
+		while (i < len)
+		{
+			new_content[i] = content[i];
+			i++;
+		}
 		content = new_content;
 	}
 	return (content);
@@ -67,63 +61,26 @@ int	check_delimiter(char *line, const char *delimiter, int delim_len)
 	return (0);
 }
 
-char	*safe_heredoc(char *prompt)
+char	*process_heredoc_line_raw(char *content, int *content_len,
+	int *content_cap, char *line)
 {
-	int		saved_in;
-	int		saved_out;
-	int		tty;
-	char	*line;
+	int		line_len;
 
-	redirect_tty(&tty, &saved_in, &saved_out);
-	line = readline(prompt);
-	insert_to_gc(new_trash(line));
-	if (tty >= 0)
-		restore_stdio(saved_in, saved_out);
-	else
-	{
-		close(saved_in);
-		close(saved_out);
-	}
-	return (line);
+	line_len = sh_strlen(line);
+	content = resize_content(content, content_cap, *content_len, line_len);
+	add_line_to_content(&content, content_len, line, line_len);
+	free(line);
+	return (content);
 }
 
-char	*get_heredoc_line(void)
+char	*expand_heredoc_content(char *content, int quoted)
 {
-	char		*line;
-	size_t		len;
-	ssize_t		read_len;
-	int			stdin_fd;
+	char	*expanded_content;
 
-	if (isatty(STDIN_FILENO))
-	{
-		if (sh_signal_interrupted())
-			return (NULL);
-		line = safe_heredoc("> ");
-		if (!line || sh_signal_interrupted())
-		{
-			return (NULL);
-		}
-		return (line);
-	}
-	len = 0;
-	line = NULL;
-	read_len = getline(&line, &len, stdin);
-	if (read_len == -1)
-	{
-		if (line)
-			free(line);
-		if (sh_signal_interrupted())
-		{
-			stdin_fd = open("/dev/tty", O_RDONLY);
-			if (stdin_fd >= 0)
-			{
-				dup2(stdin_fd, STDIN_FILENO);
-				close(stdin_fd);
-			}
-		}
-		return (NULL);
-	}
-	if (read_len > 0 && line[read_len - 1] == '\n')
-		line[read_len - 1] = '\0';
-	return (line);
+	if (quoted)
+		return (content);
+	expanded_content = expand(content);
+	if (!expanded_content)
+		return (content);
+	return (expanded_content);
 }

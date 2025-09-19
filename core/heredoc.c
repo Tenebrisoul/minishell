@@ -56,6 +56,7 @@ static int	process_heredoc_loop(char **content, int *content_len,
 		{
 			if (sh_signal_interrupted())
 				return (-1);
+			print_heredoc_warning(clean_delimiter);
 			break ;
 		}
 		if (check_delimiter(line, clean_delimiter, delimiter_len))
@@ -68,16 +69,17 @@ static int	process_heredoc_loop(char **content, int *content_len,
 	return (0);
 }
 
-static char	*expand_heredoc_content(char *content, int quoted)
+static char	*handle_heredoc_error(int quoted, char *clean_delimiter,
+					const char *delimiter)
 {
-	char	*expanded_content;
+	char	*content;
 
-	if (quoted)
-		return (content);
-	expanded_content = expand(content);
-	if (!expanded_content)
-		return (content);
-	return (expanded_content);
+	cleanup_heredoc_state(quoted, clean_delimiter, delimiter);
+	get_env()->exit_status = 130;
+	content = (char *)alloc(1);
+	if (content)
+		content[0] = '\0';
+	return (content);
 }
 
 char	*read_heredoc_input(const char *delimiter)
@@ -98,38 +100,12 @@ char	*read_heredoc_input(const char *delimiter)
 	sh_signal_set_state(STATE_HEREDOC, 1);
 	if (process_heredoc_loop(&content, &content_len, &content_cap,
 			clean_delimiter) == -1)
-	{
-		cleanup_heredoc_state(quoted, clean_delimiter, delimiter);
-		get_env()->exit_status = 130;
-		content = (char *)alloc(1);
-		if (content)
-			content[0] = '\0';
-		return (content);
-	}
+		return (handle_heredoc_error(quoted, clean_delimiter, delimiter));
 	sh_signal_set_state(STATE_HEREDOC, 0);
 	if (quoted && clean_delimiter != delimiter)
 		free(clean_delimiter);
 	if (sh_signal_interrupted())
-	{
-		get_env()->exit_status = 130;
-		sh_signal_reset();
-		content = (char *)alloc(1);
-		if (content)
-			content[0] = '\0';
-		return (content);
-	}
+		return (handle_heredoc_error(0, NULL, NULL));
 	content = expand_heredoc_content(content, quoted);
-	return (content);
-}
-
-char	*process_heredoc_line_raw(char *content, int *content_len,
-	int *content_cap, char *line)
-{
-	int		line_len;
-
-	line_len = sh_strlen(line);
-	content = resize_content(content, content_cap, *content_len, line_len);
-	add_line_to_content(&content, content_len, line, line_len);
-	free(line);
 	return (content);
 }

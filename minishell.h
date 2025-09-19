@@ -289,6 +289,9 @@ int			check_delimiter(char *line, const char *delimiter, int delim_len);
 char		*get_heredoc_line(void);
 char		*process_heredoc_line_raw(char *content, int *content_len,
 				int *content_cap, char *line);
+char		*expand_heredoc_content(char *content, int quoted);
+char		*safe_heredoc(char *prompt);
+void		print_heredoc_warning(char *delimiter);
 
 /* -------------------------------- EXPANSION --------------------------------- */
 //char		*expand_string(const char *in);
