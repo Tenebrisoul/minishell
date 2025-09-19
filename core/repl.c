@@ -76,16 +76,26 @@ int shell_run(void)
 		t_ast_node *ast = parser(tokens);
 		if (!ast)
 		{
+			if (get_env()->exit_status == 130)
+			{
+				cleanup_tokens(tokens);
+				continue;
+			}
 			write(2, "minishell: syntax error\n", 25);
 			get_env()->exit_status = 2;
 			cleanup_tokens(tokens);
 			continue;
 		}
+		if (sh_signal_interrupted())
+		{
+			printf("asd\n");
+			continue;
+		}
 		int status = exec_ast(ast);
+		if (status == 130)
+			write(STDOUT_FILENO, "\n", 1);
 		if (status >= 0)
 			get_env()->exit_status = status;
-		if (sh_signal_interrupted())
-			get_env()->exit_status = 130;
 	}
 
 	return get_env()->exit_status;

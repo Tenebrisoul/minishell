@@ -1,4 +1,5 @@
 #include "../minishell.h"
+#include <stdio.h>
 
 t_token	*read_operator(t_lexer *lexer)
 {

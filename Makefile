@@ -6,7 +6,7 @@
 #    By: root <root@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/27 01:14:03 by btuncer           #+#    #+#              #
-#    Updated: 2025/09/18 16:50:02 by root             ###   ########.fr        #
+#    Updated: 2025/09/18 23:12:37 by root             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,6 +80,7 @@ SRC_BUILTIN := \
 	builtin/builtins.c \
 	builtin/cwd.c \
 	builtin/ms_bi_env.c \
+	builtin/sort_env.c \
 	builtin/ms_cd.c \
 	builtin/ms_echo.c \
 	builtin/ms_env.c \
@@ -142,15 +143,6 @@ $(OBJDIR)/%.o: %.c
 # Include dependency files
 -include $(DEPS)
 
-# ============================== BUILD MODES =============================== #
-debug: MODE := debug
-debug: fclean all
-	@printf "$(MAGENTA)🐛 Debug build complete with sanitizers$(RESET)\n"
-
-release: MODE := release
-release: fclean all
-	@printf "$(GREEN)🚀 Release build complete$(RESET)\n"
-
 # ============================== CLEANING ================================== #
 clean:
 	@printf "$(RED)🧹 Cleaning object files...$(RESET)\n"
@@ -162,59 +154,10 @@ fclean: clean
 
 re: fclean all
 
-# ============================== TESTING ================================== #
-test: $(NAME)
-	@printf "$(BLUE)🧪 Running comparison tests...$(RESET)\n"
-	@python3 simple_tester.py test_commands.json ./$(NAME)
-
-test-mandatory: test
-	@printf "$(GREEN)✅ All mandatory tests completed!$(RESET)\n"
-
-test-bonus: $(NAME)
-	@printf "$(BLUE)🎯 Running bonus feature tests...$(RESET)\n"
-	@python3 simple_tester.py bonus_commands.json ./$(NAME)
-
-test-compare: $(NAME)
-	@printf "$(BLUE)📊 Running comprehensive comparison...$(RESET)\n"
-	@python3 simple_tester.py test_commands.json ./$(NAME)
-	@python3 simple_tester.py bonus_commands.json ./$(NAME)
-
-test-simple: $(NAME)
-	@printf "$(BLUE)✨ Running basic commands...$(RESET)\n"
-	@python3 simple_tester.py test_commands.json ./$(NAME)
-
-test-verbose: $(NAME)
-	@printf "$(BLUE)🔍 Running tests with verbose output...$(RESET)\n"
-	@python3 test_minishell.py ./$(NAME) --json-file $(PWD)/test_cases_simple.json --verbose
-
-test-logical: $(NAME)
-	@printf "$(BLUE)⚡ Testing logical operators...$(RESET)\n"
-	@python3 test_minishell.py ./$(NAME) --json-file $(PWD)/test_cases_simple.json --category logical_operators
-
-test-wildcards: $(NAME)
-	@printf "$(BLUE)🌟 Testing wildcards...$(RESET)\n"
-	@python3 test_minishell.py ./$(NAME) --json-file $(PWD)/test_cases_simple.json --category wildcards
-
-test-manual: $(NAME)
-	@printf "$(BLUE)🎮 Manual feature demonstration...$(RESET)\n"
-	@printf "$(CYAN)Testing logical AND:$(RESET)\n"
-	@echo "echo hello && echo world" | ./$(NAME)
-	@printf "\n$(CYAN)Testing logical OR:$(RESET)\n"
-	@echo "echo hello || echo backup" | ./$(NAME)
-	@printf "\n$(CYAN)Testing wildcards:$(RESET)\n"
-	@echo "echo *.h" | ./$(NAME)
-	@printf "\n$(CYAN)Testing exit status:$(RESET)\n"
-	@echo 'echo $$?' | ./$(NAME)
-	@printf "\n$(GREEN)✅ All bonus features working!$(RESET)\n"
-
 # ============================== CODE QUALITY =============================== #
 norminette:
 	@printf "$(CYAN)📏 Running norminette...$(RESET)\n"
 	@norminette $(SRCS) minishell.h
-
-check-leaks: debug
-	@printf "$(MAGENTA)🔍 Running with Valgrind...$(RESET)\n"
-	@echo "echo hello" | valgrind --leak-check=full --show-leak-kinds=all ./$(NAME)
 
 # ============================== UTILITIES ================================== #
 info:
@@ -236,12 +179,6 @@ help:
 	@printf "  $(GREEN)re$(RESET)            - Clean and rebuild\n"
 	@printf "  $(GREEN)debug$(RESET)         - Build with debug flags and sanitizers\n"
 	@printf "  $(GREEN)release$(RESET)       - Build optimized release version\n"
-	@printf "  $(GREEN)test$(RESET)          - Run simple tests\n"
-	@printf "  $(GREEN)test-bonus$(RESET)    - Run bonus feature tests\n"
-	@printf "  $(GREEN)test-simple$(RESET)   - Run simple feature tests\n"
-	@printf "  $(GREEN)test-manual$(RESET)   - Manual demonstration of bonus features\n"
-	@printf "  $(GREEN)test-logical$(RESET)  - Test logical operators (&&, ||)\n"
-	@printf "  $(GREEN)test-wildcards$(RESET) - Test wildcard expansion (*)\n"
 	@printf "  $(GREEN)norminette$(RESET)    - Check code style with norminette\n"
 	@printf "  $(GREEN)check-leaks$(RESET)   - Run with Valgrind leak detection\n"
 	@printf "  $(GREEN)info$(RESET)          - Show build information\n"
@@ -250,15 +187,3 @@ help:
 	@printf "  make debug        # Build with debug flags\n"
 	@printf "  make test-bonus   # Test all bonus features\n"
 	@printf "  make check-leaks  # Check for memory leaks\n"
-
-# ============================== INSTALL ================================== #
-install: $(NAME)
-	@printf "$(GREEN)📦 Installing $(NAME) to /usr/local/bin...$(RESET)\n"
-	@sudo cp $(NAME) /usr/local/bin/
-	@sudo chmod +x /usr/local/bin/$(NAME)
-	@printf "$(GREEN)✅ Installation complete$(RESET)\n"
-
-uninstall:
-	@printf "$(RED)🗑️  Uninstalling $(NAME) from /usr/local/bin...$(RESET)\n"
-	@sudo rm -f /usr/local/bin/$(NAME)
-	@printf "$(RED)✅ Uninstallation complete$(RESET)\n"

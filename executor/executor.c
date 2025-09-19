@@ -1,5 +1,4 @@
 #include "../minishell.h"
-#include <errno.h>
 
 static int apply_redir_in(const t_redirect *r)
 {
@@ -8,12 +7,15 @@ static int apply_redir_in(const t_redirect *r)
 	fd = open(r->filename, O_RDONLY);
 	if (fd < 0)
 	{
-		perror(r->filename);
+		write(2, "minishell: ", 11);
+		write(2, r->filename, sh_strlen(r->filename));
+		write(2, ": No such file or directory\n", 28);
 		return (1);
 	}
 	if (dup2(fd, 0) < 0)
 	{
-		perror("dup2");
+		write(2, "minishell: dup2: ", 17);
+		perror("");
 		close(fd);
 		return (1);
 	}
@@ -28,12 +30,15 @@ static int apply_redir_out(const t_redirect *r)
 	fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd < 0)
 	{
-		perror(r->filename);
+		write(2, "minishell: ", 11);
+		write(2, r->filename, sh_strlen(r->filename));
+		write(2, ": Permission denied\n", 20);
 		return (1);
 	}
 	if (dup2(fd, 1) < 0)
 	{
-		perror("dup2");
+		write(2, "minishell: dup2: ", 17);
+		perror("");
 		close(fd);
 		return (1);
 	}
@@ -48,12 +53,15 @@ static int apply_redir_append(const t_redirect *r)
 	fd = open(r->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
 	{
-		perror(r->filename);
+		write(2, "minishell: ", 11);
+		write(2, r->filename, sh_strlen(r->filename));
+		write(2, ": Permission denied\n", 20);
 		return (1);
 	}
 	if (dup2(fd, 1) < 0)
 	{
-		perror("dup2");
+		write(2, "minishell: dup2: ", 17);
+		perror("");
 		close(fd);
 		return (1);
 	}
@@ -68,13 +76,15 @@ static int apply_redir_heredoc(const t_redirect *r)
 
 	if (pipe(pipefd) < 0)
 	{
-		perror("pipe");
+		write(2, "minishell: pipe: ", 17);
+		perror("");
 		return (1);
 	}
 	content_len = sh_strlen(r->filename);
 	if (write(pipefd[1], r->filename, content_len) < 0)
 	{
-		perror("write");
+		write(2, "minishell: write: ", 18);
+		perror("");
 		close(pipefd[0]);
 		close(pipefd[1]);
 		return (1);
@@ -82,7 +92,8 @@ static int apply_redir_heredoc(const t_redirect *r)
 	close(pipefd[1]);
 	if (dup2(pipefd[0], 0) < 0)
 	{
-		perror("dup2");
+		write(2, "minishell: dup2: ", 17);
+		perror("");
 		close(pipefd[0]);
 		return (1);
 	}
@@ -172,7 +183,23 @@ static void	expand_args(const t_command *cmd)
 		// First expand variables
 		expanded = expand(cmd->args[i]);
 		if (expanded)
+		{
 			(cmd)->args[i] = expanded;
+			// If expanded to empty string, remove this argument
+			if (expanded[0] == '\0')
+			{
+				// Shift remaining arguments left
+				int j = i;
+				while (j < cmd->argc - 1)
+				{
+					cmd->args[j] = cmd->args[j + 1];
+					j++;
+				}
+				((t_command *)cmd)->argc--;
+				cmd->args[cmd->argc] = NULL;
+				i--; // Re-check this position
+			}
+		}
 
 		// Then expand wildcards if present
 		if (sh_strchr(cmd->args[i], '*'))
@@ -258,6 +285,7 @@ static void exec_child_process(const t_command *cmd, char **argv)
 {
 	char *exe;
 	char **env_array;
+	struct stat st;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
@@ -266,10 +294,21 @@ static void exec_child_process(const t_command *cmd, char **argv)
 	exe = find_exec_in_path(argv[0]);
 	if (!exe)
 	{
+		write(2, "minishell: ", 11);
 		write(2, cmd->args[0], sh_strlen(cmd->args[0]));
 		write(2, ": command not found\n", 20);
 		exit(127);
 	}
+
+	// Check if it's a directory
+	if (stat(exe, &st) == 0 && S_ISDIR(st.st_mode))
+	{
+		write(2, "minishell: ", 11);
+		write(2, cmd->args[0], sh_strlen(cmd->args[0]));
+		write(2, ": Is a directory\n", 17);
+		exit(126);
+	}
+
 	env_array = get_env_array();
 	execve(exe, argv, env_array);
 	write(2, "minishell: ", 11);
@@ -308,6 +347,21 @@ static int exec_external_command(const t_command *cmd, char **argv)
 	return (1);
 }
 
+static void update_underscore_var(const t_command *cmd)
+{
+	t_env_item *underscore_item;
+	char *last_arg;
+
+	if (!cmd || cmd->argc <= 0 || !cmd->args)
+		return ;
+	last_arg = cmd->args[cmd->argc - 1];
+	if (!last_arg)
+		return ;
+	underscore_item = new_env_item("_", last_arg);
+	if (underscore_item)
+		add_env_item(underscore_item);
+}
+
 static int exec_command(const t_command *cmd)
 {
 	int rc;
@@ -321,6 +375,15 @@ static int exec_command(const t_command *cmd)
 	}
 	expand_args(cmd);
 	expand_redirects(cmd);
+
+	// Check for empty command after expansion
+	if (!cmd->args[0] || !cmd->args[0][0])
+	{
+		sh_free_strarray(cmd->args);
+		return (0);
+	}
+
+	update_underscore_var(cmd);
 	if (is_builtin(cmd->args[0]))
 	{
 		if (cmd->redirects)
@@ -464,8 +527,6 @@ int exec_ast(const t_ast_node *ast)
         result = execute_logical_or(ast, NULL);
     else if (ast->type == NODE_SUBSHELL)
         result = execute_subshell(ast, NULL);
-
     sh_signal_set_state(STATE_COMMAND, 0);
-
     return result;
 }

@@ -15,10 +15,9 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-#include <dirent.h>
-#include <sys/stat.h>
-
-
+# include <dirent.h>
+# include <sys/stat.h>
+# include <errno.h>
 
 /* ================================= DEFINES ================================= */
 
@@ -264,6 +263,7 @@ int 		bi_exit(char **argv);
 int 		bi_cd(char **argv);
 int 		bi_export(char **argv);
 int 		bi_unset(char **argv);
+char		**get_sorted_env(void);
 
 /* --------------------------------- ENVIRONMENT ----------------------------- */
 t_env_item	*new_env_item(char *key, char *val);

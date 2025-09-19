@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 20:25:27 by root              #+#    #+#             */
-/*   Updated: 2025/09/18 21:53:00 by root             ###   ########.fr       */
+/*   Updated: 2025/09/18 23:49:00 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,11 @@ void apply_all_replacements(char *result)
         {
             replace_single_variable(result, expander->queue[i], expanded_value);
             free(expanded_value); // note
+        }
+        else
+        {
+            // Undefined variable - replace with empty string
+            replace_single_variable(result, expander->queue[i], "");
         }
         i++;
     }

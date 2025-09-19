@@ -28,14 +28,21 @@ bool is_key_valid(char *key)
 t_env_item *new_env_item(char *key, char *val)
 {
     t_env_item *new_item;
-    
+
     if (!is_key_valid(key))
         return (NULL);
     new_item = alloc(sizeof(t_env_item));
     new_item->key = alloc(len(key) * sizeof(char) + 1);
-    new_item->value = alloc(len(val) * sizeof(char) + 1);
     ft_strcpy(key, new_item->key);
-    ft_strcpy(val, new_item->value);
+    if (val)
+    {
+        new_item->value = alloc(len(val) * sizeof(char) + 1);
+        ft_strcpy(val, new_item->value);
+    }
+    else
+    {
+        new_item->value = NULL;
+    }
     new_item->next = NULL;
     return (new_item);
 }

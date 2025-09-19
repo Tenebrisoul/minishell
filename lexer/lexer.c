@@ -47,7 +47,7 @@ static bool	tokenize(t_lexer *lexer, t_token **token_list)
 		else if (is_operator(lexer->current_char))
 			current_token = read_operator(lexer);
 		else if (is_word_char(lexer->current_char) || lexer->current_char == '*')
-			current_token = read_wildcard(lexer);
+			current_token = read_word(lexer);
 		else
 			current_token = NULL;
 		if (!current_token)

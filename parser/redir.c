@@ -42,7 +42,7 @@ static t_redirect	*create_redirect(t_parser *parser, t_token_type redir_token)
 		quoted = has_quotes(parser->current->value);
 		redirect->quoted_delimiter = quoted;
 		content = read_heredoc_input(parser->current->value);
-		if (!content)
+		if (!content || (content && content[0] == '\0' && get_env()->exit_status == 130))
 		{
 			free(redirect);
 			return (NULL);

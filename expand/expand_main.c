@@ -55,6 +55,11 @@ int calculate_final_length()
             final_len = final_len - len(expander->queue[i]) + len(expanded_value);
             free(expanded_value);
         }
+        else
+        {
+            // Undefined variable - remove the variable name completely
+            final_len = final_len - len(expander->queue[i]);
+        }
         i++;
     }
     return (final_len);
