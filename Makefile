@@ -57,6 +57,7 @@ SRC_CORE    := \
 	core/main.c \
 	core/repl.c \
 	core/shell_run.c \
+	core/input.c \
 	core/heredoc.c \
 	core/heredoc_utils.c \
 	core/heredoc_input.c

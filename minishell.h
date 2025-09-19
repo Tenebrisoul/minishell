@@ -63,8 +63,9 @@ typedef enum e_redir_type
 /* ================================= STRUCTS ================================= */
 
 char	*handle_input(char *prompt);
-void	redirect_tty(int *tty, int *saved_in, int *saved_out);
-void	restore_stdio(int saved_in, int saved_out);
+int		is_getline_allocated(void);
+void	setup_tty(int *saved_in, int *saved_out);
+void	restore_tty(int saved_in, int saved_out);
 
 // Forward declarations
 typedef struct s_ast_node		t_ast_node;

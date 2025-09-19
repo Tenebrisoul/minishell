@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static void	setup_tty(int *saved_in, int *saved_out)
+void	setup_tty(int *saved_in, int *saved_out)
 {
 	int	tty;
 
@@ -29,7 +29,7 @@ static void	setup_tty(int *saved_in, int *saved_out)
 	rl_outstream = stdout;
 }
 
-static void	restore_tty(int saved_in, int saved_out)
+void	restore_tty(int saved_in, int saved_out)
 {
 	dup2(saved_in, STDIN_FILENO);
 	dup2(saved_out, STDOUT_FILENO);
@@ -47,6 +47,7 @@ static char	*handle_tty_input(char *prompt)
 
 	setup_tty(&saved_in, &saved_out);
 	line = readline(prompt);
+	insert_to_gc(new_trash(line));
 	restore_tty(saved_in, saved_out);
 	return (line);
 }

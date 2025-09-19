@@ -66,19 +66,12 @@ char	*safe_heredoc(char *prompt)
 {
 	int		saved_in;
 	int		saved_out;
-	int		tty;
 	char	*line;
 
-	redirect_tty(&tty, &saved_in, &saved_out);
+	setup_tty(&saved_in, &saved_out);
 	line = readline(prompt);
 	insert_to_gc(new_trash(line));
-	if (tty >= 0)
-		restore_stdio(saved_in, saved_out);
-	else
-	{
-		close(saved_in);
-		close(saved_out);
-	}
+	restore_tty(saved_in, saved_out);
 	return (line);
 }
 
