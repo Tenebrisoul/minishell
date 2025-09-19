@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/11 21:30:23 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 14:15:38 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 17:39:20 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	calculate_final_length(void)
 			final_len = final_len - len(expander->queue[i]);
 		i++;
 	}
-	return (final_len);
+	return (++final_len);
 }
 
 char	*expand(char *prompt)

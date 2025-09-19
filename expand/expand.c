@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/14 20:25:27 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 14:15:42 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 17:34:48 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*find_variable_in_string(char *str, char *var_name)
 		if (*pos == '$')
 		{
 			i = 0;
-			while (i < len(var_name) && pos[i] == var_name[i])
+			while (i < len(var_name) && pos[i] && pos[i] == var_name[i])
 				i++;
 			if (i == len(var_name))
 				return (pos);
@@ -46,11 +46,23 @@ void	replace_single_variable(char *str, char *var_name, char *value)
 		return ;
 	var_len = len(var_name);
 	val_len = len(value);
-	backup_len = len(pos + var_len);
-	backup = alloc((backup_len + 1) * sizeof(char));
-	ft_strcpy(pos + var_len, backup);
+	if (!pos[var_len])
+	{
+		backup_len = 0;
+		backup = alloc(1);
+		backup[0] = '\0';
+	}
+	else
+	{
+		backup_len = len(pos + var_len);
+		backup = alloc((backup_len + 1) * sizeof(char));
+		ft_strcpy(pos + var_len, backup);
+	}
 	ft_strcpy(value, pos);
-	ft_strcpy(backup, pos + val_len);
+	if (backup_len > 0)
+		ft_strcpy(backup, pos + val_len);
+	else
+		pos[val_len] = '\0';
 }
 
 void	apply_all_replacements(char *result)
@@ -69,7 +81,7 @@ void	apply_all_replacements(char *result)
 			replace_single_variable(result, expander->queue[i], expanded_value);
 		}
 		else
-			replace_single_variable(result, expander->queue[i], "");
+			replace_single_variable(result, expander->queue[i], "\0");
 		i++;
 	}
 }

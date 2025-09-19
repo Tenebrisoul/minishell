@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:36 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:24:37 by root             ###   ########.fr       */
+/*   Updated: 2025/09/19 17:17:54 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	expandable_len(char *marked_pos)
 	while (marked_pos[counter] && (is_char(marked_pos[counter])
 			|| is_number(marked_pos[counter]) || marked_pos[counter] == '_'))
 		counter++;
+	printf("DEBUG: expandable_len found length %d for variable starting with '%s'\n", counter, marked_pos);
 	return (counter);
 }
 
@@ -79,4 +80,5 @@ void	queue_expandables(void)
 			insert_curr_to_queue(expander);
 		expander->marker++;
 	}
+	// expander->queue[expander->queue_marker] = NULL;
 }
