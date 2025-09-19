@@ -28,43 +28,51 @@ static int	count_valid_env_items(void)
 	return (count);
 }
 
+static void	fill_env_with_value(char *env_str, t_env_item *node, int key_len)
+{
+	int	val_len;
+
+	val_len = len(node->value);
+	env_str[key_len] = '=';
+	env_str[key_len + 1] = '"';
+	if (val_len > 0)
+		ft_strcpy(node->value, env_str + key_len + 2);
+	env_str[key_len + val_len + 2] = '"';
+	env_str[key_len + val_len + 3] = '\0';
+}
+
+static void	fill_env_item(char **sorted_env, t_env_item *node, int *i)
+{
+	int	key_len;
+	int	val_len;
+
+	key_len = len(node->key);
+	val_len = 0;
+	if (node->value)
+		val_len = len(node->value);
+	sorted_env[*i] = alloc(key_len + val_len + 4);
+	if (sorted_env[*i])
+	{
+		ft_strcpy(node->key, sorted_env[*i]);
+		if (node->value)
+			fill_env_with_value(sorted_env[*i], node, key_len);
+		else
+			sorted_env[*i][key_len] = '\0';
+	}
+	(*i)++;
+}
+
 static void	fill_sorted_array(char **sorted_env)
 {
 	t_env_item	*node;
 	int			i;
-	int			key_len;
-	int			val_len;
 
 	i = 0;
 	node = get_env()->first_node;
 	while (node)
 	{
 		if (ft_strcmp(node->key, "__INIT__") == false)
-		{
-			key_len = len(node->key);
-			val_len = 0;
-			if (node->value)
-				val_len = len(node->value);
-			sorted_env[i] = alloc(key_len + val_len + 4);
-			if (sorted_env[i])
-			{
-				ft_strcpy(node->key, sorted_env[i]);
-				if (node->value)
-				{
-					sorted_env[i][key_len] = '=';
-					sorted_env[i][key_len + 1] = '"';
-					if (val_len > 0)
-						ft_strcpy(node->value, sorted_env[i] + key_len + 2);
-					sorted_env[i][key_len + val_len + 2] = '"';
-					sorted_env[i][key_len + val_len + 3] = '\0';
-				}
-				else
-				{
-					sorted_env[i][key_len] = '\0';
-				}
-			}
-			i++;
-		}
+			fill_env_item(sorted_env, node, &i);
 		node = node->next;
 	}
 }

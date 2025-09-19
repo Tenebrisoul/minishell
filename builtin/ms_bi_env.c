@@ -30,39 +30,52 @@ static void	print_export_format(void)
 	}
 }
 
-int	bi_export(char **argv)
+static int	export_without_value(char *arg)
 {
-	int			i;
-	char		*eq;
 	t_env_item	*item;
 
-	i = 1;
+	item = get_env_item(arg);
+	if (!item)
+		add_env_item(new_env_item(arg, NULL));
+	return (0);
+}
+
+static int	export_with_value(char *arg, char *eq)
+{
+	t_env_item	*item;
+
+	*eq = '\0';
+	item = get_env_item(arg);
+	if (item)
+		item->value = sh_strdup(eq + 1);
+	else if (add_env_item(new_env_item(arg, eq + 1)) == NULL)
+	{
+		write(2, "minishell: not a valid identifier\n", 34);
+		*eq = '=';
+		return (1);
+	}
+	*eq = '=';
+	return (0);
+}
+
+int	bi_export(char **argv)
+{
+	int		i;
+	char	*eq;
+
 	if (!argv[1])
 	{
 		print_export_format();
 		return (0);
 	}
+	i = 1;
 	while (argv[i])
 	{
 		eq = sh_strchr(argv[i], '=');
 		if (!eq)
-		{
-			item = get_env_item(argv[i]);
-			if (!item)
-				add_env_item(new_env_item(argv[i], NULL));
-			i++;
-			continue ;
-		}
-		*eq = '\0';
-		item = get_env_item(argv[i]);
-		if (item)
-			item->value = sh_strdup(eq + 1);
-		else if (add_env_item(new_env_item(argv[i], eq + 1)) == NULL)
-		{
-			write(2, "minishell: not a valid identifier\n", 34);
+			export_without_value(argv[i]);
+		else if (export_with_value(argv[i], eq))
 			return (1);
-		}
-		*eq = '=';
 		i++;
 	}
 	return (0);
