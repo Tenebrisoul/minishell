@@ -58,25 +58,35 @@ void	expand_args(const t_command *cmds)
 			new_argc = cmd->argc + split_count - 1;
 			new_args = alloc(sizeof(char *) * (new_argc + 1));
 			j = 0;
-			k = 0;
-			while (k < new_argc)
+			while (j < i)
 			{
-				if (k < i)
-					new_args[k] = cmd->args[k];
-				else if (k >= i && k < i + split_count)
-					new_args[k] = sh_strdup(split_result[k - i]);
-				else
-					new_args[k] = cmd->args[];
+				new_args[j] = cmd->args[j];
+				j++;
+			}
+			k = 0;
+			while (k < split_count)
+			{
+				new_args[j] = sh_strdup(split_result[k]);
+				j++;
 				k++;
 			}
-			new_args[k] = NULL;
+			k = i + 1;
+			while (k < cmd->argc)
+			{
+				new_args[j] = cmd->args[k];
+				j++;
+				k++;
+			}
+			new_args[j] = NULL;
 			cmd->args = new_args;
 			cmd->argc = new_argc;
-			i += split_count - 1;
+			i += split_count;
 		}
 		else
+		{
 			cmd->args[i] = expand(cmd->args[i]);
-		i++;
+			i++;
+		}
 	}
 }
 

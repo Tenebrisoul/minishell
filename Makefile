@@ -6,7 +6,7 @@
 #    By: root <root@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/27 01:14:03 by btuncer           #+#    #+#              #
-#    Updated: 2025/09/19 21:28:01 by root             ###   ########.fr        #
+#    Updated: 2025/09/20 22:53:35 by root             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,8 @@ SRC_PARSE   := \
 # Garbage collector sources
 SRC_GC      := \
 	gc/gc.c \
-	gc/cons.c
+	gc/cons.c \
+	gc/dump.c
 
 # Core shell sources
 SRC_CORE    := \
