@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:15 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 15:14:52 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 01:06:48 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_env	*get_env(void)
 		environment->first_node = new_env_item("__INIT__", "INIT");
 	}
 	if (!environment)
-		exit(-1);
+		gc_exit(1);
 	return (environment);
 }
 void		unset_env_item(char *key);

@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 16:13:13 by root              #+#    #+#             */
-/*   Updated: 2025/09/18 23:38:27 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 01:10:29 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	run_builtin(char **argv)
 	if (sh_strcmp(argv[0], "env") == 0)
 		return (bi_env(argv));
 	if (sh_strcmp(argv[0], "exit") == 0)
-		return (bi_exit(argv));
+		bi_exit(argv);
 	if (sh_strcmp(argv[0], "cd") == 0)
 		return (bi_cd(argv));
 	if (sh_strcmp(argv[0], "export") == 0)

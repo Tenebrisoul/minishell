@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 21:10:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 21:10:00 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 01:05:56 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,11 @@ static int	setup_pipe_left(const t_ast_node *left, int *pipefd)
 		if (dup2(pipefd[1], 1) < 0)
 		{
 			perror("dup2");
-			get_env()->exit_status = 1;
-			exit(-1);
+			gc_exit(1);
 		}
 		close(pipefd[0]);
 		close(pipefd[1]);
-		get_env()->exit_status = exec_ast(left);
-		exit(-1);
+		gc_exit(exec_ast(left));
 	}
 	return (lpid);
 }
@@ -65,13 +63,11 @@ static int	setup_pipe_right(const t_ast_node *right, int *pipefd, pid_t lpid)
 		if (dup2(pipefd[0], 0) < 0)
 		{
 			perror("dup2");
-			get_env()->exit_status = 1;
-			exit(-1);
+			gc_exit(1);
 		}
 		close(pipefd[1]);
 		close(pipefd[0]);
-		get_env()->exit_status = exec_ast(right);
-		exit(-1);
+		gc_exit(exec_ast(right));
 	}
 	return (rpid);
 }

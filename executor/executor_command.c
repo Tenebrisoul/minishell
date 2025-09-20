@@ -34,12 +34,21 @@ static void	update_underscore_var(const t_command *cmd)
 		add_env_item(underscore_item);
 }
 
-int	exec_command(const t_command *cmd)
+static int	execute_builtin_or_empty(const t_command *cmd, int is_builtin)
 {
-	int	rc;
-
-	if (cmd->argc <= 0)
+	if (!is_builtin)
+	{
+		if (cmd->redirects)
+			return (apply_redirs(cmd->redirects));
 		return (0);
+	}
+	if (cmd->redirects)
+		return (exec_builtin_with_redir(cmd, cmd->args));
+	return (run_builtin(cmd->args));
+}
+
+static int	prepare_command_execution(const t_command *cmd)
+{
 	if (sh_signal_interrupted())
 	{
 		reset_signals();
@@ -49,16 +58,20 @@ int	exec_command(const t_command *cmd)
 	expand_redirects(cmd);
 	if (!cmd->args[0] || !cmd->args[0][0])
 		return (0);
+	return (-1);
+}
+
+int	exec_command(const t_command *cmd)
+{
+	int	prep_result;
+
+	if (cmd->argc <= 0)
+		return (execute_builtin_or_empty(cmd, 0));
+	prep_result = prepare_command_execution(cmd);
+	if (prep_result != -1)
+		return (prep_result);
 	update_underscore_var(cmd);
 	if (is_builtin(cmd->args[0]))
-	{
-		if (cmd->redirects)
-			return (exec_builtin_with_redir(cmd, cmd->args));
-		else
-		{
-			rc = run_builtin(cmd->args);
-			return (rc);
-		}
-	}
+		return (execute_builtin_or_empty(cmd, 1));
 	return (exec_external_command(cmd, cmd->args));
 }

@@ -6,11 +6,17 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:47 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 15:12:46 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 01:09:02 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	gc_exit(int code)
+{
+	get_env()->exit_status = code;
+	exit(code);
+}
 
 t_gc	*get_gc(void)
 {
@@ -19,7 +25,7 @@ t_gc	*get_gc(void)
 	if (!gc)
 		gc = new_gc();
 	if (!gc)
-		exit(-1);
+		gc_exit(1);
 	return (gc);
 }
 
@@ -48,13 +54,13 @@ void	*alloc(ssize_t size)
 	mem = malloc(size);
 	if (!mem)
 	{
-		exit(-1);
+		gc_exit(1);
 		return (NULL);
 	}
 	trash = new_trash(mem);
 	if (!trash)
 	{
-		exit(-1);
+		gc_exit(1);
 		return (NULL);
 	}
 	insert_to_gc(trash);

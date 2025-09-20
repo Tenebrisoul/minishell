@@ -47,10 +47,8 @@ int	exec_builtin_with_redir(const t_command *cmd, char **argv)
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
 		if (apply_redirs(cmd->redirects) != 0)
-			get_env()->exit_status = 1;
-		else
-			get_env()->exit_status = run_builtin(argv);
-		exit(-1);
+			gc_exit(1);
+		gc_exit(run_builtin(argv));
 	}
 	return (wait_for_child(bpid));
 }

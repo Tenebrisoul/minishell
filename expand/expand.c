@@ -102,6 +102,8 @@ char	*replace_all_variables(void)
 
 	expander = get_expander(GET);
 	final_len = calculate_final_length();
+	if (final_len < len(expander->prompt))
+		final_len = len(expander->prompt);
 	result = alloc((final_len + 1) * sizeof(char));
 	ft_strcpy(expander->prompt, result);
 	apply_all_replacements(result);

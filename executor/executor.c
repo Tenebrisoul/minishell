@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:23 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 15:14:03 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 01:05:12 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ int	exec_external_command(const t_command *cmd, char **argv)
 		return (1);
 	}
 	if (pid == 0)
-	{
-		get_env()->exit_status = exec_child_process(cmd, argv);
-		exit(-1);
-	}
+		gc_exit(exec_child_process(cmd, argv));
 	return (wait_for_child(pid));
 }
 
