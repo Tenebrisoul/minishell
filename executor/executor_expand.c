@@ -12,11 +12,11 @@
 
 #include "../minishell.h"
 
-int	check_for_split(char *s)
+static int	check_for_split(char *s)
 {
 	int	i;
-	int has_quote;
-	int has_dollar;
+	int	has_quote;
+	int	has_dollar;
 
 	i = 0;
 	has_quote = 0;
@@ -32,15 +32,46 @@ int	check_for_split(char *s)
 	return (!has_quote && has_dollar);
 }
 
-void	expand_args(const t_command *cmds)
+static char	**build_new_args(t_command *cmd, char **split_result,
+					int split_count, int i)
 {
-	int		i;
+	char	**new_args;
 	int		j;
 	int		k;
-	char	**split_result;
-	char	**new_args;
-	int		split_count;
 	int		new_argc;
+
+	new_argc = cmd->argc + split_count - 1;
+	new_args = alloc(sizeof(char *) * (new_argc + 1));
+	j = -1;
+	while (++j < i)
+		new_args[j] = cmd->args[j];
+	k = -1;
+	while (++k < split_count)
+		new_args[j++] = sh_strdup(split_result[k]);
+	k = i;
+	while (++k < cmd->argc)
+		new_args[j++] = cmd->args[k];
+	new_args[j] = NULL;
+	cmd->argc = new_argc;
+	return (new_args);
+}
+
+static void	handle_split_arg(t_command *cmd, int *i)
+{
+	char	**split_result;
+	int		j;
+
+	split_result = ft_split(expand(cmd->args[*i]), ' ');
+	j = 0;
+	while (split_result && split_result[j])
+		j++;
+	cmd->args = build_new_args(cmd, split_result, j, *i);
+	*i += j;
+}
+
+void	expand_args(const t_command *cmds)
+{
+	int			i;
 	t_command	*cmd;
 
 	cmd = (t_command *)cmds;
@@ -50,38 +81,7 @@ void	expand_args(const t_command *cmds)
 	while (i < cmd->argc && cmd->args[i])
 	{
 		if (check_for_split(cmd->args[i]))
-		{
-			split_result = ft_split(expand(cmd->args[i]), ' ');
-			split_count = 0;
-			while (split_result && split_result[split_count])
-				split_count++;
-			new_argc = cmd->argc + split_count - 1;
-			new_args = alloc(sizeof(char *) * (new_argc + 1));
-			j = 0;
-			while (j < i)
-			{
-				new_args[j] = cmd->args[j];
-				j++;
-			}
-			k = 0;
-			while (k < split_count)
-			{
-				new_args[j] = sh_strdup(split_result[k]);
-				j++;
-				k++;
-			}
-			k = i + 1;
-			while (k < cmd->argc)
-			{
-				new_args[j] = cmd->args[k];
-				j++;
-				k++;
-			}
-			new_args[j] = NULL;
-			cmd->args = new_args;
-			cmd->argc = new_argc;
-			i += split_count;
-		}
+			handle_split_arg(cmd, &i);
 		else
 		{
 			cmd->args[i] = expand(cmd->args[i]);

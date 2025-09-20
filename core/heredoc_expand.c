@@ -6,13 +6,13 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 21:00:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/20 17:57:57 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 23:04:14 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char *expand_heredoc(char *prompt)
+static char	*expand_heredoc(char *prompt)
 {
 	t_expander	*expander;
 	char		*expanded_prompt;

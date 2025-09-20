@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/20 22:43:49 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 23:03:34 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,7 @@ void							queue_expandables(void);
 int								quote_status(char *str, int index);
 bool							is_char(char c);
 bool							is_number(char c);
-char	*process_escapes(char *str);
+char							*process_escapes(char *str);
 
 /* ENVIRONMENT UTILS */
 int								sh_env_set(const char *key, const char *val,
