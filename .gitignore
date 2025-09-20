@@ -5,11 +5,3 @@ minishell
 *.DS_Store
 *.log
 /.vscode/
-seks37.txt
-seks26.txt
-tmp_err_bash
-tmp_err_minishell
-tmp_out_bash
-tmp_out_minishell
-tmp_valgrind-out.txt
-/valgrind_logs/

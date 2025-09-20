@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:16 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:24:17 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 17:42:48 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_env(void)
 	node = get_env()->first_node;
 	while (node)
 	{
-		if (ft_strcmp(node->key, "__INIT__"))
+		if (ft_strcmp(node->key, "__INIT__") || !node->value)
 		{
 			node = node->next;
 			continue ;

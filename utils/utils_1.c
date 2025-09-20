@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:28 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 14:16:36 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:20:31 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,6 @@ char	*sh_strdup(const char *s)
 
 	len = sh_strlen(s);
 	p = (char *)alloc((len + 1) * sizeof(char));
-	if (!p)
-		return (NULL);
 	i = 0;
 	while (i < len)
 	{

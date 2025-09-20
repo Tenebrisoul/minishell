@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:02 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 12:19:12 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:21:25 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ static t_lexer	*init_lexer(char *input)
 	if (!input || !*input)
 		return (NULL);
 	lexer = alloc(sizeof(t_lexer));
-	if (!lexer)
-		return (NULL);
 	lexer->input = sh_strdup(input);
 	if (!lexer->input)
 		return (NULL);

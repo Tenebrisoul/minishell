@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/01 00:00:00 by student           #+#    #+#             */
-/*   Updated: 2025/09/19 14:18:17 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 22:32:21 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*safe_heredoc(char *prompt)
 
 	setup_tty(&saved_in, &saved_out);
 	line = readline(prompt);
-	insert_to_gc(new_trash(line));
+	insert_to_gc(new_trash(line), GC_GC);
 	restore_tty(saved_in, saved_out);
 	return (line);
 }

@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:28 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 14:16:36 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:20:23 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,6 @@ static char	*create_segment(const char *s, int start, int len)
 	int		k;
 
 	seg = (char *)alloc(len + 1);
-	if (!seg)
-		return (NULL);
 	k = 0;
 	while (k < len)
 	{
@@ -101,8 +99,6 @@ char	**sh_split_colon(const char *s)
 		return (NULL);
 	count = count_colon_segments(s);
 	arr = (char **)alloc((count + 1) * sizeof(char *));
-	if (!arr)
-		return (NULL);
 	if (!split_string_helper(s, arr))
 		return (NULL);
 	return (arr);

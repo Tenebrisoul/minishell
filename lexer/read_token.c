@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:04 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 14:09:37 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:20:06 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,6 @@ t_token	*read_word(t_lexer *lexer)
 	if (length == 0)
 		return (NULL);
 	content = alloc(length + 1);
-	if (!content)
-		return (NULL);
 	content[length] = '\0';
 	while (i < length)
 	{

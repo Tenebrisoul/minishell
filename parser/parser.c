@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:16 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 12:19:57 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:20:45 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ static t_parser	*init_parser(t_token *tokens)
 	if (!tokens)
 		return (NULL);
 	parser = alloc(sizeof(t_parser));
-	if (!parser)
-		return (NULL);
 	parser->tokens = tokens;
 	parser->current = tokens;
 	return (parser);

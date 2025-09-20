@@ -47,7 +47,7 @@ static char	*handle_tty_input(char *prompt)
 
 	setup_tty(&saved_in, &saved_out);
 	line = readline(prompt);
-	insert_to_gc(new_trash(line));
+	insert_to_gc(new_trash(line), GC_GC);
 	restore_tty(saved_in, saved_out);
 	return (line);
 }

@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/18 17:02:53 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/19 14:12:05 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:39:13 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,11 @@ int	bi_unset(char **argv)
 	i = 1;
 	if (!argv[1])
 		return (0);
+	if (argv[1][0] == '-')
+	{
+		write(2, "minishell: unset: invalid option\n", 33);
+		return (2);
+	}
 	while (argv[i])
 	{
 		unset_env_item(argv[i]);

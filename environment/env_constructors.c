@@ -6,15 +6,13 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:12 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 17:24:43 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 22:39:12 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	*alloc(ssize_t val);
-
-bool	is_key_valid(char *key)
+static bool	is_key_valid(char *key)
 {
 	int	i;
 

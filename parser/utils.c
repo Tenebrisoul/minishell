@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:21 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 12:20:38 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:20:37 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ t_ast_node	*create_ast_node(t_node_type type)
 	t_ast_node	*node;
 
 	node = alloc(sizeof(t_ast_node));
-	if (!node)
-		return (NULL);
 	node->type = type;
 	node->u_data.command = NULL;
 	return (node);

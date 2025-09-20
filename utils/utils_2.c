@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:28 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 14:16:36 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:20:27 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,6 @@ char	*sh_join_path(const char *dir, const char *file)
 	fl = sh_strlen(file);
 	need_slash = (dl > 0 && dir[dl - 1] != '/');
 	p = (char *)alloc(dl + need_slash + fl + 1);
-	if (!p)
-		return (NULL);
 	copy_dir_to_path(p, dir, dl);
 	if (need_slash)
 		p[dl] = '/';

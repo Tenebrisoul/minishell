@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:09 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 12:19:32 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:21:19 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ t_token	*create_token(t_token_type type, char *value)
 	t_token	*token;
 
 	token = alloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
 	token->type = type;
 	token->value = sh_strdup(value);
 	if (!token->value)

@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:51 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 14:16:14 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:21:13 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	word_count = split_count(s, c);
 	splitted = alloc((word_count + 1) * sizeof(char *));
-	if (!splitted)
-		return (NULL);
 	counter = 0;
 	while (counter < word_count)
 	{

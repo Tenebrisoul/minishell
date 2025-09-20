@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:18 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 14:16:32 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:20:42 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ t_redirect	*create_redirect(t_parser *parser, t_token_type redir_token)
 	if (!parser->current || parser->current->type != TOKEN_WORD)
 		return (NULL);
 	redirect = alloc(sizeof(t_redirect));
-	if (!redirect)
-		return (NULL);
 	redirect->type = token_to_redir_type(redir_token);
 	redirect->quoted_delimiter = 0;
 	if (redir_token == TOKEN_HEREDOC)

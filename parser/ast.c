@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:25:14 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 12:19:53 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:20:51 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ static t_command	*init_command(t_parser *parser)
 	size_t		size;
 
 	cmd = alloc(sizeof(t_command));
-	if (!cmd)
-		return (NULL);
 	size = 0;
 	current = parser->current;
 	while (current && current->type != TOKEN_PIPE
@@ -30,8 +28,6 @@ static t_command	*init_command(t_parser *parser)
 		current = current->next;
 	}
 	cmd->args = alloc(sizeof(char *) * (size + 1));
-	if (!cmd->args)
-		return (NULL);
 	cmd->argc = 0;
 	cmd->args[0] = NULL;
 	cmd->redirects = NULL;

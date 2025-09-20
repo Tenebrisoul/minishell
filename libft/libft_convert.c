@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 21:30:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 21:30:00 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 21:21:03 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ static char	*handle_zero_case(void)
 	char	*res;
 
 	res = alloc(2 * sizeof(char));
-	if (!res)
-		return ((void *)0);
 	res[0] = '0';
 	res[1] = '\0';
 	return (res);
@@ -40,8 +38,6 @@ char	*ft_ltoa(long l)
 		return (handle_zero_case());
 	n = len_digit(l);
 	res = alloc((n + 1) * sizeof(char));
-	if (!res)
-		return ((void *)0);
 	counter = 0;
 	while (n > 0)
 	{

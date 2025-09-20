@@ -12,44 +12,70 @@
 
 #include "../minishell.h"
 
-static void	remove_empty_arg(const t_command *cmd, int i)
+int	check_for_split(char *s)
 {
-	int	j;
+	int	i;
+	int has_quote;
+	int has_dollar;
 
-	j = i;
-	while (j < cmd->argc - 1)
+	i = 0;
+	has_quote = 0;
+	has_dollar = 0;
+	while (s[i])
 	{
-		cmd->args[j] = cmd->args[j + 1];
-		j++;
+		if (s[i] == '$')
+			has_dollar = 1;
+		if (s[i] == '\'' || s[i] == '\"')
+			has_quote = 1;
+		i++;
 	}
-	((t_command *)cmd)->argc--;
-	cmd->args[cmd->argc] = NULL;
+	return (!has_quote && has_dollar);
 }
 
-static void	process_expanded_arg(const t_command *cmd, int *i, char *expanded)
+void	expand_args(const t_command *cmds)
 {
-	if (!expanded)
-		return ;
-	(cmd)->args[*i] = expanded;
-	if (expanded[0] == '\0')
-	{
-		remove_empty_arg(cmd, *i);
-		(*i)--;
-	}
-}
-
-void	expand_args(const t_command *cmd)
-{
-	char	*expanded;
 	int		i;
+	int		j;
+	int		k;
+	char	**split_result;
+	char	**new_args;
+	int		split_count;
+	int		new_argc;
+	t_command	*cmd;
 
+	cmd = (t_command *)cmds;
 	if (!cmd || !cmd->args)
 		return ;
 	i = 0;
 	while (i < cmd->argc && cmd->args[i])
 	{
-		expanded = expand(cmd->args[i]);
-		process_expanded_arg(cmd, &i, expanded);
+		if (check_for_split(cmd->args[i]))
+		{
+			split_result = ft_split(expand(cmd->args[i]), ' ');
+			split_count = 0;
+			while (split_result && split_result[split_count])
+				split_count++;
+			new_argc = cmd->argc + split_count - 1;
+			new_args = alloc(sizeof(char *) * (new_argc + 1));
+			j = 0;
+			k = 0;
+			while (k < new_argc)
+			{
+				if (k < i)
+					new_args[k] = cmd->args[k];
+				else if (k >= i && k < i + split_count)
+					new_args[k] = sh_strdup(split_result[k - i]);
+				else
+					new_args[k] = cmd->args[];
+				k++;
+			}
+			new_args[k] = NULL;
+			cmd->args = new_args;
+			cmd->argc = new_argc;
+			i += split_count - 1;
+		}
+		else
+			cmd->args[i] = expand(cmd->args[i]);
 		i++;
 	}
 }

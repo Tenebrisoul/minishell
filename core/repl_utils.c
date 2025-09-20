@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 21:00:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 21:00:00 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 22:32:35 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	process_line(char *line)
 	if (isatty(0))
 		add_history(line);
 	if (is_getline_allocated())
-		insert_to_gc(new_trash(line));
+		insert_to_gc(new_trash(line), GC_GC);
 	tokens = lexer(line);
 	if (!tokens)
 		return (handle_lexer_error());
