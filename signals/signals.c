@@ -56,8 +56,3 @@ int	sh_signal_interrupted(void)
 	return ((g_shell_state & STATE_INTERRUPT) != 0);
 }
 
-int	sh_signal_should_exit(void)
-{
-	return ((g_shell_state & STATE_INTERRUPT)
-		&& !(g_shell_state & (STATE_HEREDOC | STATE_COMMAND)));
-}

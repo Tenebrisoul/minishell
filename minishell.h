@@ -240,8 +240,6 @@ int								write_heredoc_content(int pipefd[2],
 int								is_builtin(const char *cmd);
 int								run_builtin(char **argv);
 char							*get_cwd(void);
-void							fill_env_with_value(char *env_str,
-									t_env_item *node, int key_len);
 void							fill_env_item(char **sorted_env,
 									t_env_item *node, int *i);
 void							bubble_sort_env(char **env_array, int count);
@@ -271,12 +269,8 @@ int								process_line(char *line);
 char							*read_heredoc_input(const char *delimiter);
 
 /* HEREDOC UTILS */
-void							copy_content(char *dest, char *src, int len);
 char							*resize_content(char *content, int *cap,
 									int len, int line_len);
-void							add_line_to_content(char **content,
-									int *content_len, char *expanded,
-									int line_len);
 int								check_delimiter(char *line,
 									const char *delimiter, int delim_len);
 char							*get_heredoc_line(void);
@@ -291,9 +285,6 @@ void							print_heredoc_warning(char *delimiter);
 char							**expand_argv(char **argv, int argc);
 char							*find_variable_in_string(char *str,
 									char *var_name);
-void							replace_single_variable(char *str,
-									char *var_name, char *value);
-void							apply_all_replacements(char *result);
 char							*replace_all_variables(void);
 char							*get_variable_value(char *key);
 char							*expand(char *prompt);
@@ -321,7 +312,6 @@ const char						*sh_getenv_val(const char *name);
 void							init_signals(void);
 void							sh_signal_set_state(int state_type, int value);
 int								sh_signal_interrupted(void);
-int								sh_signal_should_exit(void);
 void							sh_signal_reset(void);
 
 /* UTILS */
@@ -339,11 +329,8 @@ void							sh_free_strarray(char **arr);
 
 /* LIBFT */
 size_t							ft_strlen(const char *str);
-bool							is_str_empty(char *str);
-bool							in(char *str, char c);
 ssize_t							len(const char *str);
 void							ft_strcpy(char *src, char *dst);
-void							ft_strncpy(char *src, char *dst, int n);
 bool							ft_strcmp(char *str, char *to_cmp);
 long							ft_atol(char *str);
 char							*ft_ltoa(long l);

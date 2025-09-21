@@ -48,7 +48,7 @@ char	*resize_content(char *content, int *cap, int len, int line_len)
 	return (content);
 }
 
-void	add_line_to_content(char **content, int *content_len, char *expanded,
+static void	add_line_to_content(char **content, int *content_len, char *expanded,
 		int line_len)
 {
 	int	i;

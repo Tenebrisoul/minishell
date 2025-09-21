@@ -58,7 +58,7 @@ static char	*create_backup(char *pos, int var_len, int *backup_len)
 	return (backup);
 }
 
-void	replace_single_variable(char *str, char *var_name, char *value)
+static void	replace_single_variable(char *str, char *var_name, char *value)
 {
 	char	*pos;
 	char	*backup;
@@ -79,7 +79,7 @@ void	replace_single_variable(char *str, char *var_name, char *value)
 		pos[val_len] = '\0';
 }
 
-void	apply_all_replacements(char *result)
+static void	apply_all_replacements(char *result)
 {
 	t_expander	*expander;
 	char		*expanded_value;

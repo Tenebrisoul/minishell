@@ -38,19 +38,6 @@ void	ft_strcpy(char *src, char *dst)
 	dst[counter] = '\0';
 }
 
-void	ft_strncpy(char *src, char *dst, int n)
-{
-	ssize_t	counter;
-
-	counter = 0;
-	while (counter < len(src) && counter < n)
-	{
-		dst[counter] = src[counter];
-		counter++;
-	}
-	dst[counter] = '\0';
-}
-
 bool	ft_strcmp(char *str, char *to_cmp)
 {
 	int	counter;
@@ -65,18 +52,4 @@ bool	ft_strcmp(char *str, char *to_cmp)
 		counter++;
 	}
 	return (true);
-}
-
-bool	in(char *str, char c)
-{
-	ssize_t	counter;
-
-	counter = 0;
-	while (str[counter])
-	{
-		if (str[counter] == c)
-			return (true);
-		counter++;
-	}
-	return (false);
 }

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	fill_env_with_value(char *env_str, t_env_item *node, int key_len)
+static void	fill_env_with_value(char *env_str, t_env_item *node, int key_len)
 {
 	int	val_len;
 

@@ -33,15 +33,15 @@ INCDIR      := .
 SRC_LEX     := \
 	lexer/lexer.c \
 	lexer/read_token.c \
-	lexer/is_it.c \
+	lexer/char_classify.c \
 	lexer/utils.c \
-	lexer/libft.c
+	lexer/string_utils.c
 
 # Parser sources
 SRC_PARSE   := \
 	parser/parser.c \
 	parser/parser_nodes.c \
-	parser/ast.c \
+	parser/command_parser.c \
 	parser/redir.c \
 	parser/redir_utils.c \
 	parser/utils.c
@@ -49,7 +49,7 @@ SRC_PARSE   := \
 # Garbage collector sources
 SRC_GC      := \
 	gc/gc.c \
-	gc/cons.c \
+	gc/gc_constructors.c \
 	gc/dump.c
 
 # Core shell sources
@@ -57,17 +57,20 @@ SRC_CORE    := \
 	core/main.c \
 	core/repl.c \
 	core/repl_utils.c \
-	core/input.c \
-	core/heredoc.c \
-	core/heredoc_utils.c \
-	core/heredoc_input.c \
-	core/heredoc_expand.c 
+	core/tty_utils.c
+
+# Heredoc sources
+SRC_HEREDOC := \
+	heredoc/heredoc.c \
+	heredoc/heredoc_utils.c \
+	heredoc/heredoc_input.c \
+	heredoc/heredoc_expand.c 
 
 # Utility sources
 SRC_UTILS   := \
-	utils/utils_1.c \
-	utils/utils_2.c \
-	utils/utils_3.c \
+	utils/string_utils.c \
+	utils/path_utils.c \
+	utils/split_utils.c \
 	signals/signals.c
 
 # Environment sources
@@ -118,16 +121,15 @@ SRC_EXPAND  := \
 # Library sources
 SRC_LIBFT   := \
 	libft/ft_split.c \
-	libft/libft_0.c \
 	libft/libft_string.c \
 	libft/libft_number.c \
 	libft/libft_convert.c \
 	libft/ft_bzero.c
 
 # Combine all sources
-SRCS        := $(SRC_LEX) $(SRC_PARSE) $(SRC_GC) $(SRC_CORE) $(SRC_UTILS) \
-               $(SRC_ENV) $(SRC_EXEC) $(SRC_BUILTIN) $(SRC_EXPAND) \
-               $(SRC_LIBFT)
+SRCS        := $(SRC_LEX) $(SRC_PARSE) $(SRC_GC) $(SRC_CORE) $(SRC_HEREDOC) \
+               $(SRC_UTILS) $(SRC_ENV) $(SRC_EXEC) $(SRC_BUILTIN) \
+               $(SRC_EXPAND) $(SRC_LIBFT)
 
 OBJS        := $(SRCS:%.c=$(OBJDIR)/%.o)
 
