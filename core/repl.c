@@ -9,8 +9,8 @@ static void	reset_signals(void)
 
 static void	handle_line(char *line)
 {
-	// dump_gc();
-	// get_gc(RESET_GC);
+	//dump_gc();
+	//get_gc(RESET_GC);
 	reset_signals();
 	if (!line)
 		return ;
