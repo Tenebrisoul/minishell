@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:13:43 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/21 23:13:43 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 01:55:03 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,3 @@ int	sh_signal_interrupted(void)
 {
 	return ((g_shell_state & STATE_INTERRUPT) != 0);
 }
-

@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:20 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/21 23:11:21 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 01:53:48 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ char	*resize_content(char *content, int *cap, int len, int line_len)
 	return (content);
 }
 
-static void	add_line_to_content(char **content, int *content_len, char *expanded,
-		int line_len)
+static void	add_line_to_content(char **content, int *content_len,
+	char *expanded, int line_len)
 {
 	int	i;
 

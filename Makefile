@@ -6,7 +6,7 @@
 #    By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/09/21 23:14:05 by btuncer           #+#    #+#              #
-#    Updated: 2025/09/21 23:14:06 by btuncer          ###   ########.fr        #
+#    Updated: 2025/09/22 01:56:57 by btuncer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -142,11 +142,11 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	@printf "$(CYAN)🔗 Linking $(NAME)...$(RESET)\n"
 	@$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS)
-	@printf "$(GREEN)✅ Build complete: $(NAME)$(RESET)\n"
+	@printf "$(YELLOW)✅ Build complete: $(NAME)$(RESET)\n"
 
 $(OBJDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
-	@printf "$(YELLOW)🔨 Compiling $<$(RESET)\n"
+	@printf "$(GREEN)🔨 Compiling $<$(RESET)\n"
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 # ============================== CLEANING ================================== #

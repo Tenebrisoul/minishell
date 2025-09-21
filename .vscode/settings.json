@@ -1,5 +1,7 @@
 {
     "files.associations": {
         "minishell.h": "c"
-    }
+    },
+    "42header.username": "btuncer",
+    "42header.email": "btuncer@student.42kocaeli.com.tr"
 }
