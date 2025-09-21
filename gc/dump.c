@@ -2,9 +2,9 @@
 
 void	dump_gc(void)
 {
-	t_trash		*trash_node;
-	t_trash		*trash_node_swap;
-	t_gc		*gc;
+	t_trash	*trash_node;
+	t_trash	*trash_node_swap;
+	t_gc	*gc;
 
 	gc = get_gc(GET_GC);
 	trash_node = gc->first_node;
@@ -21,9 +21,9 @@ void	dump_gc(void)
 
 void	dump_env_gc(void)
 {
-	t_trash		*trash_node;
-	t_trash		*trash_node_swap;
-	t_gc		*gc;
+	t_trash	*trash_node;
+	t_trash	*trash_node_swap;
+	t_gc	*gc;
 
 	gc = get_env_gc(GET_GC);
 	trash_node = gc->first_node;

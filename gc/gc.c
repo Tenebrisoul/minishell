@@ -14,7 +14,6 @@ void	insert_to_gc(t_trash *new_trash, int gcd)
 		gc = get_gc(GET_GC);
 	else if (gcd == ENV_GC)
 		gc = get_env_gc(GET_GC);
-
 	if (!gc->first_node)
 	{
 		gc->first_node = new_trash;
@@ -68,5 +67,3 @@ void	*env_alloc(ssize_t size)
 	insert_to_gc(trash, ENV_GC);
 	return (mem);
 }
-
-
