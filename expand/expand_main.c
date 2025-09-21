@@ -1,29 +1,5 @@
 #include "../minishell.h"
 
-void	*init_env(void);
-
-int	calculate_result_size(void)
-{
-	t_expander	*expander;
-	char		*expanded_value;
-	int			result_len;
-	int			i;
-
-	expander = get_expander(GET);
-	result_len = len(expander->prompt);
-	i = 0;
-	while (expander->queue[i])
-	{
-		expanded_value = get_variable_value(expander->queue[i]);
-		if (expanded_value)
-		{
-			result_len = result_len + len(expanded_value) - len(expander->queue[i]) + 1;
-		}
-		i++;
-	}
-	return (result_len + 1);
-}
-
 int	calculate_final_length(void)
 {
 	t_expander	*expander;
@@ -43,10 +19,8 @@ int	calculate_final_length(void)
 		}
 		expanded_value = get_variable_value(expander->queue[i]);
 		if (expanded_value)
-		{
 			final_len = final_len - len(expander->queue[i])
 				+ len(expanded_value);
-		}
 		else
 			final_len = final_len - len(expander->queue[i]);
 		i++;
@@ -64,9 +38,7 @@ static void	handle_escape_char(char *str, char *result, int *i, int *j)
 			*i += 2;
 		}
 		else
-		{
 			result[(*j)++] = str[(*i)++];
-		}
 	}
 	else
 		result[(*j)++] = str[(*i)++];

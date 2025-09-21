@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/21 14:06:04 by root             ###   ########.fr       */
+/*   Updated: 2025/09/21 14:19:48 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,7 +299,6 @@ void							apply_all_replacements(char *result);
 char							*replace_all_variables(void);
 char							*get_variable_value(char *key);
 char							*expand(char *prompt);
-int								calculate_result_size(void);
 int								calculate_final_length(void);
 int								valid_dollar_count(char *str);
 t_expander						*get_expander(bool value);
