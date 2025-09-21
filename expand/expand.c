@@ -92,7 +92,7 @@ char	*replace_all_variables(void)
 	final_len = calculate_final_length();
 	if (final_len < len(expander->prompt))
 		final_len = len(expander->prompt);
-	result = alloc((final_len + 2) * sizeof(char));
+	result = alloc((final_len + 1) * sizeof(char));
 	ft_strcpy(expander->prompt, result);
 	apply_all_replacements(result);
 	return (result);
