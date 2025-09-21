@@ -21,7 +21,7 @@ static int	check_for_split(char *s)
 }
 
 static char	**build_new_args(t_command *cmd, char **split_result,
-					int split_count, int i)
+		int split_count, int i)
 {
 	char	**new_args;
 	int		j;

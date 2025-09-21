@@ -6,7 +6,7 @@
 #    By: root <root@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/27 01:14:03 by btuncer           #+#    #+#              #
-#    Updated: 2025/09/21 05:28:45 by root             ###   ########.fr        #
+#    Updated: 2025/09/21 07:27:03 by root             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,7 +65,7 @@ SRC_CORE    := \
 	core/heredoc.c \
 	core/heredoc_utils.c \
 	core/heredoc_input.c \
-	core/heredoc_expand.c
+	core/heredoc_expand.c 
 
 # Utility sources
 SRC_UTILS   := \

@@ -7,31 +7,37 @@ static void	reset_signals(void)
 	sh_signal_set_state(STATE_COMMAND, 0);
 }
 
+static void	handle_line(char *line)
+{
+	dump_gc();
+	get_gc(RESET_GC);
+	reset_signals();
+	if (!line)
+		return ;
+	if (sh_signal_interrupted())
+	{
+		get_env()->exit_status = 130;
+		reset_signals();
+	}
+	if (sh_is_line_empty(line))
+		return ;
+	process_line(line);
+}
+
 int	shell_run(void)
 {
 	char	*line;
 	char	*prompt;
-	
-	line = NULL;
+
 	prompt = "";
-	if (isatty(2))
+	if (isatty(STDERR_FILENO))
 		prompt = "minishell$ ";
 	while (1)
 	{
-		dump_gc();
-		get_gc(RESET_GC);
-		reset_signals();
 		line = handle_input(prompt);
-		if (sh_signal_interrupted())
-		{
-			get_env()->exit_status = 130;
-			reset_signals();
-		}
 		if (!line)
 			break ;
-		if (sh_is_line_empty(line))
-			continue ;
-		process_line(line);
+		handle_line(line);
 	}
 	if (isatty(STDIN_FILENO))
 		printf("exit\n");

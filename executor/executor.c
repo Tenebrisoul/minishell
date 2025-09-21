@@ -1,5 +1,36 @@
 #include "../minishell.h"
 
+int	apply_redirs_with_restore(const t_redirect *r, int *saved_stdin,
+		int *saved_stdout)
+{
+	*saved_stdin = dup(0);
+	*saved_stdout = dup(1);
+	if (*saved_stdin < 0 || *saved_stdout < 0)
+	{
+		if (*saved_stdin >= 0)
+			close(*saved_stdin);
+		if (*saved_stdout >= 0)
+			close(*saved_stdout);
+		return (1);
+	}
+	apply_redirs(r);
+	return (0);
+}
+
+void	restore_fds(int saved_stdin, int saved_stdout)
+{
+	if (saved_stdin >= 0)
+	{
+		dup2(saved_stdin, 0);
+		close(saved_stdin);
+	}
+	if (saved_stdout >= 0)
+	{
+		dup2(saved_stdout, 1);
+		close(saved_stdout);
+	}
+}
+
 int	exec_external_command(const t_command *cmd, char **argv)
 {
 	pid_t	pid;

@@ -24,22 +24,22 @@ static void	update_underscore_var(const t_command *cmd)
 
 static int	execute_builtin_or_empty(const t_command *cmd, int is_builtin)
 {
-	int       saved_stdin;
-    int       saved_stdout;
-    int       result;
+	int	saved_stdin;
+	int	saved_stdout;
+	int	result;
 
 	if (!is_builtin)
 	{
 		if (cmd->redirects)
 		{
-            saved_stdin = dup(0);
-        	saved_stdout = dup(1);
-        	result = apply_redirs(cmd->redirects);
-            dup2(saved_stdin, 0);
-            dup2(saved_stdout, 1);
-        	close(saved_stdin);
-        	close(saved_stdout);
-        	return (result);
+			saved_stdin = dup(0);
+			saved_stdout = dup(1);
+			result = apply_redirs(cmd->redirects);
+			dup2(saved_stdin, 0);
+			dup2(saved_stdout, 1);
+			close(saved_stdin);
+			close(saved_stdout);
+			return (result);
 		}
 		return (0);
 	}
