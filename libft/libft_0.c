@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include <stdbool.h>
-#include <stddef.h>
-#include <sys/types.h>
 
 bool	is_str_empty(char *str)
 {

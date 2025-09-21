@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:24 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/21 23:11:25 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:30:08 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	restore_tty(int saved_in, int saved_out)
 	rl_outstream = stdout;
 }
 
-static char	*handle_tty_input(char *prompt)
+char	*handle_input(char *prompt)
 {
 	int		saved_in;
 	int		saved_out;
@@ -50,34 +50,4 @@ static char	*handle_tty_input(char *prompt)
 	insert_to_gc(new_trash(line), GC_GC);
 	restore_tty(saved_in, saved_out);
 	return (line);
-}
-
-static char	*handle_pipe_input(void)
-{
-	char	*line;
-	size_t	len;
-	ssize_t	read_len;
-
-	line = NULL;
-	len = 0;
-	read_len = getline(&line, &len, stdin);
-	if (read_len == -1)
-	{
-		if (line)
-			free(line);
-		return (NULL);
-	}
-	if (read_len > 0 && line[read_len - 1] == '\n')
-		line[read_len - 1] = '\0';
-	return (line);
-}
-
-char	*handle_input(char *prompt)
-{
-	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
-		return (handle_tty_input(prompt));
-	else
-	{
-		return (handle_pipe_input());
-	}
 }

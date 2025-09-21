@@ -10,11 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
-#include <stdbool.h>
-#include <stddef.h>
-#include <sys/types.h>
-
 long	ft_atol(char *str)
 {
 	long	res;

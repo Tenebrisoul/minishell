@@ -285,7 +285,6 @@ char							*process_heredoc_line_raw(char *content,
 									char *line);
 char							*expand_heredoc_content(char *content,
 									int quoted);
-char							*safe_heredoc(char *prompt);
 void							print_heredoc_warning(char *delimiter);
 
 /* EXPANSION */
