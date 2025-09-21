@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-t_ast_node			*parse_pipeline(t_parser *parser);
+t_ast_node		*parse_pipeline(t_parser *parser);
 
 static t_parser	*init_parser(t_token *tokens)
 {

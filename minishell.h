@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/21 19:28:36 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/21 17:27:46 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -309,8 +309,8 @@ int								quote_status(char *str, int index);
 bool							is_char(char c);
 bool							is_number(char c);
 char							*process_escapes(char *str);
-int calc_total_expandables(void);
-int calc_total_expansions(void);
+int								calc_total_expandables(void);
+int								calc_total_expansions(void);
 
 /* ENVIRONMENT UTILS */
 int								sh_env_set(const char *key, const char *val,

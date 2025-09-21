@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	*alloc(ssize_t val);
+void				*alloc(ssize_t val);
 
 static unsigned int	split_count(char const *s, char c)
 {

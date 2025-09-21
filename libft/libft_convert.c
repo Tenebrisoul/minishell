@@ -1,7 +1,7 @@
+#include "../minishell.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <sys/types.h>
-#include "../minishell.h"
 
 static char	*handle_zero_case(void)
 {

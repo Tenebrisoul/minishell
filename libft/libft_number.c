@@ -1,7 +1,7 @@
+#include "../minishell.h"
 #include <stdbool.h>
 #include <stddef.h>
 #include <sys/types.h>
-#include "../minishell.h" 
 
 long	ft_atol(char *str)
 {

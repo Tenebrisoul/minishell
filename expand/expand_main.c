@@ -15,7 +15,7 @@ int	calculate_final_length(void)
 		if (!expander->queue[i] || !expander->queue[i][0])
 		{
 			i++;
-			continue;
+			continue ;
 		}
 		expanded_value = get_variable_value(expander->queue[i]);
 		if (expanded_value)
@@ -61,18 +61,19 @@ char	*process_escapes(char *str)
 	return (result);
 }
 
-static void renew_prompt()
+static void	renew_prompt(void)
 {
-	char *new_prompt;
-	t_expander *expander;
-	char *prompt;
-	int new_size;
-	int prompt_len;
+	char		*new_prompt;
+	t_expander	*expander;
+	char		*prompt;
+	int			new_size;
+	int			prompt_len;
 
 	expander = get_expander(GET);
 	prompt = expander->prompt;
 	prompt_len = len(prompt);
-	new_size = prompt_len - calc_total_expandables() + calc_total_expansions() + 1;
+	new_size = prompt_len - calc_total_expandables() + calc_total_expansions()
+		+ 1;
 	if (new_size < prompt_len)
 		new_prompt = alloc(prompt_len + 1 + calc_total_expansions());
 	else

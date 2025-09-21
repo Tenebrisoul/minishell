@@ -40,7 +40,7 @@ t_env	*get_env(void)
 		gc_exit(1);
 	return (environment);
 }
-void		unset_env_item(char *key);
+void	unset_env_item(char *key);
 
 void	configure_env(void)
 {

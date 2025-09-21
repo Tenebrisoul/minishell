@@ -16,22 +16,23 @@ static int	handle_parser_error(void)
 	return (1);
 }
 
-static int is_redir_token(t_token_type type)
+static int	is_redir_token(t_token_type type)
 {
 	return (type == TOKEN_REDIR_IN || type == TOKEN_REDIR_OUT
 		|| type == TOKEN_REDIR_APPEND || type == TOKEN_HEREDOC);
 }
 
-static int check_syntax_errors(t_token *tokens)
+static int	check_syntax_errors(t_token *tokens)
 {
+	t_token	*current;
+
 	(void)tokens;
-	t_token *current;
 	current = tokens;
 	while (current)
 	{
 		if (is_redir_token(current->type))
 		{
-			if(!current->next || current->next->type != TOKEN_WORD)
+			if (!current->next || current->next->type != TOKEN_WORD)
 				return (1);
 		}
 		current = current->next;

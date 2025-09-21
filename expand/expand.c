@@ -6,7 +6,7 @@ char	*find_variable_in_string(char *str, char *var_name)
 	int		i;
 
 	pos = str;
-	while (pos && *pos) // n
+	while (pos && *pos)
 	{
 		if (*pos == '$')
 		{
@@ -93,7 +93,6 @@ char	*replace_all_variables(void)
 	if (final_len < len(expander->prompt))
 		final_len = len(expander->prompt);
 	result = alloc((final_len + 1) * sizeof(char));
-	// ft_strcpy(expander->prompt, result);
 	result = expander->prompt;
 	apply_all_replacements(result);
 	return (result);
