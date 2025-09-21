@@ -1,36 +1,14 @@
 #include "../minishell.h"
 
-static void	handle_getline_error(void)
-{
-	int	stdin_fd;
 
-	if (sh_signal_interrupted())
-	{
-		stdin_fd = open("/dev/tty", O_RDONLY);
-		if (stdin_fd >= 0)
-		{
-			dup2(stdin_fd, STDIN_FILENO);
-			close(stdin_fd);
-		}
-	}
-}
-
-static char	*handle_non_tty_input(void)
+static char	*handle_non_tty_heredoc(void)
 {
 	char	*line;
-	size_t	len;
-	ssize_t	read_len;
 
-	len = 0;
-	line = NULL;
-	read_len = getline(&line, &len, stdin);
-	if (read_len == -1)
-	{
-		handle_getline_error();
+	line = readline(NULL);
+	if (!line)
 		return (NULL);
-	}
-	if (read_len > 0 && line[read_len - 1] == '\n')
-		line[read_len - 1] = '\0';
+	insert_to_gc(new_trash(line), GC_GC);
 	return (line);
 }
 
@@ -47,7 +25,7 @@ char	*get_heredoc_line(void)
 			return (NULL);
 		return (line);
 	}
-	return (handle_non_tty_input());
+	return (handle_non_tty_heredoc());
 }
 
 char	*safe_heredoc(char *prompt)

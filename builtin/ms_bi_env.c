@@ -24,7 +24,11 @@ static int	export_without_value(char *arg)
 
 	item = get_env_item(arg);
 	if (!item)
-		add_env_item(new_env_item(arg, NULL));
+	if (add_env_item(new_env_item(arg, NULL)) == NULL)
+	{
+		write(2, "minishell: not a valid identifier\n", 34);
+		return (1);
+	}
 	return (0);
 }
 
@@ -61,7 +65,7 @@ int	bi_export(char **argv)
 	{
 		eq = sh_strchr(argv[i], '=');
 		if (!eq)
-			export_without_value(argv[i]);
+			return(export_without_value(argv[i]));
 		else if (export_with_value(argv[i], eq))
 			return (1);
 		i++;

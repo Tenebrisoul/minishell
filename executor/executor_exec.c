@@ -45,7 +45,7 @@ static int	handle_exec_error(const t_command *cmd, char *exe)
 {
 	struct stat	st;
 
-	if (!exe)
+	if (!exe || *exe == '\0')
 	{
 		write(2, "minishell: ", 11);
 		write(2, cmd->args[0], sh_strlen(cmd->args[0]));
@@ -82,6 +82,11 @@ int	exec_child_process(const t_command *cmd, char **argv)
 	signal(SIGQUIT, SIG_DFL);
 	if (apply_redirs(cmd->redirects) != 0)
 		return (1);
+	if (!argv[0] || !*argv[0])
+	{
+		write(2, "minishell: : command not found\n", 32);
+		return (127);
+	}
 	exe = find_exec_in_path(argv[0]);
 	error_code = handle_exec_error(cmd, exe);
 	if (error_code != 0)

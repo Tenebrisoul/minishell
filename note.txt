@@ -11,7 +11,7 @@ minishell$ unset OLDPWD
 minishell$ cd ..
 minishell$ ls
 
-minishell$ cat << eof > a | pwd
+* minishell$ cat << eof > a | pwd
 > $PATH
 > $USER
 > ""$HOME""
@@ -19,7 +19,7 @@ minishell$ cat << eof > a | pwd
 > "$SASAFA
 > eof
 
->a<a
+* >a<a
 çıkıyor gardaş
 
 export 1a 

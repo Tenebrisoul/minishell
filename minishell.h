@@ -223,6 +223,8 @@ t_redirect						*create_redirect(t_parser *parser,
 /* EXECUTOR */
 int								exec_ast(const t_ast_node *ast);
 int								apply_redirs(const t_redirect *r);
+int								apply_redirs_with_restore(const t_redirect *r, int *saved_stdin, int *saved_stdout);
+void							restore_fds(int saved_stdin, int saved_stdout);
 char							*find_exec_in_path(const char *file);
 void							expand_args(const t_command *cmd);
 void							expand_redirects(const t_command *cmd);

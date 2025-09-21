@@ -39,11 +39,11 @@ int	calculate_final_length(void)
 		expanded_value = get_variable_value(expander->queue[i]);
 		if (expanded_value)
 		{
-			final_len = final_len - len(expander->queue[i])
+			final_len = final_len - (len(expander->queue[i]) + 1)
 				+ len(expanded_value);
 		}
 		else
-			final_len = final_len - len(expander->queue[i]);
+			final_len = final_len - (len(expander->queue[i]) + 1);
 		i++;
 	}
 	return (++final_len);

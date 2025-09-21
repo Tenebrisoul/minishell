@@ -27,6 +27,23 @@ void	restore_tty(int saved_in, int saved_out)
 	rl_outstream = stdout;
 }
 
+static char	*handle_pipe_input(void)
+{
+	char	*line;
+
+	rl_outstream = fopen("/dev/null", "w");
+	line = readline(NULL);
+	if (rl_outstream != stdout)
+	{
+		fclose(rl_outstream);
+		rl_outstream = stdout;
+	}
+	if (!line)
+		return (NULL);
+	insert_to_gc(new_trash(line), GC_GC);
+	return (line);
+}
+
 static char	*handle_tty_input(char *prompt)
 {
 	int		saved_in;
@@ -40,32 +57,10 @@ static char	*handle_tty_input(char *prompt)
 	return (line);
 }
 
-static char	*handle_pipe_input(void)
-{
-	char	*line;
-	size_t	len;
-	ssize_t	read_len;
-
-	line = NULL;
-	len = 0;
-	read_len = getline(&line, &len, stdin);
-	if (read_len == -1)
-	{
-		if (line)
-			free(line);
-		return (NULL);
-	}
-	if (read_len > 0 && line[read_len - 1] == '\n')
-		line[read_len - 1] = '\0';
-	return (line);
-}
-
 char	*handle_input(char *prompt)
 {
 	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))
 		return (handle_tty_input(prompt));
 	else
-	{
 		return (handle_pipe_input());
-	}
 }

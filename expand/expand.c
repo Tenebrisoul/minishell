@@ -54,7 +54,8 @@ void	replace_single_variable(char *str, char *var_name, char *value)
 	var_len = len(var_name);
 	val_len = len(value);
 	backup = create_backup(pos, var_len, &backup_len);
-	ft_strcpy(value, pos);
+	if (value && *value)
+		ft_strcpy(value, pos);
 	if (backup_len > 0)
 		ft_strcpy(backup, pos + val_len);
 	else
@@ -92,7 +93,7 @@ char	*replace_all_variables(void)
 	final_len = calculate_final_length();
 	if (final_len < len(expander->prompt))
 		final_len = len(expander->prompt);
-	result = alloc((final_len + 2) * sizeof(char));
+	result = alloc((final_len + 1) * sizeof(char));
 	ft_strcpy(expander->prompt, result);
 	apply_all_replacements(result);
 	return (result);

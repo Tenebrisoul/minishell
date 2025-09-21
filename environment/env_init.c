@@ -1,8 +1,5 @@
 #include "../minishell.h"
 
-char		*get_cwd(void);
-t_env_item	*is_env_item_exists(char *key);
-
 bool	is_ignored_env_item(char *key)
 {
 	return ((ft_strcmp(key, "PWD") || ft_strcmp(key, "LINES") || ft_strcmp(key,
@@ -43,7 +40,6 @@ t_env	*get_env(void)
 		gc_exit(1);
 	return (environment);
 }
-void		unset_env_item(char *key);
 
 void	configure_env(void)
 {

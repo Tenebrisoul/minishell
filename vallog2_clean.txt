@@ -1,0 +1,295 @@
+4:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅
+  >> '$USER'
+  cat '$USER'
+  /bin/rm -f '$USER'
+
+16:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(1) ]
+  >> $HOME
+
+17:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅
+  >> "$H"OM"E"
+  cat OME
+  /bin/rm -f OME
+
+18:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅
+  >> "$USER'$USER'"
+  cat "$USER'$USER'"
+  /bin/rm -f "$USER'$USER'"
+
+19:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅
+  >> "$USER"
+  cat $USER
+  /bin/rm -f $USER
+
+54:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]
+  $NOVAR
+
+57:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]
+  export T="l"
+  $Ts
+
+88:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export T='|'
+  echo $T echo lala $T echo $T echo ?
+
+101:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]
+  '''''''''''''''' echo ok
+
+114:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  echo "$"$'$'$"$"$"$"$'$'
+
+123:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(2)  bash(127) ]
+  >| echo sure
+
+124:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]
+  cd --
+
+1:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  echo cd ~
+
+105:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅
+  cd "doesntexist" 2>/dev/null
+
+107:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ✅
+  cd "wtf" 2>/dev/null
+
+128:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅
+  pwd
+  cd ~
+  cd - ananas dot jpeg
+  pwd
+
+130:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅
+  pwd
+  cd ~ asd w dd q asd
+  pwd
+
+139:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  env | wc -l
+
+140:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]
+  env what
+
+150:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export
+
+160:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(1) ]
+   export $?
+
+165:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]
+  export --TEST=123
+
+170:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]
+  export -TEST=100
+
+185:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(1)  bash(2) ]
+  export -TEST=123
+
+200:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(1)  bash(0) ]
+  export TEST+=100
+
+1:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  env | sort | grep -v SHLVL | grep -v ^_
+
+27:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]
+  ls | cat << stop | ls -la | cat << stop1 | ls | cat << stop2 | ls -la > > out | cat << stop3
+  fe
+  wf
+  fwe
+  f
+  stop
+  dw
+  stop1
+  dwasd
+  stop2
+  cat Makefile | ls > out
+  cat out
+  /bin/rm -f out
+
+4:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]
+  ""
+
+7:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(2)  bash(0) ]
+  touch "
+
+26:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]
+  "."
+
+17:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  /bin/echo $"'HOM'E"$USER
+
+22:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  /bin/echo "$"
+
+24:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  /bin/echo "$""$"
+
+27:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  /bin/echo "$"$
+
+45:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="  A  B  "
+  /bin/echo "1"$X'2'
+
+46:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X=" A  B  "
+  /bin/echo "1"$X'2'
+
+47:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="A  B  "
+  /bin/echo "1"$X'2'
+
+48:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="  A  B "
+  /bin/echo "1"$X'2'
+
+49:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="  A  B"
+  /bin/echo "1"$X'2'
+
+50:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="  A B  "
+  /bin/echo "1"$X'2'
+
+51:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="  AB  "
+  /bin/echo "1"$X'2'
+
+52:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="  A  B  "
+  /bin/echo $X'2'
+
+53:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="  A  B  "
+  /bin/echo $X"1"
+
+56:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="   "
+  /bin/echo "1"$X'2'
+
+57:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="  A  B  "
+  /bin/echo ?$X'2'
+
+58:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export X="  A  B  "
+  /bin/echo "1"$X?
+
+2:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]
+  ""
+
+67:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  echo $"'HOM'E"$USER
+
+72:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  echo "$"
+
+74:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  echo "$""$"
+
+77:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  echo "$"$
+
+81:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  env | grep $USER
+
+110:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]
+  unset PATH
+  cd /bin
+  ls
+
+111:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]
+  unset PATH
+  cd /bin/../bin/
+  ls
+
+113:	STD_OUT: ✅  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(127)  bash(0) ]
+  unset PATH
+  cd /bin/
+  sleep 2
+
+114:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅
+  mkdir tmp_path_test1 tmp_path_test2
+  printf '#include <unistd.h>\nint main(){write(1, \"1\\n\", 2);}' > tmp_path_test1/test1.c
+  gcc tmp_path_test1/test1.c -o tmp_path_test1/a.out
+  printf '#include <unistd.h>\nint main(){write(1, \"2\\n\", 2);}' > tmp_path_test2/test2.c
+  gcc tmp_path_test2/test2.c -o tmp_path_test2/a.out
+  export PATH=tmp_path_test1:tmp_path_test2
+  a.out
+  export PATH=tmp_path_test2:tmp_path_test1
+  a.out
+  /bin/rm -rf tmp_path_test1 tmp_path_test2
+
+8:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅
+  cd ~/Desktop/
+  pwd
+
+11:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ❌ [ minishell(0)  bash(127) ]
+  env -i ./minishell
+  cd /bin/
+  ls
+
+12:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  touch tmp_x_file1
+  tmp_x_file1
+  echo $?
+  ./tmp_x_file1
+  echo $?
+  export PATH=$HOME
+  echo $PATH
+  tmp_x_file1
+  echo $?
+  ./tmp_x_file1
+  echo $?
+  unset PATH
+  tmp_x_file1
+  echo $?
+  ./tmp_x_file1
+  echo $?
+  echo 42
+  /bin/rm -f tmp_x_file1
+
+14:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(126) ]
+  export PATH=""
+  ls
+
+8:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(127)  bash(126) ]
+  ~
+
+15:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]
+  .
+
+16:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(126)  bash(127) ]
+  ..
+
+20:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]
+  >echo>
+  /bin/rm -f echo
+
+21:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]
+  <echo<
+  /bin/rm -f echo
+
+22:	STD_OUT: ✅  STD_ERR: ✅  EXIT_CODE: ❌ [ minishell(0)  bash(2) ]
+  >>echo>>
+  /bin/rm -f echo
+
+10:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  export test="arg1	arg2"
+  echo 'echo $1' > tmp_test_sh
+  bash tmp_test_sh $test
+  echo 'echo $2' > tmp_test_sh
+  bash tmp_test_sh $test
+  rm -f tmp_test_sh
+
+13:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  echo "env | /usr/bin/wc -l" | env -i $MINISHELL_PATH"/"$EXECUTABLE
+  echo $?
+
+14:	STD_OUT: ❌  STD_ERR: ❌  EXIT_CODE: ✅
+  echo "ls" | env -i $MINISHELL_PATH"/"$EXECUTABLE
+  echo $?
+
+15:	STD_OUT: ❌  STD_ERR: ✅  EXIT_CODE: ✅
+  echo "unset PATH" | env -i $MINISHELL_PATH"/"$EXECUTABLE
+  echo $?
