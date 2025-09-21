@@ -32,7 +32,10 @@ static int	apply_redir_out(const t_redirect *r)
 	{
 		write(2, "minishell: ", 11);
 		write(2, r->filename, sh_strlen(r->filename));
-		write(2, ": Permission denied\n", 20);
+		if (errno == EISDIR)
+			write(2, ": Is a directory\n", 17);
+		else
+			write(2, ": Permission denied\n", 20);
 		return (1);
 	}
 	if (dup2(fd, 1) < 0)
@@ -55,7 +58,10 @@ static int	apply_redir_append(const t_redirect *r)
 	{
 		write(2, "minishell: ", 11);
 		write(2, r->filename, sh_strlen(r->filename));
-		write(2, ": Permission denied\n", 20);
+		if (errno == EISDIR)
+			write(2, ": Is a directory\n", 17);
+		else
+			write(2, ": Permission denied\n", 20);
 		return (1);
 	}
 	if (dup2(fd, 1) < 0)
@@ -90,6 +96,47 @@ static int	apply_redir_heredoc(const t_redirect *r)
 	}
 	close(pipefd[0]);
 	return (0);
+}
+
+int	apply_redirs_with_restore(const t_redirect *r, int *saved_stdin, int *saved_stdout)
+{
+	*saved_stdin = dup(0);
+	*saved_stdout = dup(1);
+	if (*saved_stdin < 0 || *saved_stdout < 0)
+	{
+		if (*saved_stdin >= 0)
+			close(*saved_stdin);
+		if (*saved_stdout >= 0)
+			close(*saved_stdout);
+		return (1);
+	}
+	while (r)
+	{
+		if (r->type == REDIR_IN && apply_redir_in(r))
+			return (1);
+		else if (r->type == REDIR_OUT && apply_redir_out(r))
+			return (1);
+		else if (r->type == REDIR_APPEND && apply_redir_append(r))
+			return (1);
+		else if (r->type == REDIR_HEREDOC && apply_redir_heredoc(r))
+			return (1);
+		r = r->next;
+	}
+	return (0);
+}
+
+void	restore_fds(int saved_stdin, int saved_stdout)
+{
+	if (saved_stdin >= 0)
+	{
+		dup2(saved_stdin, 0);
+		close(saved_stdin);
+	}
+	if (saved_stdout >= 0)
+	{
+		dup2(saved_stdout, 1);
+		close(saved_stdout);
+	}
 }
 
 int	apply_redirs(const t_redirect *r)
