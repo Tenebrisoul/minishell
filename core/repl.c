@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:04 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 13:25:41 by root             ###   ########.fr       */
+/*   Updated: 2025/09/21 00:08:04 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,15 @@ int	shell_run(void)
 {
 	char	*line;
 	char	*prompt;
-
+	
 	line = NULL;
 	prompt = "";
 	if (isatty(2))
 		prompt = "minishell$ ";
 	while (1)
 	{
+		dump_gc();
+		get_gc(RESET_GC);
 		reset_signals();
 		line = handle_input(prompt);
 		if (sh_signal_interrupted())
@@ -39,6 +41,8 @@ int	shell_run(void)
 		}
 		if (!line)
 			break ;
+		if (sh_is_line_empty(remove_outer_quotes(line)))
+			get_env()->exit_status = 127;
 		if (sh_is_line_empty(remove_outer_quotes(line)))
 			continue ;
 		process_line(line);

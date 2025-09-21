@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:12 by root              #+#    #+#             */
-/*   Updated: 2025/09/20 22:39:12 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 23:18:22 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,12 @@ t_env_item	*new_env_item(char *key, char *val)
 
 	if (!is_key_valid(key))
 		return (NULL);
-	new_item = alloc(sizeof(t_env_item));
-	new_item->key = alloc(len(key) * sizeof(char) + 1);
+	new_item = env_alloc(sizeof(t_env_item));
+	new_item->key = env_alloc(len(key) * sizeof(char) + 1);
 	ft_strcpy(key, new_item->key);
 	if (val)
 	{
-		new_item->value = alloc(len(val) * sizeof(char) + 1);
+		new_item->value = env_alloc(len(val) * sizeof(char) + 1);
 		ft_strcpy(val, new_item->value);
 	}
 	else
@@ -59,7 +59,7 @@ t_env	*new_env(void)
 {
 	t_env	*new_environment;
 
-	new_environment = alloc(sizeof(t_env));
+	new_environment = env_alloc(sizeof(t_env));
 	if (!new_environment)
 		return (NULL);
 	new_environment->first_node = NULL;

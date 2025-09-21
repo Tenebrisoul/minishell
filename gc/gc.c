@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:47 by root              #+#    #+#             */
-/*   Updated: 2025/09/20 22:42:37 by root             ###   ########.fr       */
+/*   Updated: 2025/09/21 00:07:34 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ void	insert_to_gc(t_trash *new_trash, int gcd)
 	t_gc	*gc;
 
 	if (gcd == GC_GC)
-		gc = get_gc();
+		gc = get_gc(GET_GC);
 	else if (gcd == ENV_GC)
-		gc = get_env_gc();
+		gc = get_env_gc(GET_GC);
 
 	if (!gc->first_node)
 	{

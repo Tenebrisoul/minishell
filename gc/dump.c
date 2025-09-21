@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 22:18:26 by root              #+#    #+#             */
-/*   Updated: 2025/09/20 22:36:57 by root             ###   ########.fr       */
+/*   Updated: 2025/09/21 00:06:47 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,8 @@ void	dump_gc(void)
 	t_trash		*trash_node;
 	t_trash		*trash_node_swap;
 	t_gc		*gc;
-	static int	already_cleaned = 0;
 
-	if (already_cleaned)
-		return ;
-	already_cleaned = 1;
-	gc = get_gc();
-	if (!gc)
-		return ;
+	gc = get_gc(GET_GC);
 	trash_node = gc->first_node;
 	while (trash_node)
 	{
@@ -42,14 +36,8 @@ void	dump_env_gc(void)
 	t_trash		*trash_node;
 	t_trash		*trash_node_swap;
 	t_gc		*gc;
-	static int	already_cleaned = 0;
 
-	if (already_cleaned)
-		return ;
-	already_cleaned = 1;
-	gc = get_env_gc();
-	if (!gc)
-		return ;
+	gc = get_env_gc(GET_GC);
 	trash_node = gc->first_node;
 	while (trash_node)
 	{

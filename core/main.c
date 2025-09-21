@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:02 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 15:14:24 by root             ###   ########.fr       */
+/*   Updated: 2025/09/21 00:08:31 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,9 @@ __attribute__((destructor)) static void	cleanup_on_exit(void)
 	else
 		exit_status = 0;
 	dump_gc();
+	get_gc(RESET_GC);
+	dump_env_gc();
+	get_env_gc(RESET_GC);
 	rl_clear_history();
 	exit(exit_status);
 }

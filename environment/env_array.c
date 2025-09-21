@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/19 02:24:16 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:24:17 by root             ###   ########.fr       */
+/*   Updated: 2025/09/20 23:18:12 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*create_env_string(t_env_item *node)
 
 	key_len = len(node->key);
 	val_len = len(node->value);
-	env_str = alloc(key_len + val_len + 2);
+	env_str = env_alloc(key_len + val_len + 2);
 	if (env_str)
 	{
 		ft_strcpy(node->key, env_str);
@@ -68,7 +68,7 @@ char	**get_env_array(void)
 	int		count;
 
 	count = count_env_items();
-	env_array = alloc((count + 1) * sizeof(char *));
+	env_array = env_alloc((count + 1) * sizeof(char *));
 	if (!env_array)
 		return (NULL);
 	fill_env_array(env_array, count);

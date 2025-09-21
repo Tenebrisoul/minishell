@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/20 23:03:34 by root             ###   ########.fr       */
+/*   Updated: 2025/09/21 00:07:16 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@
 # define INIT true
 # define GC_GC 1
 # define ENV_GC 2
-
+# define GET_GC 0
+# define RESET_GC 1
 /* ENUMS */
 
 typedef enum e_token_type
@@ -354,8 +355,8 @@ char							**ft_split(char const *s, char c);
 /* GARBAGE COLLECTOR */
 void							*alloc(ssize_t size);
 void							*env_alloc(ssize_t size);
-t_gc							*get_gc(void);
-t_gc							*get_env_gc(void);
+t_gc							*get_gc(int option);
+t_gc							*get_env_gc(int option);
 t_gc							*new_gc(void);
 t_trash							*new_trash(void *mem);
 void							insert_to_gc(t_trash *new_trash, int gcd);
