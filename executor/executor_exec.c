@@ -45,7 +45,7 @@ static int	handle_exec_error(const t_command *cmd, char *exe)
 {
 	struct stat	st;
 
-	if (!exe || *exe == '\0' || (!cmd->args[0] && !cmd->args[0][0]))
+	if (!exe || *exe == '\0' || (!cmd->args[0] || !cmd->args[0][0]))
 	{
 		write(2, "minishell: ", 11);
 		write(2, cmd->args[0], sh_strlen(cmd->args[0]));
