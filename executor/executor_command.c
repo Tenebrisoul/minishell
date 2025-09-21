@@ -58,7 +58,7 @@ static int	prepare_command_execution(const t_command *cmd)
 	expand_args(cmd);
 	expand_redirects(cmd);
 	if (!cmd->args[0])
-		return (127);
+		return (0);
 	return (-1);
 }
 
