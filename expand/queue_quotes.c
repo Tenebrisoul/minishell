@@ -6,11 +6,11 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 22:21:53 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:25 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:31:31 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include <stdbool.h>
 
 static int	analyze_queue_quotes(bool qt, bool dqt)
 {

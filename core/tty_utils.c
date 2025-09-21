@@ -6,11 +6,13 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:24 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:52:16 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:16:08 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <readline/readline.h>
+#include <fcntl.h>
 
 void	setup_tty(int *saved_in, int *saved_out)
 {

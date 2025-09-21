@@ -6,11 +6,12 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:45 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:34 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:13:33 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdlib.h>
 
 void	dump_gc(void)
 {

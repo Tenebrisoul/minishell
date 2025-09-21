@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:13:33 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:54:50 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:44:09 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static t_parser	*init_parser(t_token *tokens)
 	return (parser);
 }
 
-t_ast_node	*parse_sequence(t_parser *parser)
+static t_ast_node	*parse_sequence(t_parser *parser)
 {
 	t_ast_node	*left;
 	t_ast_node	*right;

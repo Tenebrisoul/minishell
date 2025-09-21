@@ -6,11 +6,16 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:55 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:52:40 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:26:23 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <signal.h>
+#include <stdio.h>
+#include <errno.h>
 
 int	wait_for_child(pid_t pid)
 {

@@ -6,11 +6,12 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:47 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:39 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:12:57 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdlib.h>
 
 void	gc_exit(int code)
 {

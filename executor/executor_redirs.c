@@ -6,11 +6,14 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:07 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:52:54 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:21:54 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <fcntl.h>
+#include <stdio.h>
+#include <errno.h>
 
 static int	apply_redir_in(const t_redirect *r)
 {

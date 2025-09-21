@@ -6,11 +6,11 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:22 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:09 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:30:38 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include <stdbool.h>
 
 bool	is_number(char c)
 {

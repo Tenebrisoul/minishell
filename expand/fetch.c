@@ -6,16 +6,43 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:25 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:11 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:37:09 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <fcntl.h>
+
+static int	ft_getpid(void)
+{
+	int		fd;
+	char	buffer[32];
+	int		bytes_read;
+	int		result;
+	int		i;
+
+	fd = open("/proc/self/stat", O_RDONLY);
+	if (fd == -1)
+		return (-1);
+	bytes_read = read(fd, buffer, sizeof(buffer) - 1);
+	close(fd);
+	if (bytes_read <= 0)
+		return (-1);
+	buffer[bytes_read] = '\0';
+	result = 0;
+	i = 0;
+	while (buffer[i] >= '0' && buffer[i] <= '9')
+	{
+		result = result * 10 + (buffer[i] - '0');
+		i++;
+	}
+	return (result);
+}
 
 static char	*handle_special_vars(char *key)
 {
 	if (key[1] == '$')
-		return (ft_ltoa(getpid()));
+		return (ft_ltoa(ft_getpid()));
 	else if (key[1] == '?')
 		return (ft_ltoa(get_env()->exit_status));
 	else if (key[1] == '0')
@@ -32,7 +59,7 @@ static char	*expand_in_dquotes(char *str)
 	if (str[0] == '$' && str[1])
 	{
 		if (str[1] == '$')
-			return (ft_ltoa(getpid()));
+			return (ft_ltoa(ft_getpid()));
 		else if (str[1] == '?')
 			return (ft_ltoa(get_env()->exit_status));
 		else if (str[1] == '0')

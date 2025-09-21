@@ -6,13 +6,14 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:31 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:52:13 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:26:47 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdio.h>
 
-static void	reset_signals(void)
+void	reset_signals(void)
 {
 	sh_signal_set_state(STATE_INTERRUPT, 0);
 	sh_signal_set_state(STATE_HEREDOC, 0);

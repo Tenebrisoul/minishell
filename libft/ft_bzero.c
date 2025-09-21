@@ -6,11 +6,11 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 20:51:45 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:54:14 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:08:59 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/types.h>
+#include <stddef.h>
 
 void	ft_bzero(void *s, size_t n)
 {

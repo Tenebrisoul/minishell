@@ -6,11 +6,12 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:11 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:00 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:20:58 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdio.h>
 
 int	apply_redirs_with_restore(const t_redirect *r, int *saved_stdin,
 		int *saved_stdout)

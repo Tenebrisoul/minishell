@@ -6,11 +6,11 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:55 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:54:07 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:11:46 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include <stddef.h>
 
 size_t	ft_strlen(const char *str)
 {

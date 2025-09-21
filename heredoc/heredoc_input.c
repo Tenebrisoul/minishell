@@ -6,11 +6,12 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:45 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:17:45 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <readline/readline.h>
 
 static char	*safe_heredoc(char *prompt)
 {

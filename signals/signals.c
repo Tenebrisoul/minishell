@@ -6,11 +6,13 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:13:43 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:55:03 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:18:46 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <readline/readline.h>
+#include <signal.h>
 
 volatile sig_atomic_t	g_shell_state = 0;
 

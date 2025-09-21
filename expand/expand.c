@@ -6,13 +6,13 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:19 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:06 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:49:44 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-char	*find_variable_in_string(char *str, char *var_name)
+static char	*find_variable_in_string(char *str, char *var_name)
 {
 	char	*pos;
 	int		counter;

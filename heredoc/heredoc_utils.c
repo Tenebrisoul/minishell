@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:20 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:48 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:48:25 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	has_quotes(const char *str)
 	return (0);
 }
 
-char	*resize_content(char *content, int *cap, int len, int line_len)
+static char	*resize_content(char *content, int *cap, int len, int line_len)
 {
 	char	*new_content;
 	int		i;

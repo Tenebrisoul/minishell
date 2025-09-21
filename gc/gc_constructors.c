@@ -6,13 +6,14 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:43 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:53:37 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:56:53 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdlib.h>
 
-t_gc	*new_gc(void)
+static t_gc	*new_gc(void)
 {
 	t_gc	*gc;
 

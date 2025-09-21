@@ -6,11 +6,12 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:02 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:51:57 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:29:57 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdio.h>
 
 static int	is_numeric(char *str)
 {

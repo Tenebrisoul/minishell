@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/21 23:16:49 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:57:24 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,8 @@
 # define MINISHELL_H
 
 /* INCLUDES */
-
-# include <dirent.h>
-# include <errno.h>
-# include <fcntl.h>
-# include <readline/history.h>
-# include <readline/readline.h>
-# include <signal.h>
-# include <stdbool.h>
-# include <stddef.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <sys/stat.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <unistd.h>
+#include <unistd.h>
+#include <stdbool.h>
 
 /* DEFINES */
 
@@ -175,7 +161,6 @@ typedef struct s_expander
 /* FUNCTION DECLARATIONS */
 
 /* MAIN */
-int								main(void);
 void							*init_env(void);
 char							*handle_input(char *prompt);
 void							setup_tty(int *saved_in, int *saved_out);
@@ -204,9 +189,7 @@ bool							is_redirect_token(t_token_type type);
 t_ast_node						*parse_ast_node(t_parser *parser);
 t_command						*parse_command(t_parser *parser);
 t_redirect						*parse_redirections(t_parser *parser);
-t_ast_node						*parse_primary(t_parser *parser);
 t_ast_node						*parse_pipeline(t_parser *parser);
-t_ast_node						*parse_sequence(t_parser *parser);
 t_ast_node						*create_pipeline_node(t_ast_node *left,
 									t_ast_node *right);
 t_ast_node						*create_sequence_node(t_ast_node *left,
@@ -216,6 +199,7 @@ t_redirect						*create_redirect(t_parser *parser,
 									t_token_type redir_token);
 
 /* EXECUTOR */
+void							reset_signals(void);
 int								exec_ast(const t_ast_node *ast);
 int								apply_redirs(const t_redirect *r);
 char							*find_exec_in_path(const char *file);
@@ -269,8 +253,6 @@ int								process_line(char *line);
 char							*read_heredoc_input(const char *delimiter);
 
 /* HEREDOC UTILS */
-char							*resize_content(char *content, int *cap,
-									int len, int line_len);
 int								check_delimiter(char *line,
 									const char *delimiter, int delim_len);
 char							*get_heredoc_line(void);
@@ -282,9 +264,6 @@ char							*expand_heredoc_content(char *content,
 void							print_heredoc_warning(char *delimiter);
 
 /* EXPANSION */
-char							**expand_argv(char **argv, int argc);
-char							*find_variable_in_string(char *str,
-									char *var_name);
 char							*replace_all_variables(void);
 char							*get_variable_value(char *key);
 char							*expand(char *prompt);
@@ -303,16 +282,12 @@ int								calc_total_expandables(void);
 int								calc_total_expansions(void);
 
 /* ENVIRONMENT UTILS */
-int								sh_env_set(const char *key, const char *val,
-									int overwrite);
-int								sh_env_unset(const char *key);
 const char						*sh_getenv_val(const char *name);
 
 /* SIGNALS */
 void							init_signals(void);
 void							sh_signal_set_state(int state_type, int value);
 int								sh_signal_interrupted(void);
-void							sh_signal_reset(void);
 
 /* UTILS */
 int								sh_is_line_empty(const char *s);
@@ -325,7 +300,6 @@ char							*sh_strchr(const char *s, int c);
 char							*sh_join_path(const char *dir,
 									const char *file);
 char							**sh_split_colon(const char *s);
-void							sh_free_strarray(char **arr);
 
 /* LIBFT */
 size_t							ft_strlen(const char *str);
@@ -345,7 +319,6 @@ void							*alloc(ssize_t size);
 void							*env_alloc(ssize_t size);
 t_gc							*get_gc(int option);
 t_gc							*get_env_gc(int option);
-t_gc							*new_gc(void);
 t_trash							*new_trash(void *mem);
 void							insert_to_gc(t_trash *new_trash, int gcd);
 void							dump_gc(void);

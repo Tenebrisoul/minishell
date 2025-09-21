@@ -6,11 +6,12 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:12:00 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:52:45 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:27:47 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <stdio.h>
 
 int	write_heredoc_content(int pipefd[2], const char *content)
 {

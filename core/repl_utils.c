@@ -6,11 +6,12 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:29 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:52:10 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:15:41 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <readline/history.h>
 
 static int	handle_lexer_error(void)
 {

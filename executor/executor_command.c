@@ -6,18 +6,11 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:53 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 01:52:38 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:27:30 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-static void	reset_signals(void)
-{
-	sh_signal_set_state(STATE_INTERRUPT, 0);
-	sh_signal_set_state(STATE_HEREDOC, 0);
-	sh_signal_set_state(STATE_COMMAND, 0);
-}
 
 static void	update_underscore_var(const t_command *cmd)
 {
