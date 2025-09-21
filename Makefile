@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: root <root@student.42.fr>                  +#+  +:+       +#+         #
+#    By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/27 01:14:03 by btuncer           #+#    #+#              #
-#    Updated: 2025/09/21 07:27:03 by root             ###   ########.fr        #
+#    Updated: 2025/09/21 19:29:41 by btuncer          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -115,7 +115,8 @@ SRC_EXPAND  := \
 	expand/expander_utils.c \
 	expand/get_expander.c \
 	expand/queue.c \
-	expand/quotes.c
+	expand/quotes.c \
+	expand/new_prompt.c
 
 # Library sources
 SRC_LIBFT   := \

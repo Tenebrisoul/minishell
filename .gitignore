@@ -1,0 +1,9 @@
+
+/bin/echo $HOME$TESTNOTFOUND
+
+minishell$ echo $HOME$QWSAAAAAA
+/home/btuncer
+minishell$ echo $HOME$QWSAAAAAAA
+/home/btuncer
+free(): invalid pointer
+Aborted (core dumped)
