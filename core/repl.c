@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   repl.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 02:24:04 by root              #+#    #+#             */
-/*   Updated: 2025/09/21 00:08:04 by root             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 static void	reset_signals(void)
@@ -41,11 +29,11 @@ int	shell_run(void)
 		}
 		if (!line)
 			break ;
-		if (sh_is_line_empty(remove_outer_quotes(line)))
-			get_env()->exit_status = 127;
-		if (sh_is_line_empty(remove_outer_quotes(line)))
+		if (sh_is_line_empty(line))
 			continue ;
 		process_line(line);
 	}
+	if (isatty(STDIN_FILENO))
+		printf("exit\n");
 	return (get_env()->exit_status);
 }

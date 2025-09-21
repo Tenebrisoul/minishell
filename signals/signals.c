@@ -1,23 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   signals.c                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 02:25:24 by root              #+#    #+#             */
-/*   Updated: 2025/09/19 02:44:06 by root             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 volatile sig_atomic_t	g_shell_state = 0;
-
-#define STATE_NORMAL 0
-#define STATE_INTERRUPT 1
-#define STATE_HEREDOC 2
-#define STATE_COMMAND 4
 
 static void	sigint_handler(int signo)
 {

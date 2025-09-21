@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/14 20:25:27 by root              #+#    #+#             */
-/*   Updated: 2025/09/20 21:24:51 by root             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 char	*find_variable_in_string(char *str, char *var_name)
@@ -104,7 +92,7 @@ char	*replace_all_variables(void)
 	final_len = calculate_final_length();
 	if (final_len < len(expander->prompt))
 		final_len = len(expander->prompt);
-	result = alloc((final_len + 1) * sizeof(char));
+	result = alloc((final_len + 2) * sizeof(char));
 	ft_strcpy(expander->prompt, result);
 	apply_all_replacements(result);
 	return (result);

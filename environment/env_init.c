@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   env_init.c                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 02:24:15 by root              #+#    #+#             */
-/*   Updated: 2025/09/20 22:15:15 by root             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 char		*get_cwd(void);
@@ -64,7 +52,7 @@ void	configure_env(void)
 	add_env_item(new_env_item("PWD", get_cwd()));
 	item_exists = is_env_item_exists("SHLVL");
 	if (item_exists)
-		item_exists->value = ft_ltoa(ft_atol(item_exists->value) + 1);
+		item_exists->value = ft_ltoa_env(ft_atol(item_exists->value) + 1);
 	else
 		add_env_item(new_env_item("SHLVL", "1"));
 }

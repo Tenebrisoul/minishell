@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ms_cd.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/18 17:00:44 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/19 14:12:05 by root             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 static const char	*get_cd_target(char **argv)
@@ -58,6 +46,24 @@ static int	change_directory(const char *target)
 	return (0);
 }
 
+char	*sh_env_strdup(const char *s)
+{
+	int		len;
+	char	*p;
+	int		i;
+
+	len = sh_strlen(s);
+	p = (char *)env_alloc((len + 1) * sizeof(char));
+	i = 0;
+	while (i < len)
+	{
+		p[i] = s[i];
+		i++;
+	}
+	p[len] = '\0';
+	return (p);
+}
+
 static void	update_pwd_vars(const char *old)
 {
 	char		buf[4096];
@@ -67,12 +73,12 @@ static void	update_pwd_vars(const char *old)
 	{
 		item = get_env_item("OLDPWD");
 		if (item)
-			item->value = sh_strdup(old);
+			item->value = sh_env_strdup(old);
 		else
 			add_env_item(new_env_item("OLDPWD", (char *)old));
 		item = get_env_item("PWD");
 		if (item)
-			item->value = sh_strdup(buf);
+			item->value = sh_env_strdup(buf);
 		else
 			add_env_item(new_env_item("PWD", buf));
 	}

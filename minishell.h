@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/21 00:07:16 by root             ###   ########.fr       */
+/*   Updated: 2025/09/21 02:44:49 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,6 +332,7 @@ void							sh_signal_reset(void);
 int								sh_is_line_empty(const char *s);
 int								sh_strlen(const char *s);
 char							*sh_strdup(const char *s);
+char							*sh_env_strdup(const char *s);
 int								sh_strcmp(const char *a, const char *b);
 int								sh_strncmp(const char *a, const char *b, int n);
 char							*sh_strchr(const char *s, int c);
@@ -350,7 +351,10 @@ void							ft_strncpy(char *src, char *dst, int n);
 bool							ft_strcmp(char *str, char *to_cmp);
 long							ft_atol(char *str);
 char							*ft_ltoa(long l);
+char							*ft_ltoa_env(long l);
 char							**ft_split(char const *s, char c);
+long							power_of10(long times);
+long							len_digit(long l);
 
 /* GARBAGE COLLECTOR */
 void							*alloc(ssize_t size);

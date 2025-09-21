@@ -1,0 +1,26 @@
+* ctrl + D exit
+
+minishell$ ""
+minishell: : Is a directory
+
+"boş komutla redir atınca komple programın rediri değişiyo"
+"bundan sonra tüm çıktılar oraya gidiyo"
+> test
+
+minishell$ unset OLDPWD
+minishell$ cd ..
+minishell$ ls
+
+minishell$ cat << eof > a | pwd
+> $PATH
+> $USER
+> ""$HOME""
+> $"HOME"
+> "$SASAFA
+> eof
+
+>a<a
+çıkıyor gardaş
+
+export 1a 
+error ve exit

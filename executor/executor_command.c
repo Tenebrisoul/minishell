@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   executor_command.c                                 :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/19 21:10:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/20 22:21:52 by root             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 static void	reset_signals(void)
@@ -56,8 +44,8 @@ static int	prepare_command_execution(const t_command *cmd)
 	}
 	expand_args(cmd);
 	expand_redirects(cmd);
-	if (!cmd->args[0] || !cmd->args[0][0])
-		return (0);
+	if (!cmd->args[0])
+		return (127);
 	return (-1);
 }
 

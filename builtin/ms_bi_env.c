@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ms_bi_env.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/18 17:02:53 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/20 21:39:13 by root             ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
 static void	print_export_format(void)
@@ -47,7 +35,7 @@ static int	export_with_value(char *arg, char *eq)
 	*eq = '\0';
 	item = get_env_item(arg);
 	if (item)
-		item->value = sh_strdup(eq + 1);
+		item->value = sh_env_strdup(eq + 1);
 	else if (add_env_item(new_env_item(arg, eq + 1)) == NULL)
 	{
 		write(2, "minishell: not a valid identifier\n", 34);
