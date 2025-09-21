@@ -2,6 +2,16 @@
 
 static int	is_quoted_delimiter(const char *delimiter, char **clean_delimiter)
 {
+	if (delimiter[0] == '$' && (delimiter[1] == '"' || delimiter[1] == '\''))
+	{
+		*clean_delimiter = remove_outer_quotes((char *)(delimiter + 1));
+		if (!*clean_delimiter)
+		{
+			*clean_delimiter = (char *)delimiter;
+			return (0);
+		}
+		return (0);
+	}
 	if (has_quotes(delimiter))
 	{
 		*clean_delimiter = remove_outer_quotes((char *)delimiter);

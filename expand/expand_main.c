@@ -17,7 +17,7 @@ int	calculate_result_size(void)
 		expanded_value = get_variable_value(expander->queue[i]);
 		if (expanded_value)
 		{
-			result_len += len(expanded_value);
+			result_len = result_len + len(expanded_value) - len(expander->queue[i]) + 1;
 		}
 		i++;
 	}

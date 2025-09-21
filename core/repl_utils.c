@@ -16,6 +16,12 @@ static int	handle_parser_error(void)
 	return (1);
 }
 
+static int check_syntax_errors(t_token *tokens)
+{
+	(void)tokens;
+	return (0);
+}
+
 int	process_line(char *line)
 {
 	t_token		*tokens;
@@ -28,6 +34,8 @@ int	process_line(char *line)
 		insert_to_gc(new_trash(line), GC_GC);
 	tokens = lexer(line);
 	if (!tokens)
+		return (handle_lexer_error());
+	if (check_syntax_errors(tokens))
 		return (handle_lexer_error());
 	ast = parser(tokens);
 	if (!ast)

@@ -9,8 +9,6 @@ static void	reset_signals(void)
 
 static void	handle_line(char *line)
 {
-	//dump_gc();
-	//get_gc(RESET_GC);
 	reset_signals();
 	if (!line)
 		return ;
@@ -34,6 +32,8 @@ int	shell_run(void)
 		prompt = "minishell$ ";
 	while (1)
 	{
+		dump_gc();
+		get_gc(RESET_GC);
 		line = handle_input(prompt);
 		if (!line)
 			break ;
