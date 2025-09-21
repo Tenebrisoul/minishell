@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:46 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 02:19:14 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:58:41 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	unset_env_item(char *key)
 	t_env_item	*item_exists;
 	t_env_item	*env_item;
 
-	if(ft_strcmp(key, "__INIT__"))
+	if (ft_strcmp(key, "__INIT__"))
 		return ;
 	item_exists = is_env_item_exists(key);
 	if (!item_exists)

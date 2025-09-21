@@ -6,7 +6,7 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/22 02:57:24 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 02:58:27 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define MINISHELL_H
 
 /* INCLUDES */
-#include <unistd.h>
-#include <stdbool.h>
+# include <unistd.h>
+# include <stdbool.h>
 
 /* DEFINES */
 
