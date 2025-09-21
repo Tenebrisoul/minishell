@@ -21,7 +21,7 @@ int	calculate_result_size(void)
 		}
 		i++;
 	}
-	return (result_len + 100);
+	return (result_len + 1);
 }
 
 int	calculate_final_length(void)
@@ -36,6 +36,11 @@ int	calculate_final_length(void)
 	i = 0;
 	while (i < expander->queue_marker && expander->queue[i])
 	{
+		if (!expander->queue[i] || !expander->queue[i][0])
+		{
+			i++;
+			continue;
+		}
 		expanded_value = get_variable_value(expander->queue[i]);
 		if (expanded_value)
 		{
