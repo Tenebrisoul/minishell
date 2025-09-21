@@ -139,10 +139,15 @@ void	restore_fds(int saved_stdin, int saved_stdout)
 	}
 }
 
-int	apply_redirs(const t_redirect *r)
+int	apply_redirs(const t_redirect *redir)
 {
+	t_redirect	*r;
+
+	r = (t_redirect *)redir;
 	while (r)
 	{
+		if (r->type != REDIR_HEREDOC)
+			r->filename = expand(r->filename);
 		if (r->type == REDIR_IN && apply_redir_in(r))
 			return (1);
 		else if (r->type == REDIR_OUT && apply_redir_out(r))
