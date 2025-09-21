@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   queue.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/21 23:12:35 by btuncer           #+#    #+#             */
+/*   Updated: 2025/09/21 23:15:00 by btuncer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	valid_dollar_count(char *str)
@@ -21,7 +33,7 @@ int	expandable_len(char *marked_pos)
 {
 	int		counter;
 	char	quote_char;
-	char *prompt;
+	char	*prompt;
 
 	counter = 1;
 	prompt = get_expander(GET)->prompt;
@@ -53,10 +65,10 @@ void	insert_curr_to_queue(t_expander *expander)
 	int	i;
 
 	marked_pos = expander->marker;
-	if ((expander->prompt + marked_pos)[1] 
-		&& ((expander->prompt + marked_pos)[1] == '$'
-			|| (expander->prompt + marked_pos)[1] == '?'
-				|| (expander->prompt + marked_pos)[1] == '0'))
+	if ((expander->prompt + marked_pos)[1] && ((expander->prompt
+				+ marked_pos)[1] == '$' || (expander->prompt
+				+ marked_pos)[1] == '?' || (expander->prompt
+				+ marked_pos)[1] == '0'))
 		new_expandable_size = 2;
 	else
 		new_expandable_size = expandable_len(expander->prompt + marked_pos);

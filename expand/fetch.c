@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fetch.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/21 23:12:25 by btuncer           #+#    #+#             */
+/*   Updated: 2025/09/21 23:12:26 by btuncer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 static char	*handle_special_vars(char *key)
@@ -38,17 +50,13 @@ static char	*handle_quoted_var(char *key)
 	char	*var_name;
 	char	*result;
 
-	var_name = remove_outer_quotes(key + 1);
+	var_name = key + 1;
 	if (!var_name)
 		return (sh_strdup(""));
 	if (key[1] == '"')
-	{
 		result = expand_in_dquotes(var_name);
-	}
 	else
-	{
 		result = sh_strdup(var_name);
-	}
 	return (result);
 }
 

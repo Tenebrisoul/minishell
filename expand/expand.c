@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/21 23:12:19 by btuncer           #+#    #+#             */
+/*   Updated: 2025/09/21 23:15:12 by btuncer          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*find_variable_in_string(char *str, char *var_name)
 {
 	char	*pos;
-	int counter;
+	int		counter;
 	int		i;
 
 	pos = str;

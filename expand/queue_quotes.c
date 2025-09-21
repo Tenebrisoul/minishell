@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   queue_quotes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 22:21:53 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/21 22:23:22 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:15:27 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 static int	analyze_queue_quotes(bool qt, bool dqt)
 {
 	if (qt || dqt)
-		return 1;
-	return 0;
+		return (1);
+	return (0);
 }
 
 int	queue_quote_status(char *str, int index)

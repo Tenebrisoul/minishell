@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
+/*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/21 22:23:53 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/21 23:16:49 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@
 # define STATE_HEREDOC 2
 # define STATE_COMMAND 4
 
-# define GET false
-# define INIT true
+# define GET 0
+# define INIT 1
 # define GC_GC 1
 # define ENV_GC 2
 # define GET_GC 0
