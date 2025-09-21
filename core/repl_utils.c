@@ -48,8 +48,6 @@ int	process_line(char *line)
 
 	if (isatty(0))
 		add_history(line);
-	if (is_getline_allocated())
-		insert_to_gc(new_trash(line), GC_GC);
 	tokens = lexer(line);
 	if (!tokens)
 		return (handle_lexer_error());

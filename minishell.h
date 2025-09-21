@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: btuncer <btuncer@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/21 17:27:46 by root             ###   ########.fr       */
+/*   Updated: 2025/09/21 22:23:53 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,6 @@ typedef struct s_expander
 int								main(void);
 void							*init_env(void);
 char							*handle_input(char *prompt);
-int								is_getline_allocated(void);
 void							setup_tty(int *saved_in, int *saved_out);
 void							restore_tty(int saved_in, int saved_out);
 
@@ -306,6 +305,7 @@ char							*remove_outer_quotes(char *str);
 int								has_quotes(const char *str);
 void							queue_expandables(void);
 int								quote_status(char *str, int index);
+int								queue_quote_status(char *str, int index);
 bool							is_char(char c);
 bool							is_number(char c);
 char							*process_escapes(char *str);
@@ -352,6 +352,7 @@ char							*ft_ltoa_env(long l);
 char							**ft_split(char const *s, char c);
 long							power_of10(long times);
 long							len_digit(long l);
+void							ft_bzero(void *s, size_t n);
 
 /* GARBAGE COLLECTOR */
 void							*alloc(ssize_t size);

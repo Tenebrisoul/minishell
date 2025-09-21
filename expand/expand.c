@@ -3,20 +3,26 @@
 char	*find_variable_in_string(char *str, char *var_name)
 {
 	char	*pos;
+	int counter;
 	int		i;
 
 	pos = str;
+	counter = 0;
 	while (pos && *pos)
 	{
 		if (*pos == '$')
 		{
-			i = 0;
-			while (i < len(var_name) && pos[i] && pos[i] == var_name[i])
-				i++;
-			if (i == len(var_name))
-				return (pos);
+			if (quote_status(str, counter) == 1)
+			{
+				i = 0;
+				while (i < len(var_name) && pos[i] && pos[i] == var_name[i])
+					i++;
+				if (i == len(var_name))
+					return (pos);
+			}
 		}
 		pos++;
+		counter++;
 	}
 	return (NULL);
 }
@@ -73,9 +79,7 @@ void	apply_all_replacements(char *result)
 	{
 		expanded_value = get_variable_value(expander->queue[i]);
 		if (expanded_value)
-		{
 			replace_single_variable(result, expander->queue[i], expanded_value);
-		}
 		else
 			replace_single_variable(result, expander->queue[i], "\0");
 		i++;

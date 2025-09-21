@@ -1,4 +1,5 @@
 #include "../minishell.h"
+#include <stdlib.h>
 
 void	gc_exit(int code)
 {
@@ -39,6 +40,7 @@ void	*alloc(ssize_t size)
 		gc_exit(1);
 		return (NULL);
 	}
+	ft_bzero(mem, size);
 	trash = new_trash(mem);
 	if (!trash)
 	{
@@ -60,6 +62,7 @@ void	*env_alloc(ssize_t size)
 		gc_exit(1);
 		return (NULL);
 	}
+	ft_bzero(mem, size);
 	trash = new_trash(mem);
 	if (!trash)
 	{

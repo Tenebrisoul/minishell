@@ -46,7 +46,6 @@ SRC_CORE    := \
 	core/repl.c \
 	core/repl_utils.c \
 	core/input.c \
-	core/input_utils.c \
 	core/heredoc.c \
 	core/heredoc_utils.c \
 	core/heredoc_input.c \
@@ -101,7 +100,8 @@ SRC_EXPAND  := \
 	expand/get_expander.c \
 	expand/queue.c \
 	expand/quotes.c \
-	expand/new_prompt.c
+	expand/new_prompt.c \
+	expand/queue_quotes.c
 
 # Library sources
 SRC_LIBFT   := \
@@ -109,7 +109,8 @@ SRC_LIBFT   := \
 	libft/libft_0.c \
 	libft/libft_string.c \
 	libft/libft_number.c \
-	libft/libft_convert.c
+	libft/libft_convert.c \
+	libft/ft_bzero.c
 
 # Combine all sources
 SRCS        := $(SRC_LEX) $(SRC_PARSE) $(SRC_GC) $(SRC_CORE) $(SRC_UTILS) \

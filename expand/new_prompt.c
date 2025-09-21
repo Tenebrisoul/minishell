@@ -12,7 +12,6 @@ int	calc_total_expandables(void)
 	while (queue[i])
 	{
 		total_len += len(queue[i]) - 1;
-		printf("ÇIKARTIYORUM: %ld\n", len(queue[i]) - 1);
 		i++;
 	}
 	return (total_len + 1);
@@ -34,7 +33,6 @@ int	calc_total_expansions(void)
 		if (env_item)
 		{
 			total_len += len(env_item->value);
-			printf("EKLİYORUM: %ld\n", len(env_item->value));
 		}
 		i++;
 	}
