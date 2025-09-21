@@ -37,6 +37,7 @@ t_redirect	*process_redirect_token(t_parser *parser)
 		redir_token = parser->current->type;
 		advance_token(parser);
 		current = create_redirect(parser, redir_token);
+		get_env()->exit_status = 2;
 	}
 	return (current);
 }

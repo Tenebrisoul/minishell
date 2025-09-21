@@ -27,10 +27,7 @@ t_ast_node	*parse_sequence(t_parser *parser)
 		advance_token(parser);
 		right = parse_pipeline(parser);
 		if (!right)
-		{
-			cleanup_ast(left);
 			return (NULL);
-		}
 		left = create_sequence_node(left, right);
 		if (!left)
 			return (NULL);
@@ -51,10 +48,7 @@ t_ast_node	*parse_pipeline(t_parser *parser)
 		advance_token(parser);
 		right = parse_ast_node(parser);
 		if (!right)
-		{
-			cleanup_ast(left);
 			return (NULL);
-		}
 		left = create_pipeline_node(left, right);
 		if (!left)
 			return (NULL);

@@ -53,8 +53,3 @@ void	add_token_to_list(t_token **head, t_token *new_token)
 		current = current->next;
 	current->next = new_token;
 }
-
-void	cleanup_tokens(t_token *tokens)
-{
-	(void)tokens;
-}

@@ -61,10 +61,7 @@ t_redirect	*parse_redirections(t_parser *parser)
 	{
 		current = process_redirect_token(parser);
 		if (!current)
-		{
-			cleanup_redirections(head);
 			return (NULL);
-		}
 		*next_ptr = current;
 		next_ptr = &current->next;
 	}

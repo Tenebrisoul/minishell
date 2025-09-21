@@ -16,18 +16,3 @@ void	advance_token(t_parser *parser)
 		return ;
 	parser->current = parser->current->next;
 }
-
-void	cleanup_redirections(t_redirect *redirects)
-{
-	(void)redirects;
-}
-
-void	cleanup_command(t_command *cmd)
-{
-	(void)cmd;
-}
-
-void	cleanup_ast(t_ast_node *node)
-{
-	(void)node;
-}

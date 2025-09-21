@@ -16,11 +16,6 @@ static t_lexer	*init_lexer(char *input)
 	return (lexer);
 }
 
-static void	cleanup_lexer(t_lexer *lexer)
-{
-	(void)lexer;
-}
-
 static bool	tokenize(t_lexer *lexer, t_token **token_list)
 {
 	t_token	*current_token;
@@ -56,11 +51,6 @@ t_token	*lexer(char *input)
 		return (NULL);
 	token_list = NULL;
 	if (!tokenize(lexer, &token_list))
-	{
-		cleanup_tokens(token_list);
-		cleanup_lexer(lexer);
 		return (NULL);
-	}
-	cleanup_lexer(lexer);
 	return (token_list);
 }

@@ -92,14 +92,8 @@ t_command	*parse_command(t_parser *parser)
 	if (!cmd)
 		return (NULL);
 	if (!parse_command_tokens(parser, cmd))
-	{
-		cleanup_command(cmd);
 		return (NULL);
-	}
 	if (cmd->argc == 0 && !cmd->redirects)
-	{
-		cleanup_command(cmd);
 		return (NULL);
-	}
 	return (cmd);
 }

@@ -7,16 +7,12 @@ static int	handle_lexer_error(void)
 	return (1);
 }
 
-static int	handle_parser_error(t_token *tokens)
+static int	handle_parser_error(void)
 {
 	if (get_env()->exit_status == 130)
-	{
-		cleanup_tokens(tokens);
 		return (1);
-	}
 	write(2, "minishell: syntax error\n", 25);
 	get_env()->exit_status = 2;
-	cleanup_tokens(tokens);
 	return (1);
 }
 
@@ -35,7 +31,7 @@ int	process_line(char *line)
 		return (handle_lexer_error());
 	ast = parser(tokens);
 	if (!ast)
-		return (handle_parser_error(tokens));
+		return (handle_parser_error());
 	if (sh_signal_interrupted())
 		return (1);
 	status = exec_ast(ast);

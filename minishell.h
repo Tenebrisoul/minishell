@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 01:15:00 by root              #+#    #+#             */
-/*   Updated: 2025/09/21 05:28:39 by root             ###   ########.fr       */
+/*   Updated: 2025/09/21 06:03:07 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,6 @@ void							restore_tty(int saved_in, int saved_out);
 /* LEXER */
 t_token							*lexer(char *input);
 void							advance_char(t_lexer *lexer);
-void							cleanup_tokens(t_token *tokens);
 char							peek_char(t_lexer *lexer, int offset);
 t_token							*create_token(t_token_type type, char *value);
 void							add_token_to_list(t_token **head,
@@ -202,9 +201,6 @@ t_token							*read_operator(t_lexer *lexer);
 t_ast_node						*parser(t_token *tokens);
 t_ast_node						*create_ast_node(t_node_type type);
 void							advance_token(t_parser *parser);
-void							cleanup_redirections(t_redirect *redirects);
-void							cleanup_command(t_command *cmd);
-void							cleanup_ast(t_ast_node *ast);
 bool							is_redirect_token(t_token_type type);
 t_ast_node						*parse_ast_node(t_parser *parser);
 t_command						*parse_command(t_parser *parser);
