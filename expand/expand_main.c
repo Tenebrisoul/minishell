@@ -86,10 +86,11 @@ static void	renew_prompt(void)
 	prompt_len = len(prompt);
 	new_size = prompt_len - calc_total_expandables() + calc_total_expansions()
 		+ 1;
-	if (new_size < prompt_len)
-		new_prompt = alloc(prompt_len + 1 + calc_total_expansions());
-	else
-		new_prompt = alloc(new_size + 1);
+	if (new_size < prompt_len + calc_total_expansions())
+		new_size = prompt_len + calc_total_expansions() + 1;
+	if (new_size < prompt_len + 16)
+		new_size = prompt_len + 16;
+	new_prompt = alloc(new_size);
 	ft_strcpy(prompt, new_prompt);
 	expander->prompt = new_prompt;
 }

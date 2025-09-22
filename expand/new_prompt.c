@@ -23,10 +23,10 @@ int	calc_total_expandables(void)
 	i = 0;
 	while (queue[i])
 	{
-		total_len += len(queue[i]) - 1;
+		total_len += len(queue[i]);
 		i++;
 	}
-	return (total_len + 1);
+	return (total_len);
 }
 
 int	calc_total_expansions(void)
@@ -48,5 +48,5 @@ int	calc_total_expansions(void)
 		}
 		i++;
 	}
-	return (total_len + 1);
+	return (total_len);
 }

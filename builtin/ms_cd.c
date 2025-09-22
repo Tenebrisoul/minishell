@@ -101,6 +101,11 @@ int	bi_cd(char **argv)
 	const char	*target;
 	char		old[4096];
 
+	if (argv && argv[0] && argv[1] && argv[2])
+	{
+		write(2, "minishell: cd: too many arguments\n", 28);
+		return (1);
+	}
 	target = get_cd_target(argv);
 	if (!target && argv[1] && sh_strcmp(argv[1], "-") == 0)
 		return (1);

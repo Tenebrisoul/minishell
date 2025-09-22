@@ -20,6 +20,7 @@ static void	sigint_handler(int signo)
 {
 	(void)signo;
 	g_shell_state |= STATE_INTERRUPT;
+	get_env()->exit_status = 130;
 	if (g_shell_state & STATE_COMMAND)
 		return ;
 	if (g_shell_state & STATE_HEREDOC)

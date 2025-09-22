@@ -64,7 +64,8 @@ SRC_HEREDOC := \
 	heredoc/heredoc.c \
 	heredoc/heredoc_utils.c \
 	heredoc/heredoc_input.c \
-	heredoc/heredoc_expand.c 
+	heredoc/heredoc_expand.c \
+	heredoc/heredoc_replace.c 
 
 # Utility sources
 SRC_UTILS   := \

@@ -68,6 +68,7 @@ int	bi_export(char **argv)
 {
 	int		i;
 	char	*eq;
+	int		code;
 
 	if (!argv[1])
 	{
@@ -75,16 +76,17 @@ int	bi_export(char **argv)
 		return (0);
 	}
 	i = 1;
+	code = 0;
 	while (argv[i])
 	{
 		eq = sh_strchr(argv[i], '=');
 		if (!eq)
-			return (export_without_value(argv[i]));
-		else if (export_with_value(argv[i], eq))
-			return (1);
+			code = export_without_value(argv[i]);
+		else
+			code = export_with_value(argv[i], eq);
 		i++;
 	}
-	return (0);
+	return (code);
 }
 
 int	bi_unset(char **argv)

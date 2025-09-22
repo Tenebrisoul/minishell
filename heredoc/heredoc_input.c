@@ -6,12 +6,26 @@
 /*   By: btuncer <btuncer@student.42kocaeli.com.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/21 23:11:17 by btuncer           #+#    #+#             */
-/*   Updated: 2025/09/22 02:17:45 by btuncer          ###   ########.fr       */
+/*   Updated: 2025/09/22 01:23:01 by btuncer          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 #include <readline/readline.h>
+
+void	heredoc_queue_expandables(void)
+{
+	t_expander	*expander;
+
+	expander = get_expander(GET);
+	while (expander->prompt[expander->marker])
+	{
+		if (expander->prompt[expander->marker] == '$'
+			&& !is_escaped(expander->prompt, expander->marker))
+			heredoc_insert_curr_to_queue(expander);
+		expander->marker++;
+	}
+}
 
 static char	*safe_heredoc(char *prompt)
 {
@@ -26,16 +40,39 @@ static char	*safe_heredoc(char *prompt)
 	return (line);
 }
 
+static char	*handle_non_tty_input(void)
+{
+	char	*line;
+	size_t	len;
+	ssize_t	read_len;
+
+	len = 0;
+	line = NULL;
+	read_len = getline(&line, &len, stdin);
+	if (read_len == -1)
+	{
+		return (NULL);
+	}
+	if (read_len > 0 && line[read_len - 1] == '\n')
+		line[read_len - 1] = '\0';
+	insert_to_gc(new_trash(line), GC_GC);
+	return (line);
+}
+
 char	*get_heredoc_line(void)
 {
 	char	*line;
 
-	if (sh_signal_interrupted())
-		return (NULL);
-	line = safe_heredoc("> ");
-	if (!line || sh_signal_interrupted())
-		return (NULL);
-	return (line);
+	if (isatty(STDIN_FILENO))
+	{
+		if (sh_signal_interrupted())
+			return (NULL);
+		line = safe_heredoc("> ");
+		if (!line || sh_signal_interrupted())
+			return (NULL);
+		return (line);
+	}
+	return (handle_non_tty_input());
 }
 
 void	print_heredoc_warning(char *delimiter)
